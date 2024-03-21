@@ -1,4 +1,4 @@
-﻿namespace eCinemas.API.ValueObjects;
+﻿namespace eCinemas.API.Shared.ValueObjects;
 
 public interface IEndpoint
 {

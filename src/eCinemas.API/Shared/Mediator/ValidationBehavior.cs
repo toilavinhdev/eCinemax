@@ -1,7 +1,8 @@
-﻿using FluentValidation;
+﻿using eCinemas.API.Shared.Exceptions;
+using FluentValidation;
 using MediatR;
 
-namespace eCinemas.API.Mediator;
+namespace eCinemas.API.Shared.Mediator;
 
 public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
@@ -19,6 +20,7 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
             .ToList();
         if (failures.Count == 0) return await next();
         
-        throw new ValidationException(failures);
+        throw new BadRequestException(
+            string.Join(";", failures.Select(x => x.ErrorMessage).Distinct()));
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using eCinemas.API.ValueObjects;
+using eCinemas.API.Shared.ValueObjects;
 
 namespace eCinemas.API.Services;
 

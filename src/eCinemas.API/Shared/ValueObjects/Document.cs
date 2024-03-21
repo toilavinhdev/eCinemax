@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace eCinemas.API.ValueObjects;
+namespace eCinemas.API.Shared.ValueObjects;
 
 public class Document
 {
@@ -20,13 +20,13 @@ public class TrackingDocument : Document
     
     public string? ModifiedBy { get; set; }
 
-    public virtual void MarkCreated(string? createdBy)
+    public virtual void MarkCreated(string? createdBy = null)
     {
         CreatedAt = DateTimeOffset.Now;
         CreatedBy = createdBy;
     }
 
-    public virtual void MarkModified(string? modifiedBy)
+    public virtual void MarkModified(string? modifiedBy = null)
     {
         ModifiedAt = DateTimeOffset.Now;
         ModifiedBy = modifiedBy;

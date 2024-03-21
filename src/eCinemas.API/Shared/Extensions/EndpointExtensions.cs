@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
-using eCinemas.API.ValueObjects;
+using eCinemas.API.Shared.ValueObjects;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace eCinemas.API.Extensions;
+namespace eCinemas.API.Shared.Extensions;
 
 public static class EndpointExtensions
 {

@@ -1,7 +1,7 @@
-﻿using eCinemas.API.ValueObjects;
+﻿using eCinemas.API.Shared.ValueObjects;
 using MediatR;
 
-namespace eCinemas.API.Mediator;
+namespace eCinemas.API.Shared.Mediator;
 
 public interface IAPIRequestHandler<in TRequest> : IRequestHandler<TRequest, APIResponse>
     where TRequest : IRequest<APIResponse>

@@ -1,7 +1,7 @@
-﻿using eCinemas.API.ValueObjects;
+﻿using eCinemas.API.Shared.ValueObjects;
 using Microsoft.Extensions.FileProviders;
 
-namespace eCinemas.API.Extensions;
+namespace eCinemas.API.Shared.Extensions;
 
 public static class StaticFileExtensions
 {

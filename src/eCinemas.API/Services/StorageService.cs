@@ -1,10 +1,10 @@
-﻿using eCinemas.API.ValueObjects;
+﻿using eCinemas.API.Shared.ValueObjects;
 
 namespace eCinemas.API.Services;
 
 public interface IStorageService : IBaseService
 {
-    Task<string> SaveAsync(IFormFile file, string fileName, string bucket, CancellationToken cancellationToken);
+    Task<string> SaveAsync(IFormFile file, string fileName, string? bucket, CancellationToken cancellationToken);
 }
 
 public class StorageService(IHttpContextAccessor httpContextAccessor, AppSettings appSettings) 

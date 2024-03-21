@@ -1,6 +1,7 @@
-﻿using eCinemas.API.ValueObjects;
+﻿using eCinemas.API.Shared.ValueObjects;
+using Serilog;
 
-namespace eCinemas.API.Extensions;
+namespace eCinemas.API.Shared.Extensions;
 
 public static class WebBuilderExtensions
 {
@@ -19,5 +20,16 @@ public static class WebBuilderExtensions
             .Bind(appSettings);
 
         builder.Services.AddSingleton(appSettings);
+    }
+    
+    public static void SetupSerilog(this WebApplicationBuilder builder)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.Console()
+            .CreateLogger();
+        builder.Host.UseSerilog();
+        builder.Logging.ClearProviders();
+        builder.Logging.AddSerilog();
     }
 }

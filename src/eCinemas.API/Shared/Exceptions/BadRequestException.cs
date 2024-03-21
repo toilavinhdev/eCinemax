@@ -1,4 +1,4 @@
-﻿namespace eCinemas.API.Exceptions;
+﻿namespace eCinemas.API.Shared.Exceptions;
 
 public class BadRequestException : Exception
 {
