@@ -36,6 +36,7 @@ app.UseAuthorization();
 app.UsePhysicalStaticFile(appSettings.StaticFileConfig);
 app.UseHttpsRedirection();
 app.MapEndpointDefinitions();
-app.MapGet("Ping", () => "Pong");
+app.MapGet("/ping", () => "Pong");
+app.MapGet("/check-auth", () => "OK").RequireAuthorization();
 
 app.Run();

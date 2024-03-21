@@ -9,6 +9,10 @@ public class AppSettings
     public MongoConfig MongoConfig { get; set; } = default!;
 
     public JwtConfig JwtConfig { get; set; } = default!;
+
+    public GoogleOAuthConfig GoogleOAuthConfig { get; set; } = default!;
+
+    public GmailConfig GmailConfig { get; set; } = default!;
 }
 
 public class StaticFileConfig
@@ -30,4 +34,24 @@ public class JwtConfig
     public string TokenSingingKey { get; set; } = default!;
     
     public int AccessTokenDurationInMinutes { get; set; }
+}
+
+public class GoogleOAuthConfig
+{
+    public string ClientId { get; set; } = default!;
+
+    public string ClientSecret { get; set; } = default!;
+}
+
+public class GmailConfig
+{
+    public string Host { get; set; } = default!;
+    
+    public int Port { get; set; }
+    
+    public string DisplayName { get; set; } = default!;
+    
+    public string Mail { get; set; } = default!;
+    
+    public string Password { get; set; } = default!;
 }

@@ -48,7 +48,8 @@ public class SignInCommandHandler(IMongoService mongoService, AppSettings appSet
         };
 
         var accessToken = JwtBearerProvider.GenerateAccessToken(
-            appSettings.JwtConfig.TokenSingingKey, claims,
+            appSettings.JwtConfig.TokenSingingKey, 
+            claims,
             DateTime.Now.AddMinutes(appSettings.JwtConfig.AccessTokenDurationInMinutes));
 
         return new APIResponse<SignInResponse>().IsSuccess(

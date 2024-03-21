@@ -33,6 +33,14 @@ public static class AuthExtensions
                     // correct any user mistake
                     options.TokenValidationParameters.ValidateAudience = options.TokenValidationParameters.ValidAudience is not null;
                     options.TokenValidationParameters.ValidateIssuer = options.TokenValidationParameters.ValidIssuer is not null;
+                    
+                    // events
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = _ => throw new UnauthorizedAccessException(),
+                        OnAuthenticationFailed = _ => throw new UnauthorizedAccessException(),
+                        OnChallenge = _ => throw new UnauthorizedAccessException(),
+                    };
                 });
         
         return services;

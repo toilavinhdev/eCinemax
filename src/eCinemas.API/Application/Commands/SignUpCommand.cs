@@ -1,4 +1,5 @@
 ﻿using eCinemas.API.Aggregates.UserAggregate;
+using eCinemas.API.Helpers;
 using eCinemas.API.Services;
 using eCinemas.API.Shared.Constants;
 using eCinemas.API.Shared.Exceptions;
@@ -29,7 +30,7 @@ public class SignUpCommandValidator : AbstractValidator<SignUpCommand>
     }
 }
 
-public class SignUpCommandHandler(IMongoService mongoService) : IAPIRequestHandler<SignUpCommand>
+public class SignUpCommandHandler(IMongoService mongoService, AppSettings appSettings) : IAPIRequestHandler<SignUpCommand>
 {
     private readonly IMongoCollection<User> _userCollection = mongoService.Collection<User>();
     
@@ -50,6 +51,12 @@ public class SignUpCommandHandler(IMongoService mongoService) : IAPIRequestHandl
         document.MarkCreated();
 
         await _userCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
+
+        await EmailHelper.SendMailAsync(
+            appSettings.GmailConfig,
+            request.Email,
+            "ĐĂNG KÝ THÀNH CÔNG",
+            "Bạn đã đăng ký thành công tài khoản eCinemas");
 
         return APIResponse.IsSuccess("Đăng ký thành công");
     }
