@@ -5,19 +5,19 @@ namespace eCinemas.API.Services;
 
 public interface IBaseService
 {
-    UserClaimValue GetUserClaimValue();
+    UserClaimValue? GetUserClaimValue();
 }
 
 public class BaseService(IHttpContextAccessor httpContextAccessor) : IBaseService
 {
-    public UserClaimValue GetUserClaimValue()
+    public UserClaimValue? GetUserClaimValue()
     {
         var stringValues = httpContextAccessor.HttpContext?.Request.Headers
             .FirstOrDefault(x => x.Key.Equals("Authorization")).Value;
         
         var accessToken = stringValues?.ToString().Split(" ").LastOrDefault();
-        
-        if (string.IsNullOrEmpty(accessToken)) return new UserClaimValue();
+
+        if (string.IsNullOrEmpty(accessToken)) return null;
         
         var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
         

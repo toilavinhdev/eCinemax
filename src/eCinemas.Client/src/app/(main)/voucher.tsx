@@ -1,10 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-export default function InputComponent() {
+const VoucherScreen = () => {
   return (
     <View>
-      <Text>InputComponent</Text>
+      <Text>VoucherScreen</Text>
     </View>
   );
-}
+};
+
+export default VoucherScreen;

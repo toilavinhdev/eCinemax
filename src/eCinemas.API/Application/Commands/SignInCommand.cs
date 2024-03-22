@@ -5,6 +5,7 @@ using eCinemas.API.Helpers;
 using eCinemas.API.Services;
 using eCinemas.API.Shared.Constants;
 using eCinemas.API.Shared.Exceptions;
+using eCinemas.API.Shared.Extensions;
 using eCinemas.API.Shared.Mediator;
 using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
@@ -39,6 +40,9 @@ public class SignInCommandHandler(IMongoService mongoService, AppSettings appSet
             .FirstOrDefaultAsync(cancellationToken);
 
         if (user is null) throw new BadRequestException("Email không tồn tại");
+        
+        if (!user.PasswordHash.Equals(request.Password.ToSha256()))
+            throw new BadRequestException("Mật khẩu không chính xác");
 
         var claims = new List<Claim>
         {

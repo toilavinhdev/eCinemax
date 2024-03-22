@@ -29,7 +29,7 @@ public class StorageService(IHttpContextAccessor httpContextAccessor, AppSetting
 
     private string GetUrl(string bucketToFile)
     {
-        return $"{appSettings.Host}${appSettings.StaticFileConfig.External}/${bucketToFile}";
+        return $"${appSettings.StaticFileConfig.External}/${bucketToFile}";
     }
     
     private string InitialBucket(string path)

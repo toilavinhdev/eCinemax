@@ -36,11 +36,7 @@ public static class AuthExtensions
                     
                     // events
                     options.Events = new JwtBearerEvents
-                    {
-                        OnTokenValidated = _ => throw new UnauthorizedAccessException(),
-                        OnAuthenticationFailed = _ => throw new UnauthorizedAccessException(),
-                        OnChallenge = _ => throw new UnauthorizedAccessException(),
-                    };
+                    { };
                 });
         
         return services;
