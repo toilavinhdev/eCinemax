@@ -23,13 +23,13 @@ public static class ExceptionHandlerExtensions
                         switch (exception)
                         {
                             case UnauthorizedAccessException:
-                                await WriteResponse(context, (int)HttpStatusCode.Unauthorized, "Unauthorized");
+                                await WriteResponse(context, (int)HttpStatusCode.Unauthorized, ["Unauthorized"]);
                                 break;
                             case BadRequestException:
-                                await WriteResponse(context, (int)HttpStatusCode.BadRequest, GetErrorMessage(exception));
+                                await WriteResponse(context, (int)HttpStatusCode.BadRequest, GetErrors(exception));
                                 break;
                             default:
-                                await WriteResponse(context, (int)HttpStatusCode.InternalServerError, GetErrorMessage(exception));
+                                await WriteResponse(context, (int)HttpStatusCode.InternalServerError, GetErrors(exception));
                                 break;
                         }
                     }
@@ -39,7 +39,7 @@ public static class ExceptionHandlerExtensions
         return app;
     }
     
-    private static async Task WriteResponse(HttpContext context, int statusCode, string? errorMessage)
+    private static async Task WriteResponse(HttpContext context, int statusCode, string[]? errors)
     {
         context.Response.ContentType = "application/problem+json";
         context.Response.StatusCode = statusCode;
@@ -48,11 +48,11 @@ public static class ExceptionHandlerExtensions
             {
                 Success = false,
                 Code = statusCode,
-                Message = errorMessage
+                Errors = errors
             });
     }
 
-    private static string GetErrorMessage(Exception ex)
+    private static string[] GetErrors(Exception ex)
     {
         var messages = new List<string> { ex.Message };
 
@@ -64,6 +64,6 @@ public static class ExceptionHandlerExtensions
             inner = inner.InnerException;
         }
 
-        return string.Join(";", messages.Distinct().ToList());
+        return messages.Distinct().ToArray();
     }
 }

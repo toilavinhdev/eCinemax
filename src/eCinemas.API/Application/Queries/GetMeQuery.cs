@@ -26,6 +26,6 @@ public class GetMeQueryHandler(IMongoService mongoService, IMapper mapper) : IAP
         var user = await _userCollection.Find(x => x.Id == userId).FirstOrDefaultAsync(cancellationToken);
         if (user is null) throw new BadRequestException("Người dùng không tồn tại");
         
-        return new APIResponse<GetMeResponse>().IsSuccess(mapper.Map<GetMeResponse>(user));
+        return APIResponse<GetMeResponse>.IsSuccess(mapper.Map<GetMeResponse>(user));
     }
 }

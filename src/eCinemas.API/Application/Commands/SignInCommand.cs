@@ -24,8 +24,11 @@ public class SignInCommandValidator : AbstractValidator<SignInCommand>
 {
     public SignInCommandValidator()
     {
-        RuleFor(x => x.Email).NotEmpty().Matches(RegexConstant.EmailRegex);
-        RuleFor(x => x.Password).NotEmpty().MinimumLength(6);
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email không được bỏ trống")
+            .Matches(RegexConstant.EmailRegex).WithMessage("Email không đúng định dạng");
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage("Mật khẩu không được bỏ trống");
     }
 }
 
@@ -56,7 +59,7 @@ public class SignInCommandHandler(IMongoService mongoService, AppSettings appSet
             claims,
             DateTime.Now.AddMinutes(appSettings.JwtConfig.AccessTokenDurationInMinutes));
 
-        return new APIResponse<SignInResponse>().IsSuccess(
+        return APIResponse<SignInResponse>.IsSuccess(
             new SignInResponse { AccessToken = accessToken },
             "Đăng nhập thành công");
     }

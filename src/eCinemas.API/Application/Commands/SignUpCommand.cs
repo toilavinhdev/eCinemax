@@ -24,9 +24,13 @@ public class SignUpCommandValidator : AbstractValidator<SignUpCommand>
 {
     public SignUpCommandValidator()
     {
-        RuleFor(x => x.FullName).NotEmpty();
-        RuleFor(x => x.Email).NotEmpty().Matches(RegexConstant.EmailRegex);
-        RuleFor(x => x.Password).NotEmpty().MinimumLength(6);
+        RuleFor(x => x.FullName)
+            .NotEmpty().WithMessage("Không bỏ trống tên");
+        RuleFor(x => x.Email)
+            .NotEmpty()
+            .Matches(RegexConstant.EmailRegex);
+        RuleFor(x => x.Password)
+            .NotEmpty();
     }
 }
 

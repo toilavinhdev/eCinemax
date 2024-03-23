@@ -1,9 +1,11 @@
-﻿using eCinemas.API.Shared.ValueObjects;
+﻿using eCinemas.API.Aggregates.MovieAggregate;
 
-namespace eCinemas.API.Aggregates.MovieAggregate;
+namespace eCinemas.API.Application.Responses;
 
-public class Movie : TrackingDocument 
+public class GetMovieResponse
 {
+    public string Id { get; set; } = default!;
+    
     public string Title { get; set; } = default!;
     
     public string? Description { get; set; }
@@ -15,11 +17,4 @@ public class Movie : TrackingDocument
     public List<string>? ImageUrls { get; set; }
     
     public long DurationMinutes { get; set; }
-}
-
-public enum MovieStatus
-{
-    ComingSoon = 0,
-    NowShowing,
-    StopShowing
 }

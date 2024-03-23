@@ -1,11 +1,11 @@
+import { client } from "~/core/client";
+import { IAPIResponse } from "~/core/interfaces";
 import {
   IGetMeResponse,
   ISignInRequest,
   ISignInResponse,
   ISignUpRequest,
-} from "~/store/user/user.interfaces";
-import { client, setClientAccessToken } from "~/core/client";
-import { IAPIResponse } from "~/core/interfaces";
+} from "~/features/user/user.interfaces";
 
 const endpoint = {
   signIn: "/api/user/sign-in",

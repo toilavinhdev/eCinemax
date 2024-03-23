@@ -11,6 +11,9 @@ public class APIResponse
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Message { get; set; }
     
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string[]? Errors { get; set; }
+    
     public static APIResponse IsSuccess(string? message = null)
         => new()
         {
@@ -23,7 +26,7 @@ public class APIResponse<T> : APIResponse
 {
     public T Data { get; set; } = default!;
     
-    public APIResponse<T> IsSuccess(T data, string? message = null) 
+    public static APIResponse<T> IsSuccess(T data, string? message = null) 
         => new()
         {
             Success = true,

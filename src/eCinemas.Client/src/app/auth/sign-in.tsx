@@ -3,14 +3,13 @@ import React, { useState } from "react";
 import { Text, View } from "react-native";
 import { ButtonComponent, InputComponent } from "~/shared/components";
 import { isEmailValid } from "~/shared/utils";
-import { useAppDispatch, useAppSelector } from "~/store/store";
-import { signIn } from "~/store/user/user.thunk";
+import { useAppDispatch, useAppSelector } from "~/features/store";
+import { signIn } from "~/features/user/user.thunk";
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("hoangdvinh68@gmail.com");
   const [password, setPassword] = useState("Password@123");
   const dispatch = useAppDispatch();
-
   const loading = useAppSelector((state) => state.user.loading);
 
   const onSubmit = async () => {

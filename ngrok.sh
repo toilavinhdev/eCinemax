@@ -1,1 +1,1 @@
-﻿ngrok http --domain=exciting-snail-new.ngrok-free.app 5005
+﻿ngrok http --domain=exciting-snail-new.ngrok-free.app 5005 

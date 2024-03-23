@@ -1,8 +1,8 @@
-import { View, Text } from "react-native";
 import React from "react";
-import { useAppDispatch, useAppSelector } from "~/store/store";
+import { Text, View } from "react-native";
+import { useAppDispatch, useAppSelector } from "~/features/store";
+import { signOut } from "~/features/user/user.slice";
 import { ButtonComponent } from "~/shared/components";
-import { signOut } from "~/store/user/user.thunk";
 
 const ProfileScreen = () => {
   const user = useAppSelector((state) => state.user.currentUser);
