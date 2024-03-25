@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using eCinemas.API.Aggregates.MovieAggregate;
+﻿using eCinemas.API.Aggregates.MovieAggregate;
 using eCinemas.API.Application.Responses;
 using eCinemas.API.Services;
 using eCinemas.API.Shared.Mediator;
@@ -9,7 +8,7 @@ using MongoDB.Driver;
 
 namespace eCinemas.API.Application.Queries;
 
-public class ListMovieQuery : IAPIRequest<ListMovieResponse>
+public class ListMovieQuery : IAPIRequest<ListMovieResponse>, IPaginationRequest
 {
     public int PageIndex { get; set; }
     
@@ -27,7 +26,7 @@ public class ListMovieQueryValidator : AbstractValidator<ListMovieQuery>
     }
 }
 
-public class ListMovieQueryHandler(IMongoService mongoService, IMapper mapper) : IAPIRequestHandler<ListMovieQuery, ListMovieResponse>
+public class ListMovieQueryHandler(IMongoService mongoService) : IAPIRequestHandler<ListMovieQuery, ListMovieResponse>
 {
     private readonly IMongoCollection<Movie> _movieCollection = mongoService.Collection<Movie>();
         
@@ -43,13 +42,19 @@ public class ListMovieQueryHandler(IMongoService mongoService, IMapper mapper) :
         var documents = await fluent
             .Skip((request.PageIndex - 1) * request.PageSize)
             .Limit(request.PageSize)
+            .Project(x => new MovieViewList
+            {
+                Id = x.Id,
+                Status = x.Status,
+                Title = x.Title,
+                DurationMinutes = x.DurationMinutes,
+                PosterUrl = x.PosterUrl
+            })
             .ToListAsync(cancellationToken);
-
-        var data = documents.Select(mapper.Map<MovieViewList>).ToList();
 
         return APIResponse<ListMovieResponse>.IsSuccess(
             new ListMovieResponse(
-                data, 
+                documents, 
                 request.PageIndex, 
                 request.PageSize, 
                 (int)totalRecord));

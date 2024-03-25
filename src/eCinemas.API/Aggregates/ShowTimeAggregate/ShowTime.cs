@@ -13,9 +13,11 @@ public class ShowTime : TrackingDocument
     [BsonRepresentation(BsonType.ObjectId)]
     public string Room { get; set; } = default!;
     
-    public DateTime StartTime { get; set; }
+    public DateTimeOffset StartAt { get; set; }
 
-    public List<SeatPrice> SeatPrices { get; set; } = default!;
+    public List<SeatPrice> Ticket { get; set; } = default!;
+    
+    public List<List<Reservation>> Reservations { get; set; } = default!;
 
     [BsonRepresentation(BsonType.ObjectId)]
     public List<string> Bookings { get; set; } = default!;
@@ -26,4 +28,11 @@ public class SeatPrice
     public SeatType Type { get; set; }
     
     public int Price { get; set; }
+}
+
+public class Reservation : Seat
+{
+    public bool IsEmpty { get; set; }
+    
+    public DateTimeOffset? ReservationAt { get; set; }
 }

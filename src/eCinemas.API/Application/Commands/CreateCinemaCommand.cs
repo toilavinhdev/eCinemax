@@ -32,6 +32,7 @@ public class CreateCinemaCommandHandler(IMongoService mongoService, IMapper mapp
     {
         var document = mapper.Map<Cinema>(request);
         document.MarkCreated();
+        document.Rooms = [];
         await _cinemaCollection.InsertOneAsync(document, cancellationToken:cancellationToken);
         return APIResponse<Cinema>.IsSuccess(document);
     }

@@ -13,23 +13,23 @@ namespace eCinemas.API.Application.Commands;
 
 public class CreateShowTimeCommand : IAPIRequest<ShowTime>
 {
-    public string MovieId { get; set; } = default!;
+    public string Movie { get; set; } = default!;
 
-    public string RoomId { get; set; } = default!;
+    public string Room { get; set; } = default!;
 
-    public string StartAt { get; set; } = default!; // 2024-03-25 10:30:00;
+    public DateTimeOffset StartAt { get; set; } = default!; //iso 8601 -> datetime utc
 
-    public List<SeatPrice> SeatPrices { get; set; } = default!;
+    public List<SeatPrice> Ticket { get; set; } = default!;
 }
 
 public class CreateShowTimeCommandValidator : AbstractValidator<CreateShowTimeCommand>
 {
     public CreateShowTimeCommandValidator()
     {
-        RuleFor(x => x.MovieId).NotEmpty();
-        RuleFor(x => x.RoomId).NotEmpty();
+        RuleFor(x => x.Movie).NotEmpty();
+        RuleFor(x => x.Room).NotEmpty();
         RuleFor(x => x.StartAt).NotEmpty();
-        RuleFor(x => x.SeatPrices).NotEmpty();
+        RuleFor(x => x.Ticket).NotEmpty();
     }
 }
 
@@ -42,16 +42,25 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
     public async Task<APIResponse<ShowTime>> Handle(CreateShowTimeCommand request, CancellationToken cancellationToken)
     {
         var movie = await _movieCollection
-            .Find(x => x.Id == request.MovieId)
+            .Find(x => x.Id == request.Movie)
             .FirstOrDefaultAsync(cancellationToken);
-        DocumentNotFoundException<Movie>.ThrowIfNotFound(movie, request.MovieId);
+        DocumentNotFoundException<Movie>.ThrowIfNotFound(movie, request.Movie);
         var room = await _roomCollection
-            .Find(x => x.Id == request.RoomId)
+            .Find(x => x.Id == request.Room)
             .FirstOrDefaultAsync(cancellationToken);
-        DocumentNotFoundException<Room>.ThrowIfNotFound(room, request.RoomId);
+        DocumentNotFoundException<Room>.ThrowIfNotFound(room, request.Room);
 
         var document = mapper.Map<ShowTime>(request);
-        document.StartTime = DateTime.Parse(request.StartAt);
+        document.Reservations = room.Seats
+            .Select(rowSeats => 
+                rowSeats.Select(seat => new Reservation
+                {
+                    Row = seat.Row,
+                    Column = seat.Column,
+                    Type = seat.Type,
+                    IsEmpty = true,
+                }).ToList()
+            ).ToList();
         document.MarkCreated();
         await _showTimeCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 

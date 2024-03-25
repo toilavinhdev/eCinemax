@@ -12,8 +12,8 @@ public class MovieEndpoint : IEndpoint
     {
         var group = app.MapGroup("/api/movie").WithTags(nameof(Movie));
 
-        group.MapPost("/{id}", (string id, IMediator mediator) 
-            => mediator.Send(new GetMovieQuery { Id = id }))
+        group.MapPost("get", (GetMovieQuery query, IMediator mediator) 
+            => mediator.Send(query))
             .RequireAuthorization();
 
         group.MapPost("/list", (

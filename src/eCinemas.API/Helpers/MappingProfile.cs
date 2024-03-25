@@ -22,5 +22,7 @@ public class MappingProfile : Profile
         CreateMap<Cinema, CinemaViewList>();
 
         CreateMap<CreateShowTimeCommand, ShowTime>();
+        CreateMap<ShowTime, ShowTimeListView>();
+        CreateMap<ShowTime, GetShowTimeResponse>();
     }
 }

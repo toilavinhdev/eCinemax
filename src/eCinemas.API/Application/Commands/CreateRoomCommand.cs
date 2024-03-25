@@ -16,7 +16,7 @@ public class CreateRoomCommand : IAPIRequest<Room>
 
     public string Name { get; set; } = default!;
 
-    public SeatType[][] SeatsTypes { get; set; } = default!;
+    public List<List<SeatType>> SeatsTypes { get; set; } = default!; // Row<Column<Type>>
 }
 
 public class CreateRoomCommandValidator : AbstractValidator<CreateRoomCommand>
@@ -36,42 +36,35 @@ public class CreateRoomCommandHandler(IMongoService mongoService) : IAPIRequestH
     
     public async Task<APIResponse<Room>> Handle(CreateRoomCommand request, CancellationToken cancellationToken)
     {
-        var cinema = await _cinemaCollection
+        var existedCinema = await _cinemaCollection
             .Find(x => x.Id == request.CinemaId)
-            .FirstOrDefaultAsync(cancellationToken);
-        DocumentNotFoundException<Cinema>.ThrowIfNotFound(cinema, request.CinemaId);
+            .AnyAsync(cancellationToken);
+        if (!existedCinema) throw new DocumentNotFoundException<Cinema>(request.CinemaId);
 
         var document = new Room
         {
             Cinema = request.CinemaId,
             Name = request.Name,
+            // handle seats 2d
+            Seats = request.SeatsTypes
+                .Select((columnTypes, rowIndex) => 
+                    columnTypes.Select((columnType, columnIndex) => new Seat
+                    {
+                        Row = rowIndex.ToSeatCharacter().ToString(),
+                        Column = columnIndex + 1,
+                        Type = columnType
+                    }).ToList())
+                .ToList()
         };
-        
-        // handle seats 2d array
-        var rowCount = request.SeatsTypes.Length;
-        var seats = new Seat[rowCount][];
-
-        for (var row = 0; row < rowCount; row++)
-        {
-            var columnCount = request.SeatsTypes[row].Length;
-            seats[row] = new Seat[columnCount];
-
-            for (var column = 0; column < columnCount; column++)
-            {
-                seats[row][column] = new Seat
-                {
-                    Row = row.ToSeatCharacter().ToString(),
-                    Column = column + 1,
-                    Type = request.SeatsTypes[row][column]
-                };
-            }
-        }
-
-        document.Seats = seats;
         document.MarkCreated();
-
+        
         await _roomCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 
+        await _cinemaCollection.UpdateOneAsync(
+            x => x.Id == request.CinemaId,
+            Builders<Cinema>.Update.Push(x => x.Rooms, document.Id),
+            cancellationToken: cancellationToken);
+        
         return APIResponse<Room>.IsSuccess(document);
     }
 }

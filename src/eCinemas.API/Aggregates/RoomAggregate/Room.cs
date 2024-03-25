@@ -11,14 +11,14 @@ public class Room : TrackingDocument
 
     public string Name { get; set; } = default!;
 
-    public Seat[][] Seats { get; set; } = default!;
+    public List<List<Seat>> Seats { get; set; } = default!;
 }
 
 public class Seat
 {
     public string Row { get; set; } = default!;
 
-    public int Column { get; set; } = default!;
+    public int Column { get; set; }
 
     public string Name => $"{Row}{Column}";
     
