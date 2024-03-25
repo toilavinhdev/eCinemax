@@ -51,6 +51,8 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
         DocumentNotFoundException<Room>.ThrowIfNotFound(room, request.Room);
 
         var document = mapper.Map<ShowTime>(request);
+        document.Cinema = room.Cinema;
+        document.Available = room.Seats.Aggregate(0, (acc, cur) => acc + cur.Count(x => x.Type != SeatType.Empty));
         document.Reservations = room.Seats
             .Select(rowSeats => 
                 rowSeats.Select(seat => new Reservation

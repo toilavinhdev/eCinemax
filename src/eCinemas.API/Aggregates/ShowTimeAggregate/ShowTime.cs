@@ -9,6 +9,9 @@ public class ShowTime : TrackingDocument
 {
     [BsonRepresentation(BsonType.ObjectId)]
     public string Movie { get; set; } = default!;
+    
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Cinema { get; set; } = default!;
 
     [BsonRepresentation(BsonType.ObjectId)]
     public string Room { get; set; } = default!;
@@ -16,6 +19,8 @@ public class ShowTime : TrackingDocument
     public DateTimeOffset StartAt { get; set; }
 
     public List<SeatPrice> Ticket { get; set; } = default!;
+    
+    public int Available { get; set; }
     
     public List<List<Reservation>> Reservations { get; set; } = default!;
 

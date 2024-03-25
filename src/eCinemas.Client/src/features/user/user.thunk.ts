@@ -1,20 +1,24 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getMeAPI, signInAPI, signUpAPI } from "~/features/user/user.apis";
 import {
   ISignInRequest,
   ISignUpRequest,
 } from "~/features/user/user.interfaces";
+import { authConst } from "~/shared/constants";
 
 export const signIn = createAsyncThunk(
   "@user/signIn",
   async (payload: ISignInRequest, thunkAPI) => {
     try {
       const response = await signInAPI(payload);
-      return response.data.data.accessToken;
+      const accessToken = response.data.data.accessToken;
+      await AsyncStorage.setItem(authConst.ACCESS_TOKEN, accessToken);
+      return accessToken;
     } catch (err) {
       thunkAPI.rejectWithValue(err);
     }
-  },
+  }
 );
 
 export const signUp = createAsyncThunk(
@@ -25,7 +29,7 @@ export const signUp = createAsyncThunk(
     } catch (err) {
       thunkAPI.rejectWithValue(err);
     }
-  },
+  }
 );
 
 export const getMe = createAsyncThunk("@user/me", async () => {

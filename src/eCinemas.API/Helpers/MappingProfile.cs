@@ -15,14 +15,12 @@ public class MappingProfile : Profile
         CreateMap<User, GetMeResponse>();
 
         CreateMap<CreateMovieCommand, Movie>();
-        CreateMap<Movie, GetMovieResponse>();
-        CreateMap<Movie, MovieViewList>();
+        CreateMap<Movie, MovieViewModel>();
 
         CreateMap<CreateCinemaCommand, Cinema>();
         CreateMap<Cinema, CinemaViewList>();
 
         CreateMap<CreateShowTimeCommand, ShowTime>();
-        CreateMap<ShowTime, ShowTimeListView>();
         CreateMap<ShowTime, GetShowTimeResponse>();
     }
 }

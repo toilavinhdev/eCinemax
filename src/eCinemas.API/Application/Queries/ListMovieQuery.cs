@@ -42,13 +42,19 @@ public class ListMovieQueryHandler(IMongoService mongoService) : IAPIRequestHand
         var documents = await fluent
             .Skip((request.PageIndex - 1) * request.PageSize)
             .Limit(request.PageSize)
-            .Project(x => new MovieViewList
+            .Project(x => new MovieViewModel
             {
                 Id = x.Id,
-                Status = x.Status,
                 Title = x.Title,
+                Plot = x.Plot,
+                Directors = x.Directors,
+                Casts = x.Casts,
+                Languages = x.Languages,
+                Status = x.Status,
+                Genres = x.Genres,
+                PosterUrl = x.PosterUrl,
+                Released = x.Released,
                 DurationMinutes = x.DurationMinutes,
-                PosterUrl = x.PosterUrl
             })
             .ToListAsync(cancellationToken);
 

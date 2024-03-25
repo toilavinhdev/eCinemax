@@ -14,7 +14,14 @@ const HomeLayout = () => {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="[id]" />
+      <Stack.Screen
+        name="movie-detail"
+        options={{
+          title: "Chi tiết phim",
+          headerBackTitleVisible: false,
+          headerTitleAlign: "left",
+        }}
+      />
     </Stack>
   );
 };

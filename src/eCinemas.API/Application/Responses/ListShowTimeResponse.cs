@@ -1,18 +1,21 @@
-﻿using eCinemas.API.Shared.ValueObjects;
+﻿namespace eCinemas.API.Application.Responses;
 
-namespace eCinemas.API.Application.Responses;
-
-public class ListShowTimeResponse(List<ShowTimeListView> records, int pageIndex, 
-    int pageSize, int totalRecord) : PaginationResponse<ShowTimeListView>(records, pageIndex, pageSize, totalRecord)
+public class CinemaShowTime
 {
-    
+    public string CinemaId { get; set; } = default!;
+
+    public string CinemaName { get; set; } = default!;
+
+    public string CinemaAddress { get; set; } = default!;
+
+    public List<ShowTimeValue> ShowTimes { get; set; } = default!;
 }
 
-public class ShowTimeListView
+public class ShowTimeValue
 {
-    public string Id { get; set; } = default!;
-
-    public string MovieId { get; set; } = default!;
+    public string ShowTimeId { get; set; } = default!;
     
     public DateTimeOffset StartAt { get; set; }
+    
+    public int Available { get; set; }
 }

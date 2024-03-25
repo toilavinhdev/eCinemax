@@ -24,7 +24,7 @@ public class ListCinemaQueryHandler(IMongoService mongoService) : IAPIRequestHan
         var documents = await _cinemaCollection
             .Find(filter)
             .Skip((request.PageIndex - 1) * request.PageSize)
-            .Limit(request.PageIndex)
+            .Limit(request.PageSize)
             .Project(x => new CinemaViewList
             {
                 Id = x.Id,

@@ -1,5 +1,5 @@
 import { IMovieState } from "~/features/movie/movie.interfaces";
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { listMovie } from "~/features/movie/movie.thunk";
 
 const initialState: IMovieState = {
@@ -9,7 +9,11 @@ const initialState: IMovieState = {
 const movieSlice = createSlice({
   name: "@movie",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    selectMovie: (state, action: PayloadAction<string>) => {
+      state.selectedMovie = state.list.find((x) => x.id === action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(listMovie.pending, (state) => {
       state.loading = true;
@@ -24,5 +28,5 @@ const movieSlice = createSlice({
   },
 });
 
-export const {} = movieSlice.actions;
+export const { selectMovie } = movieSlice.actions;
 export default movieSlice.reducer;

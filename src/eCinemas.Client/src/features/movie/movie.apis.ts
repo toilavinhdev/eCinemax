@@ -6,7 +6,6 @@ import {
 import { IAPIResponse } from "~/core/interfaces";
 
 const endpoints = {
-  get: "/api/movie",
   list: "/api/movie/list",
 };
 

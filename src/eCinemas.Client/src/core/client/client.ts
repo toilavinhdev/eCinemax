@@ -23,10 +23,11 @@ client.interceptors.response.use(
     console.log(
       `[${timeLog.getHours()}:${timeLog.getMinutes()}:${timeLog.getMilliseconds()}]`,
       "API RESPONSE",
+      JSON.stringify(response.config.url),
       JSON.stringify(response.config.params),
       JSON.stringify(response.config.data),
       response.config.url,
-      JSON.stringify(response.data),
+      JSON.stringify(response.data)
     );
     return response;
   },
@@ -36,8 +37,8 @@ client.interceptors.response.use(
     console.log(
       `[${timeLog.getHours()}:${timeLog.getMinutes()}:${timeLog.getMilliseconds()}]`,
       "API ERROR",
-      JSON.stringify(errorResponse),
+      JSON.stringify(errorResponse)
     );
     throw new Error(errorResponse.errors?.[0]);
-  },
+  }
 );
