@@ -11,8 +11,8 @@ export interface IPagination {
   pageSize: number;
   totalRecord: number;
   totalPage: number;
-  hasPreviosPage: number;
-  hasNextPpage: number;
+  hasPreviousPage: number;
+  hasNextPage: number;
 }
 
 export interface IPaginationResponse<T> {

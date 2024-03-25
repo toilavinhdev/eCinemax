@@ -1,7 +1,7 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authConst } from "~/shared/constants";
-import { IAPIResponse } from "../interfaces";
+import { IAPIResponse } from "~/core/interfaces";
 
 export const client = axios.create({
   baseURL: process.env.EXPO_PUBLIC_BASE_URL,
@@ -18,13 +18,26 @@ client.interceptors.request.use(async (config) => {
 });
 
 client.interceptors.response.use(
-  (response: AxiosResponse) => {
-    console.log("Client response", response.data);
-    return response.data;
+  (response) => {
+    const timeLog = new Date(Date.now());
+    console.log(
+      `[${timeLog.getHours()}:${timeLog.getMinutes()}:${timeLog.getMilliseconds()}]`,
+      "API RESPONSE",
+      JSON.stringify(response.config.params),
+      JSON.stringify(response.config.data),
+      response.config.url,
+      JSON.stringify(response.data),
+    );
+    return response;
   },
   (error) => {
+    const timeLog = new Date(Date.now());
     const errorResponse: IAPIResponse<any> = error.response.data;
-    console.log(`Client errors: ${errorResponse.errors}`);
+    console.log(
+      `[${timeLog.getHours()}:${timeLog.getMinutes()}:${timeLog.getMilliseconds()}]`,
+      "API ERROR",
+      JSON.stringify(errorResponse),
+    );
     throw new Error(errorResponse.errors?.[0]);
-  }
+  },
 );

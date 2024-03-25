@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const NewsScreen = () => {
+const VoucherLayout = () => {
   return (
     <View>
-      <Text>NewsScreen</Text>
+      <Text>VoucherLayout</Text>
     </View>
   );
 };
 
-export default NewsScreen;
+export default VoucherLayout;

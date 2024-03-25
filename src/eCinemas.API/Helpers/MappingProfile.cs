@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using eCinemas.API.Aggregates.CinemaAggregate;
 using eCinemas.API.Aggregates.MovieAggregate;
+using eCinemas.API.Aggregates.ShowtimeAggregate;
 using eCinemas.API.Aggregates.UserAggregate;
 using eCinemas.API.Application.Commands;
 using eCinemas.API.Application.Responses;
@@ -14,5 +16,11 @@ public class MappingProfile : Profile
 
         CreateMap<CreateMovieCommand, Movie>();
         CreateMap<Movie, GetMovieResponse>();
+        CreateMap<Movie, MovieViewList>();
+
+        CreateMap<CreateCinemaCommand, Cinema>();
+        CreateMap<Cinema, CinemaViewList>();
+
+        CreateMap<CreateShowTimeCommand, ShowTime>();
     }
 }

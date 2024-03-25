@@ -1,4 +1,5 @@
-﻿using eCinemas.API.Aggregates.MovieAggregate;
+﻿using AutoMapper;
+using eCinemas.API.Aggregates.MovieAggregate;
 using eCinemas.API.Application.Responses;
 using eCinemas.API.Services;
 using eCinemas.API.Shared.Mediator;
@@ -13,6 +14,8 @@ public class ListMovieQuery : IAPIRequest<ListMovieResponse>
     public int PageIndex { get; set; }
     
     public int PageSize { get; set; }
+    
+    public MovieStatus Status { get; set; }
 }
 
 public class ListMovieQueryValidator : AbstractValidator<ListMovieQuery>
@@ -24,7 +27,7 @@ public class ListMovieQueryValidator : AbstractValidator<ListMovieQuery>
     }
 }
 
-public class ListMovieQueryHandler(IMongoService mongoService) : IAPIRequestHandler<ListMovieQuery, ListMovieResponse>
+public class ListMovieQueryHandler(IMongoService mongoService, IMapper mapper) : IAPIRequestHandler<ListMovieQuery, ListMovieResponse>
 {
     private readonly IMongoCollection<Movie> _movieCollection = mongoService.Collection<Movie>();
         
@@ -33,6 +36,8 @@ public class ListMovieQueryHandler(IMongoService mongoService) : IAPIRequestHand
         var builder = Builders<Movie>.Filter;
         var filter = builder.Empty;
 
+        filter &= builder.Eq(x => x.Status, request.Status);
+
         var fluent = _movieCollection.Find(filter);
         var totalRecord = await fluent.CountDocumentsAsync(cancellationToken);
         var documents = await fluent
@@ -40,17 +45,13 @@ public class ListMovieQueryHandler(IMongoService mongoService) : IAPIRequestHand
             .Limit(request.PageSize)
             .ToListAsync(cancellationToken);
 
-        var data = documents
-            .Select(
-                x => new MovieViewModel
-                {
-                    Id = x.Id,
-                    Status = x.Status,
-                    Title = x.Title,
-                    ImageUrl = x.ImageUrls?.FirstOrDefault()
-                }).ToList();
-        var pagination = new Pagination(request.PageIndex, request.PageSize, (int)totalRecord);
-        
-        return APIResponse<ListMovieResponse>.IsSuccess(new ListMovieResponse(pagination, data));
+        var data = documents.Select(mapper.Map<MovieViewList>).ToList();
+
+        return APIResponse<ListMovieResponse>.IsSuccess(
+            new ListMovieResponse(
+                data, 
+                request.PageIndex, 
+                request.PageSize, 
+                (int)totalRecord));
     }
 }

@@ -7,17 +7,28 @@ import {
   ISignUpRequest,
 } from "~/features/user/user.interfaces";
 
-const endpoint = {
+const endpoints = {
   signIn: "/api/user/sign-in",
   signUp: "/api/user/sign-up",
   me: "/api/user/me",
 };
 
 export const signInAPI = async (payload: ISignInRequest) =>
-  await client.post<IAPIResponse<ISignInResponse>>(endpoint.signIn, payload);
+  await client.request<IAPIResponse<ISignInResponse>>({
+    method: "POST",
+    data: payload,
+    url: endpoints.signIn,
+  });
 
 export const signUpAPI = async (payload: ISignUpRequest) =>
-  await client.post<IAPIResponse<any>>(endpoint.signUp, payload);
+  await client.request<IAPIResponse<any>>({
+    method: "POST",
+    data: payload,
+    url: endpoints.signUp,
+  });
 
 export const getMeAPI = async () =>
-  await client.get<IAPIResponse<IGetMeResponse>>(endpoint.me);
+  await client.request<IAPIResponse<IGetMeResponse>>({
+    method: "POST",
+    url: endpoints.me,
+  });

@@ -10,6 +10,9 @@ const userSlice = createSlice({
   name: "@user",
   initialState: initialState,
   reducers: {
+    authorized: (state, action) => {
+      state.isAuthorized = action.payload;
+    },
     signOut: (state) => {
       state.isAuthorized = false;
       state.currentUser = undefined;

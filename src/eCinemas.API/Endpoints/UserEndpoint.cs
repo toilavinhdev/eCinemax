@@ -12,7 +12,7 @@ public class UserEndpoint : IEndpoint
     {
         var group = app.MapGroup("/api/user").WithTags(nameof(User)); 
         
-        group.MapGet("/me", (ISender sender) => sender.Send(new GetMeQuery()))
+        group.MapPost("/me", (ISender sender) => sender.Send(new GetMeQuery()))
              .RequireAuthorization();
 
         group.MapPost("/sign-in", (SignInCommand command, ISender sender) => sender.Send(command));

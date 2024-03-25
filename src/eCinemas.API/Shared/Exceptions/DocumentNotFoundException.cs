@@ -13,7 +13,7 @@ public class DocumentNotFoundException<T> : BadRequestException
     public static void ThrowIfNotFound([NotNull] object? value, string? parameter = null)
     {
         if (value is not null) return;
-        var message = $"Không tìm thấy bản ghi ${nameof(T)} ${parameter}";
+        var message = $"Không tìm thấy bản ghi {typeof(T).Name} {parameter}";
         throw new DocumentNotFoundException<T>(message);
     }
 }

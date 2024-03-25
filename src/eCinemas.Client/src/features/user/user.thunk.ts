@@ -10,12 +10,11 @@ export const signIn = createAsyncThunk(
   async (payload: ISignInRequest, thunkAPI) => {
     try {
       const response = await signInAPI(payload);
-      const accessToken = response.data.data.accessToken;
-      return accessToken;
-    } catch (err: any) {
+      return response.data.data.accessToken;
+    } catch (err) {
       thunkAPI.rejectWithValue(err);
     }
-  }
+  },
 );
 
 export const signUp = createAsyncThunk(
@@ -26,18 +25,14 @@ export const signUp = createAsyncThunk(
     } catch (err) {
       thunkAPI.rejectWithValue(err);
     }
-  }
+  },
 );
 
-export const getMe = createAsyncThunk(
-  "@user/me",
-  async ({}, { rejectWithValue }) => {
-    try {
-      const response = await getMeAPI();
-      return response.data.data;
-    } catch (err) {
-      console.log(err);
-      rejectWithValue(err);
-    }
+export const getMe = createAsyncThunk("@user/me", async () => {
+  try {
+    const response = await getMeAPI();
+    return response.data.data;
+  } catch (err) {
+    console.log(err);
   }
-);
+});

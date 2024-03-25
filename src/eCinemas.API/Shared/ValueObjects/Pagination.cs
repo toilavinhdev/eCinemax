@@ -22,9 +22,14 @@ public interface IPaginationRequest
     int PageSize { get; set; }
 }
 
-public abstract class PaginationResponse<T>(Pagination pagination, List<T> records)
+public class Pagination<T>(List<T> records, int pageIndex, int pageSize, int totalRecord) : Pagination(pageIndex, pageSize, totalRecord)
 {
-    public Pagination Pagination { get; set; } = pagination;
+    public List<T> Records { get; set; } = records;
+}
+
+public abstract class PaginationResponse<T>(List<T> records, int pageIndex, int pageSize, int totalRecord)
+{
+    public Pagination Pagination { get; set; } = new(pageIndex, pageSize, totalRecord);
 
     public List<T> Records { get; set; } = records;
 }

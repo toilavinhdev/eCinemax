@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 import { ButtonComponent, InputComponent } from "~/shared/components";
 import { isEmailValid } from "~/shared/utils";
 import { useAppDispatch, useAppSelector } from "~/features/store";
-import { signIn } from "~/features/user/user.thunk";
+import { signIn } from "~/features/user";
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("hoangdvinh68@gmail.com");

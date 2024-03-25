@@ -1,9 +1,9 @@
-import { Slot, SplashScreen } from "expo-router";
+import { Slot, SplashScreen, router } from "expo-router";
 import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
-import { useAuthGuard } from "~/core/guards";
-import store from "~/features/store";
+import store, { useAppDispatch, useAppSelector } from "~/features/store";
+import { getMe } from "~/features/user/user.thunk";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,7 +24,18 @@ const RootLayout = () => {
 };
 
 const App = () => {
-  useAuthGuard();
+  const dispatch = useAppDispatch();
+  const isAuthorized = useAppSelector((state) => state.user.isAuthorized);
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      router.replace("/auth");
+    } else {
+      router.replace("/");
+      dispatch(getMe());
+    }
+  }, [isAuthorized]);
+
   return <Slot />;
 };
 

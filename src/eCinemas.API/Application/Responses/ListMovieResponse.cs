@@ -3,17 +3,18 @@ using eCinemas.API.Shared.ValueObjects;
 
 namespace eCinemas.API.Application.Responses;
 
-public class ListMovieResponse(
-    Pagination pagination, 
-    List<MovieViewModel> records): PaginationResponse<MovieViewModel>(pagination, records);
+public class ListMovieResponse(List<MovieViewList> records, int pageIndex, 
+    int pageSize, int totalRecord) : PaginationResponse<MovieViewList>(records, pageIndex, pageSize, totalRecord);
 
-public class MovieViewModel
+public class MovieViewList
 {
     public string Id { get; set; } = default!;
     
     public string Title { get; set; } = default!;
 
     public MovieStatus Status { get; set; }
+
+    public string PosterUrl { get; set; } = default!;
     
-    public string? ImageUrl { get; set; }
+    public long DurationMinutes { get; set; }
 }
