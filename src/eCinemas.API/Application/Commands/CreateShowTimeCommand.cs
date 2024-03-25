@@ -58,7 +58,7 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
                     Row = seat.Row,
                     Column = seat.Column,
                     Type = seat.Type,
-                    IsEmpty = true,
+                    Status = SeatStatus.Empty,
                 }).ToList()
             ).ToList();
         document.MarkCreated();

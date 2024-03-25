@@ -32,3 +32,9 @@ public enum SeatType
     VIP,
     Couple
 }
+
+public enum SeatStatus
+{
+    Empty = 0,
+    SoldOut
+}

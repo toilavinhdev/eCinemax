@@ -32,7 +32,7 @@ public class SeatPrice
 
 public class Reservation : Seat
 {
-    public bool IsEmpty { get; set; }
+    public SeatStatus Status { get; set; }
     
     public DateTimeOffset? ReservationAt { get; set; }
 }
