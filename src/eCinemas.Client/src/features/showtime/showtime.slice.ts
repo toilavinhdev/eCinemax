@@ -1,15 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { IShowTimeState } from "./showtime.interfaces";
-import { listShowtime } from "./showtime.thunk";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { IReservation, IShowTimeState } from "./showtime.interfaces";
+import { getShowtime, listShowtime } from "./showtime.thunk";
 
 const initialState: IShowTimeState = {
   list: [],
+  reservations: [],
 };
 
 const showTimeSlice = createSlice({
   name: "@showtime",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    reservation: (state, action: PayloadAction<IReservation>) => {
+      state.reservations?.push(action.payload);
+    },
+    removeReservation: (state, action: PayloadAction<IReservation>) => {
+      state.reservations = state.reservations?.filter(
+        (x) => x.name !== action.payload.name
+      );
+    },
+    clearReservations: (state) => {
+      state.reservations = [];
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(listShowtime.pending, (state) => {
       state.loadingList = true;
@@ -21,8 +34,19 @@ const showTimeSlice = createSlice({
     builder.addCase(listShowtime.rejected, (state) => {
       state.loadingList = false;
     });
+    builder.addCase(getShowtime.pending, (state) => {
+      state.loadingGet = true;
+    });
+    builder.addCase(getShowtime.fulfilled, (state, action) => {
+      state.loadingGet = false;
+      state.showtime = action.payload;
+    });
+    builder.addCase(getShowtime.rejected, (state) => {
+      state.loadingGet = false;
+    });
   },
 });
 
-export const {} = showTimeSlice.actions;
+export const { reservation, removeReservation, clearReservations } =
+  showTimeSlice.actions;
 export default showTimeSlice.reducer;

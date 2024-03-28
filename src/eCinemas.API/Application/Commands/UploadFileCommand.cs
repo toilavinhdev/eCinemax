@@ -24,7 +24,7 @@ public class UploadFileCommandHandler(IStorageService storageService) : IAPIRequ
 {
     public async Task<APIResponse<string>> Handle(UploadFileCommand request, CancellationToken cancellationToken)
     {
-        var fileName = $"{Guid.NewGuid():N}{Path.GetExtension(request.File.Name)}";
+        var fileName = $"{Guid.NewGuid():N}{Path.GetExtension(request.File.FileName)}";
         var url = await storageService.SaveAsync(request.File, fileName, request.Bucket, cancellationToken);
         return APIResponse<string>.IsSuccess(url, "Upload thành công");
     }

@@ -19,7 +19,7 @@ const CollapseComponent = (props: Props) => {
   return (
     <View className="rounded-lg" style={{ backgroundColor: colors.secondary }}>
       <TouchableWithoutFeedback onPress={() => toggle()}>
-        <View className="flex-row justify-between p-5">
+        <View className="flex-row justify-between items-center p-5">
           <Text className="text-white text-[16px]">{title}</Text>
           <AntDesign name="right" size={16} color="white" />
         </View>

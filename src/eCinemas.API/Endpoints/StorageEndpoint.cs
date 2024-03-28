@@ -11,6 +11,7 @@ public class StorageEndpoint : IEndpoint
         var group = app.MapGroup("/api/storage").WithTags("Storage");
 
         group.MapPost("/upload", (IFormFile file, string? bucket, IMediator mediator)
-            => mediator.Send(new UploadFileCommand { File = file, Bucket = bucket }));
+            => mediator.Send(new UploadFileCommand { File = file, Bucket = bucket }))
+            .DisableAntiforgery();
     }
 }

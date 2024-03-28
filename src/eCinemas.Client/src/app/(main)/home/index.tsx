@@ -20,7 +20,7 @@ import { colors } from "~/shared/constants";
 const HomeScreen = () => {
   const [status, setStatus] = useState<EMovieStatus>(EMovieStatus.NowShowing);
   const [pageIndex, setPageIndex] = useState<number>(1);
-  const pageSize = 10;
+  const pageSize = 15;
   const dispatch = useAppDispatch();
   const featureMovieSelector = useAppSelector((state) => state.movie);
 
