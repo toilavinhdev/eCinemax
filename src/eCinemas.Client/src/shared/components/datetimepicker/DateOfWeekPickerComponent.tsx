@@ -9,7 +9,7 @@ interface Props {
 const DateOfWeekPickerComponent = (props: Props) => {
   const { onChangeDate } = props;
   const currentDate = new Date(Date.now());
-  currentDate.setUTCHours(currentDate.getUTCHours());
+  // currentDate.setUTCHours(currentDate.getUTCHours());
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const days: Date[] = [];
 

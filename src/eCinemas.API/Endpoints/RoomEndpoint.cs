@@ -10,7 +10,9 @@ public class RoomEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/room").WithTags(nameof(Room));
+        var group = app.MapGroup("/api/room")
+            .WithTags(nameof(Room))
+            .RequireAuthorization();
         
         group.MapGet("/list", (IMediator mediator) 
             => mediator.Send(new ListRoomQuery()));

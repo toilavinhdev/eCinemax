@@ -31,8 +31,8 @@ public class CreateCinemaCommandHandler(IMongoService mongoService, IMapper mapp
     public async Task<APIResponse<Cinema>> Handle(CreateCinemaCommand request, CancellationToken cancellationToken)
     {
         var document = mapper.Map<Cinema>(request);
-        document.MarkCreated();
         document.Rooms = [];
+        document.MarkCreated(mongoService.GetUserClaimValue()?.Id);
         await _cinemaCollection.InsertOneAsync(document, cancellationToken:cancellationToken);
         return APIResponse<Cinema>.IsSuccess(document);
     }

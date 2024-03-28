@@ -63,7 +63,7 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
                     Status = SeatStatus.Empty,
                 }).ToList()
             ).ToList();
-        document.MarkCreated();
+        document.MarkCreated(mongoService.GetUserClaimValue()?.Id);
         await _showTimeCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 
         return APIResponse<ShowTime>.IsSuccess(document);

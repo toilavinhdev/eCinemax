@@ -8,6 +8,8 @@ public class GetShowTimeResponse
     
     public string Movie { get; set; } = default!;
 
+    public string CinemaName { get; set; } = default!;
+
     public DateTimeOffset StartAt { get; set; }
 
     public List<SeatPrice> Ticket { get; set; } = default!;

@@ -55,7 +55,7 @@ public class CreateMovieCommandHandler(IMongoService mongoService, IMapper mappe
     {
         var document = mapper.Map<Movie>(request);
         document.Released = request.ReleasedAt is not null ? DateOnly.Parse(request.ReleasedAt) : null;
-        document.MarkCreated();
+        document.MarkCreated(mongoService.GetUserClaimValue()?.Id);
         await _movieCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
         return APIResponse<Movie>.IsSuccess(document);
     }

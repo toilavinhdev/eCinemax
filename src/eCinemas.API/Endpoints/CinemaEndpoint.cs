@@ -10,7 +10,9 @@ public class CinemaEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/cinema").WithTags(nameof(Cinema));
+        var group = app.MapGroup("/api/cinema")
+            .WithTags(nameof(Cinema))
+            .RequireAuthorization();
 
         group.MapPost("/list", (IMediator mediator) 
             => mediator.Send(new ListCinemaQuery()));

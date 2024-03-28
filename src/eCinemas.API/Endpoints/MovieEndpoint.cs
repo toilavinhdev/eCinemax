@@ -10,7 +10,9 @@ public class MovieEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/movie").WithTags(nameof(Movie));
+        var group = app.MapGroup("/api/movie")
+            .WithTags(nameof(Movie))
+            .RequireAuthorization();
 
         group.MapPost("/list", (
                     ListMovieQuery query,

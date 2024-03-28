@@ -39,7 +39,7 @@ const HomeLayout = () => {
       <Stack.Screen
         name="checkout"
         options={{
-          title: "checkout",
+          title: "Checkout",
           headerBackTitleVisible: false,
           headerTintColor: "white",
         }}

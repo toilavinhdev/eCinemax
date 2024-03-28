@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eCinemas.API.Aggregates.CinemaAggregate;
 using eCinemas.API.Aggregates.ShowtimeAggregate;
 using eCinemas.API.Application.Responses;
 using eCinemas.API.Services;
@@ -26,6 +27,7 @@ public class GetShowTimeQueryValidator : AbstractValidator<GetShowTimeQuery>
 public class GetShowTimeQueryHandler(IMongoService mongoService, IMapper mapper) : IAPIRequestHandler<GetShowTimeQuery, GetShowTimeResponse>
 {
     private readonly IMongoCollection<ShowTime> _showTimeCollection = mongoService.Collection<ShowTime>();
+    private readonly IMongoCollection<Cinema> _cinemaCollection = mongoService.Collection<Cinema>();
     
     public async Task<APIResponse<GetShowTimeResponse>> Handle(GetShowTimeQuery request, CancellationToken cancellationToken)
     {
@@ -34,6 +36,14 @@ public class GetShowTimeQueryHandler(IMongoService mongoService, IMapper mapper)
             .FirstOrDefaultAsync(cancellationToken);
         DocumentNotFoundException<ShowTime>.ThrowIfNotFound(document, request.Id);
 
-        return APIResponse<GetShowTimeResponse>.IsSuccess(mapper.Map<GetShowTimeResponse>(document));
+        var cinema = await _cinemaCollection
+            .Find(x => x.Id == document.Cinema)
+            .FirstOrDefaultAsync(cancellationToken);
+        DocumentNotFoundException<Cinema>.ThrowIfNotFound(cinema, document.Cinema);
+
+        var response = mapper.Map<GetShowTimeResponse>(document);
+        response.CinemaName = cinema.Name;
+
+        return APIResponse<GetShowTimeResponse>.IsSuccess(response);
     }
 }

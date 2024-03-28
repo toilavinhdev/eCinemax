@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import React from "react";
 import { Image, ScrollView, Text, View } from "react-native";
+import { EMovieStatus } from "~/features/movie";
 import { useAppSelector } from "~/features/store";
 import { ButtonComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
@@ -60,18 +61,19 @@ const MovieDetailScreen = () => {
           <Text className="text-white">{movie?.released}</Text>
         </View>
       </View>
-
-      <ButtonComponent
-        text="BUY TICKET"
-        buttonClassName="w-full mt-8"
-        textClassName="font-semibold"
-        onPress={() =>
-          router.push({
-            pathname: "/(main)/home/choose-cinema",
-            params: { movieId: movie?.id },
-          })
-        }
-      />
+      {movie?.status === EMovieStatus.NowShowing && (
+        <ButtonComponent
+          text="BUY TICKET"
+          buttonClassName="w-full mt-8"
+          textClassName="font-semibold"
+          onPress={() =>
+            router.push({
+              pathname: "/(main)/home/choose-cinema",
+              params: { movieId: movie?.id },
+            })
+          }
+        />
+      )}
     </ScrollView>
   );
 };

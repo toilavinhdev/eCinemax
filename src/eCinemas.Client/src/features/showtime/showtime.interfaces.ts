@@ -27,6 +27,7 @@ export interface IShowTimeValue {
 export interface IGetShowTimeResponse {
   id: string;
   movie: string;
+  cinemaName: string;
   startAt: Date;
   ticket: ISeatPrice[];
   reservations: IReservation[][];

@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
@@ -10,6 +10,7 @@ import {
   getShowtime,
   reservation,
   clearReservations,
+  showtimeTotalTicket,
 } from "~/features/showtime";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { ButtonComponent } from "~/shared/components";
@@ -53,7 +54,7 @@ const ScreenComponent = () => {
 const RoomComponent = (props: { reservations: IReservation[][] }) => {
   const { reservations } = props;
   return (
-    <View className="mt-4">
+    <View className="mt-10">
       {reservations.map((row, idx) => (
         <View key={idx} className="flex-row">
           {row.map((seat) => (
@@ -118,24 +119,16 @@ const SeatComponent = (props: { reservation: IReservation }) => {
 };
 
 const TotalComponent = () => {
-  const reservations = useAppSelector((x) => x.showtime.reservations);
-  const showtime = useAppSelector((x) => x.showtime.showtime);
-  const [total, setTotal] = useState<number>(0);
-
-  useEffect(() => {
-    const amount =
-      reservations?.reduce(
-        (acc, cur) =>
-          acc + (showtime?.ticket.find((x) => x.type === cur.type)?.price ?? 0),
-        0
-      ) ?? 0;
-    setTotal(amount);
-  });
+  const total = useAppSelector(showtimeTotalTicket);
 
   return (
     <View className="mt-auto mb-5">
-      <Text className="text-white">Total {total.toLocaleString()} VND</Text>
-      <ButtonComponent text="BUY TICKETS" buttonClassName="w-full mt-1" />
+      <ButtonComponent
+        text={`BUY TICKETS(${total.toLocaleString()} VND)`}
+        disabled={total === 0}
+        buttonClassName="w-full mt-1"
+        onPress={() => router.push("/(main)/home/checkout")}
+      />
     </View>
   );
 };

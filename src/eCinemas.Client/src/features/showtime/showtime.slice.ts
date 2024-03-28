@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IReservation, IShowTimeState } from "./showtime.interfaces";
 import { getShowtime, listShowtime } from "./showtime.thunk";
+import { RootState } from "../store";
 
 const initialState: IShowTimeState = {
   list: [],
@@ -46,6 +47,15 @@ const showTimeSlice = createSlice({
     });
   },
 });
+
+export const showtimeTotalTicket = (state: RootState) =>
+  state.showtime.reservations?.reduce(
+    (acc, cur) =>
+      acc +
+      (state.showtime.showtime?.ticket.find((x) => x.type === cur.type)
+        ?.price ?? 0),
+    0
+  ) ?? 0;
 
 export const { reservation, removeReservation, clearReservations } =
   showTimeSlice.actions;
