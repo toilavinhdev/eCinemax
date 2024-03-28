@@ -35,7 +35,7 @@ const MainLayout = () => {
       <Tabs.Screen
         name="news"
         options={{
-          title: "News",
+          title: "Notifications",
           tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons
               name="bell"

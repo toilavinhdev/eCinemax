@@ -1,16 +1,23 @@
-import React, { ReactNode } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
+import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAppDispatch, useAppSelector } from "~/features/store";
-import { colors } from "~/shared/constants";
-import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { signOut } from "~/features/user/user.slice";
-import { router } from "expo-router";
+import { authConst, colors } from "~/shared/constants";
 
 const ProfileScreen = () => {
   const insets = useSafeAreaInsets();
   const user = useAppSelector((state) => state.user.currentUser);
   const dispatch = useAppDispatch();
+
+  const onLogout = async () => {
+    dispatch(signOut());
+    router.replace("/auth");
+    await AsyncStorage.removeItem(authConst.ACCESS_TOKEN);
+  };
 
   return (
     <View
@@ -39,9 +46,7 @@ const ProfileScreen = () => {
           {
             title: "Logout",
             icon: <MaterialIcons name="logout" size={24} color={"white"} />,
-            onPress: () => {
-              dispatch(signOut());
-            },
+            onPress: () => onLogout(),
             textClassName: "text-red-400",
           },
         ]}

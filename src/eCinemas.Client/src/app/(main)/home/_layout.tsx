@@ -7,19 +7,41 @@ const HomeLayout = () => {
   return (
     <Stack
       screenOptions={{
-        title: "eCinemas",
+        title: "Home",
         headerStyle: styles.header,
-        headerTitleStyle: styles.title,
-        headerTitleAlign: "left",
       }}
     >
       <Stack.Screen name="index" />
       <Stack.Screen
         name="movie-detail"
         options={{
-          title: "Chi tiết phim",
+          title: "Movie detail",
           headerBackTitleVisible: false,
-          headerTitleAlign: "left",
+          headerTintColor: "white",
+        }}
+      />
+      <Stack.Screen
+        name="choose-cinema"
+        options={{
+          title: "Choose cinema",
+          headerBackTitleVisible: false,
+          headerTintColor: "white",
+        }}
+      />
+      <Stack.Screen
+        name="choose-seats"
+        options={{
+          title: "Choose seats",
+          headerBackTitleVisible: false,
+          headerTintColor: "white",
+        }}
+      />
+      <Stack.Screen
+        name="checkout"
+        options={{
+          title: "checkout",
+          headerBackTitleVisible: false,
+          headerTintColor: "white",
         }}
       />
     </Stack>

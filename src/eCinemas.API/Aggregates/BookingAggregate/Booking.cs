@@ -9,9 +9,6 @@ public class Booking : TrackingDocument
 {
     [BsonRepresentation(BsonType.ObjectId)]
     public string ShowTime { get; set; } = default!;
-    
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string User { get; set; } = default!;
 
     public List<Seat> Seats { get; set; } = default!;
     

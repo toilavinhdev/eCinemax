@@ -20,7 +20,7 @@ const movieSlice = createSlice({
     });
     builder.addCase(listMovie.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload!.records;
+      state.list = action.payload?.records ?? [];
     });
     builder.addCase(listMovie.rejected, (state) => {
       state.loading = false;

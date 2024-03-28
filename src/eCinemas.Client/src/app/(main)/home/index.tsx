@@ -1,16 +1,21 @@
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
-  View,
   Image,
-  Text,
   StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
+import {
+  EMovieStatus,
+  IMovieViewModel,
+  listMovie,
+  selectMovie,
+} from "~/features/movie";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { colors } from "~/shared/constants";
-import { EMovieStatus, IMovieViewModel, listMovie } from "~/features/movie";
-import { router } from "expo-router";
 
 const HomeScreen = () => {
   const [status, setStatus] = useState<EMovieStatus>(EMovieStatus.NowShowing);
@@ -28,13 +33,13 @@ const HomeScreen = () => {
   }, [status, pageIndex]);
 
   return (
-    <View style={{ backgroundColor: colors.dark, flex: 1 }}>
+    <View style={{ backgroundColor: colors.dark, flex: 1 }} className="px-1">
       <MovieStatusComponent currentStatus={status} setStatus={setStatus} />
       <FlatList
         data={featureMovieSelector.list}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <MovieComponent item={item} />}
-        numColumns={2}
+        numColumns={3}
         onRefresh={() => loadData()}
         refreshing={false}
         ListEmptyComponent={() => <Text>Không có dữ liệu</Text>}
@@ -45,19 +50,35 @@ const HomeScreen = () => {
 
 const MovieComponent = (props: { item: IMovieViewModel }) => {
   const { item } = props;
+  const dispatch = useAppDispatch();
   return (
-    <TouchableOpacity
-      className="flex-[0.5]"
-      onPress={() =>
-        router.push({
-          pathname: "/(main)/home/movie-detail",
-          params: { id: item.id },
-        })
-      }
-    >
-      <Image source={{ uri: item.posterUrl }} className="h-[300px]" />
-      <Text className="text-white">{item.title}</Text>
-    </TouchableOpacity>
+    <View className="flex-[0.3333] p-1">
+      <TouchableOpacity
+        onPress={() => {
+          router.push({
+            pathname: "/(main)/home/movie-detail",
+            params: { id: item.id },
+          });
+          dispatch(selectMovie(item.id));
+        }}
+      >
+        <Image
+          source={{ uri: item.posterUrl }}
+          className="h-[200px] rounded-t-lg"
+        />
+        <View
+          className="rounded-b-lg px-1 py-2"
+          style={{ backgroundColor: colors.secondary }}
+        >
+          <Text
+            numberOfLines={1}
+            className="text-white text-[12px] text-center"
+          >
+            {item.title}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -72,6 +93,8 @@ const MovieStatusComponent = (props: {
         onPress={() => setStatus(EMovieStatus.NowShowing)}
         style={{
           ...styles.textStatus,
+          fontFamily: "LexendDeca",
+          fontSize: 15,
           color:
             currentStatus === EMovieStatus.NowShowing
               ? colors.primary
@@ -84,6 +107,8 @@ const MovieStatusComponent = (props: {
         onPress={() => setStatus(EMovieStatus.ComingSoon)}
         style={{
           ...styles.textStatus,
+          fontFamily: "LexendDeca",
+          fontSize: 15,
           color:
             currentStatus === EMovieStatus.ComingSoon
               ? colors.primary

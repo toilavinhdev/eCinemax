@@ -1,5 +1,5 @@
 export interface IUserState {
-  isAuthorized: boolean;
+  loggedIn: boolean;
   loading?: boolean;
   currentUser?: IGetMeResponse;
 }

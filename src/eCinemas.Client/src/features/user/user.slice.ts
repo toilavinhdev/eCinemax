@@ -3,18 +3,15 @@ import { getMe, signIn, signUp } from "~/features/user/user.thunk";
 import { IUserState } from "./user.interfaces";
 
 const initialState: IUserState = {
-  isAuthorized: false,
+  loggedIn: false,
 };
 
 const userSlice = createSlice({
   name: "@user",
   initialState: initialState,
   reducers: {
-    authorized: (state, action) => {
-      state.isAuthorized = action.payload;
-    },
     signOut: (state) => {
-      state.isAuthorized = false;
+      state.loggedIn = false;
       state.currentUser = undefined;
     },
   },
@@ -23,11 +20,11 @@ const userSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(signIn.fulfilled, (state, action) => {
-      state.isAuthorized = true;
+      state.loggedIn = true;
       state.loading = false;
     });
     builder.addCase(signIn.rejected, (state) => {
-      state.isAuthorized = false;
+      state.loggedIn = false;
       state.loading = false;
     });
     builder.addCase(signUp.pending, (state) => {

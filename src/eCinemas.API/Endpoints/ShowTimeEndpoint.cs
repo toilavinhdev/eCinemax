@@ -10,7 +10,7 @@ public class ShowTimeEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/show-time").WithTags(nameof(ShowTime));
+        var group = app.MapGroup("/api/showtime").WithTags(nameof(ShowTime));
 
         group.MapPost("get", (GetShowTimeQuery query, IMediator mediator) 
             => mediator.Send(query));

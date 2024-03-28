@@ -1,24 +1,17 @@
-import { useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
-import { Image, Text, View } from "react-native";
-import { selectMovie } from "~/features/movie";
-import { useAppDispatch, useAppSelector } from "~/features/store";
+import { router } from "expo-router";
+import React from "react";
+import { Image, ScrollView, Text, View } from "react-native";
+import { useAppSelector } from "~/features/store";
 import { ButtonComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
 
-const MovieDetailComponent = () => {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const dispatch = useAppDispatch();
+const MovieDetailScreen = () => {
   const movie = useAppSelector((state) => state.movie.selectedMovie);
 
-  useEffect(() => {
-    dispatch(selectMovie(id!));
-  });
-
   return (
-    <View className="flex-1 p-2" style={{ backgroundColor: colors.dark }}>
+    <ScrollView className="flex-1 p-2" style={{ backgroundColor: colors.dark }}>
       <Text
-        className="uppercase font-semibold text-[16px]"
+        className="font-semibold text-[16px]"
         style={{ color: colors.primary }}
       >
         {movie?.title}
@@ -68,9 +61,19 @@ const MovieDetailComponent = () => {
         </View>
       </View>
 
-      <ButtonComponent text="Buy Ticket" />
-    </View>
+      <ButtonComponent
+        text="BUY TICKET"
+        buttonClassName="w-full mt-8"
+        textClassName="font-semibold"
+        onPress={() =>
+          router.push({
+            pathname: "/(main)/home/choose-cinema",
+            params: { movieId: movie?.id },
+          })
+        }
+      />
+    </ScrollView>
   );
 };
 
-export default MovieDetailComponent;
+export default MovieDetailScreen;

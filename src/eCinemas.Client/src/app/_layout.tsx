@@ -1,18 +1,27 @@
+import { useFonts } from "expo-font";
 import { Slot, SplashScreen, router } from "expo-router";
 import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import store, { useAppDispatch, useAppSelector } from "~/features/store";
-import { getMe } from "~/features/user/user.thunk";
+import { getMe } from "~/features/user";
 
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
+  const [loaded, error] = useFonts({
+    LexendDeca: require("../shared/assets/fonts/LexendDeca-VariableFont_wght.ttf"),
+  });
+
   useEffect(() => {
-    setTimeout(() => {
+    if (loaded) {
       SplashScreen.hideAsync();
-    }, 3000);
-  }, []);
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
     <Provider store={store}>
@@ -25,16 +34,16 @@ const RootLayout = () => {
 
 const App = () => {
   const dispatch = useAppDispatch();
-  const isAuthorized = useAppSelector((state) => state.user.isAuthorized);
+  const loggedIn = useAppSelector((state) => state.user.loggedIn);
 
   useEffect(() => {
-    if (!isAuthorized) {
+    if (!loggedIn) {
       router.replace("/auth");
     } else {
       router.replace("/");
       dispatch(getMe());
     }
-  }, [isAuthorized]);
+  }, [loggedIn]);
 
   return <Slot />;
 };
