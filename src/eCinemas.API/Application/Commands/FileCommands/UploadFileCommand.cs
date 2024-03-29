@@ -1,11 +1,11 @@
-﻿using eCinemas.API.Aggregates.FileAggregate;
-using eCinemas.API.Services;
+﻿using eCinemas.API.Services;
 using eCinemas.API.Shared.Mediator;
 using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
+using File = eCinemas.API.Aggregates.FileAggregate.File;
 
-namespace eCinemas.API.Application.Commands;
+namespace eCinemas.API.Application.Commands.FileCommand;
 
 public class UploadFileCommand : IAPIRequest<string>
 {
@@ -24,14 +24,14 @@ public class UploadFileCommandValidator : AbstractValidator<UploadFileCommand>
 
 public class UploadFileCommandHandler(IStorageService storageService, IMongoService mongoService) : IAPIRequestHandler<UploadFileCommand, string>
 {
-    private readonly IMongoCollection<ApplicationFile> _fileCollection = mongoService.Collection<ApplicationFile>();
+    private readonly IMongoCollection<File> _fileCollection = mongoService.Collection<File>();
     
     public async Task<APIResponse<string>> Handle(UploadFileCommand request, CancellationToken cancellationToken)
     {
         var fileName = $"{Guid.NewGuid():N}{Path.GetExtension(request.File.FileName)}";
         var path = await storageService.SaveAsync(request.File, fileName, request.Bucket, cancellationToken);
 
-        var document = new ApplicationFile
+        var document = new File
         {
             SourceName = request.File.FileName,
             FileName = fileName,
@@ -39,7 +39,7 @@ public class UploadFileCommandHandler(IStorageService storageService, IMongoServ
             Size = request.File.Length,
             ContentType = request.File.ContentType
         };
-        document.MarkCreated(mongoService.GetUserClaimValue()?.Id);
+        document.MarkCreated(mongoService.UserClaims().Id);
         await _fileCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
         return APIResponse<string>.IsSuccess(path, "Upload thành công");
     }

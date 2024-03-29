@@ -9,7 +9,7 @@ using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Commands;
+namespace eCinemas.API.Application.Commands.ShowTimeCommands;
 
 public class CreateShowTimeCommand : IAPIRequest<ShowTime>
 {
@@ -44,15 +44,14 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
         var movie = await _movieCollection
             .Find(x => x.Id == request.Movie)
             .FirstOrDefaultAsync(cancellationToken);
-        DocumentNotFoundException<Movie>.ThrowIfNotFound(movie, request.Movie);
+        DocumentNotFoundException<Movie>.ThrowIfNotFound(movie, "Không tìm thấy phim");
         var room = await _roomCollection
             .Find(x => x.Id == request.Room)
             .FirstOrDefaultAsync(cancellationToken);
-        DocumentNotFoundException<Room>.ThrowIfNotFound(room, request.Room);
+        DocumentNotFoundException<Room>.ThrowIfNotFound(room, "Có lỗi xảy ra");
 
         var document = mapper.Map<ShowTime>(request);
-        document.Cinema = room.Cinema;
-        document.Available = room.Seats.Aggregate(0, (acc, cur) => acc + cur.Count(x => x.Type != SeatType.Empty));
+        document.Available = room.Seats.Aggregate(0, (acc, cur) => acc + cur.Count(x => x.Type != SeatType.Blank));
         document.Reservations = room.Seats
             .Select(rowSeats => 
                 rowSeats.Select(seat => new Reservation
@@ -60,10 +59,9 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
                     Row = seat.Row,
                     Column = seat.Column,
                     Type = seat.Type,
-                    Status = SeatStatus.Empty,
+                    Status = ReservationStatus.Idle,
                 }).ToList()
             ).ToList();
-        document.MarkCreated(mongoService.GetUserClaimValue()?.Id);
         await _showTimeCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 
         return APIResponse<ShowTime>.IsSuccess(document);

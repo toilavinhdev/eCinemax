@@ -1,7 +1,7 @@
 import { IPaginationResponse } from "~/core/interfaces";
 
 export interface IMovieState {
-  loading?: boolean;
+  loading: boolean;
   list: IMovieViewModel[];
   selectedMovie?: IMovieViewModel;
 }

@@ -2,7 +2,7 @@
 
 namespace eCinemas.API.Aggregates.FileAggregate;
 
-public class ApplicationFile : TrackingDocument
+public class File : ModifierTrackingDocument
 {
     public string SourceName { get; set; } = default!;
 

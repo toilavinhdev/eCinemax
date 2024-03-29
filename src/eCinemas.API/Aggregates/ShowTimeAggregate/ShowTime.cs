@@ -5,16 +5,16 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace eCinemas.API.Aggregates.ShowtimeAggregate;
 
-public class ShowTime : TrackingDocument
+public class ShowTime : TimeTrackingDocument
 {
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Movie { get; set; } = default!;
+    public string MovieId { get; set; } = default!;
     
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Cinema { get; set; } = default!;
+    public string CinemaId { get; set; } = default!;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Room { get; set; } = default!;
+    public string RoomId { get; set; } = default!;
     
     public DateTimeOffset StartAt { get; set; }
 
@@ -23,9 +23,6 @@ public class ShowTime : TrackingDocument
     public int Available { get; set; }
     
     public List<List<Reservation>> Reservations { get; set; } = default!;
-
-    [BsonRepresentation(BsonType.ObjectId)]
-    public List<string> Bookings { get; set; } = default!;
 }
 
 public class SeatPrice

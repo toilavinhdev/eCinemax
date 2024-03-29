@@ -5,7 +5,7 @@ namespace eCinemas.API.Helpers;
 
 public static class EmailHelper
 {
-    public static async Task SendMailAsync(GmailConfig config, string toMail, string title, string body)
+    public static async Task SmptSendAsync(GmailConfig config, string toMail, string title, string body)
     {
         var mimeMessage = new MimeMessage();
         mimeMessage.Sender = new MailboxAddress(config.DisplayName, config.Mail);
@@ -24,7 +24,7 @@ public static class EmailHelper
         }
         catch (Exception ex)
         {
-            throw new ApplicationException("Có lỗi xảy ra:", ex);
+            throw new ApplicationException("Có lỗi xảy ra");
         }
     }
 }

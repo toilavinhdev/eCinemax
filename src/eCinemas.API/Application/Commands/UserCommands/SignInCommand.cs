@@ -42,7 +42,7 @@ public class SignInCommandHandler(IMongoService mongoService, AppSettings appSet
             .Find(x => x.Email == request.Email)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (user is null) throw new BadRequestException("Email không tồn tại");
+        if (user is null) throw new BadRequestException("Không tìm thấy email");
         
         if (!user.PasswordHash.Equals(request.Password.ToSha256()))
             throw new BadRequestException("Mật khẩu không chính xác");

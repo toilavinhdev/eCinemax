@@ -4,7 +4,7 @@ using eCinemas.API.Shared.Mediator;
 using eCinemas.API.Shared.ValueObjects;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Queries;
+namespace eCinemas.API.Application.Queries.RoomQueries;
 
 public class ListRoomQuery : IAPIRequest<List<Room>>
 {

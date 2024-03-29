@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using eCinemas.API.Shared.Exceptions;
 using eCinemas.API.Shared.ValueObjects;
+using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace eCinemas.API.Shared.Extensions;
@@ -54,8 +55,15 @@ public static class ExceptionHandlerExtensions
 
     private static string[] GetErrors(Exception ex)
     {
-        var messages = new List<string> { ex.Message };
+        var messages = new List<string>();
 
+        if (ex is ValidationException vEx)
+        {
+            messages.AddRange(vEx.Errors.Select(x => x.ErrorMessage).Distinct());
+            return messages.ToArray();
+        }
+        
+        messages.Add(ex.Message);
         var inner = ex.InnerException;
         var count = 5;
         while (inner is not null && count-- > 0)

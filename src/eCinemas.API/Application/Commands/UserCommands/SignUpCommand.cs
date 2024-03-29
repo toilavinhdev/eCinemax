@@ -9,7 +9,7 @@ using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Commands;
+namespace eCinemas.API.Application.Commands.UserCommands;
 
 public class SignUpCommand : IAPIRequest
 {
@@ -25,12 +25,13 @@ public class SignUpCommandValidator : AbstractValidator<SignUpCommand>
     public SignUpCommandValidator()
     {
         RuleFor(x => x.FullName)
-            .NotEmpty().WithMessage("Không bỏ trống tên");
+            .NotEmpty().WithMessage("Tên không được bỏ trống");
         RuleFor(x => x.Email)
-            .NotEmpty()
-            .Matches(RegexConstant.EmailRegex);
+            .NotEmpty().WithMessage("Email không được bỏ trống")
+            .Matches(RegexConstant.EmailRegex).WithMessage("Email không đúng định dạng");;
         RuleFor(x => x.Password)
-            .NotEmpty();
+            .NotEmpty().WithMessage("Mật khẩu không được bỏ trống")
+            .MinimumLength(6).WithMessage("Mật khẩu tối thiểu 6 ký tự");
     }
 }
 
@@ -56,10 +57,10 @@ public class SignUpCommandHandler(IMongoService mongoService, AppSettings appSet
 
         await _userCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 
-        await EmailHelper.SendMailAsync(
+        await EmailHelper.SmptSendAsync(
             appSettings.GmailConfig,
             request.Email,
-            "ĐĂNG KÝ THÀNH CÔNG",
+            "Đăng ký tài khoản người dùng",
             "Bạn đã đăng ký thành công tài khoản eCinemas");
 
         return APIResponse.IsSuccess("Đăng ký thành công");

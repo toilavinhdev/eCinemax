@@ -26,7 +26,6 @@ services.AddAutoMapper(Metadata.Assembly);
 services.AddTransient<IBaseService, BaseService>();
 services.AddTransient<IStorageService, StorageService>();
 services.AddScoped<IMongoService, MongoService>();
-services.AddTransient<IVNPayService, VNPayService>();
 
 var app = builder.Build();
 app.UseDefaultExceptionHandler();

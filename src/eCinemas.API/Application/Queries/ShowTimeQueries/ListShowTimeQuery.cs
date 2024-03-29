@@ -2,27 +2,26 @@
 using eCinemas.API.Aggregates.ShowtimeAggregate;
 using eCinemas.API.Application.Responses;
 using eCinemas.API.Services;
-using eCinemas.API.Shared.Extensions;
 using eCinemas.API.Shared.Mediator;
 using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Queries;
+namespace eCinemas.API.Application.Queries.ShowTimeQueries;
 
 public class ListShowTimeQuery : IAPIRequest<List<CinemaShowTime>>
 {
     public string MovieId { get; set; } = default!;
 
-    public DateTimeOffset Date { get; set; } = default!;
+    public DateTime ShowDate { get; set; } = default!;
 }
 
 public class ListShowTimeQueryValidator : AbstractValidator<ListShowTimeQuery>
 {
     public ListShowTimeQueryValidator()
     {
-        RuleFor(x => x.Date).NotEmpty();
         RuleFor(x => x.MovieId).NotEmpty();
+        RuleFor(x => x.ShowDate).NotEmpty();
     }
 }
 
@@ -35,10 +34,10 @@ public class ListShowTimeQueryHandler(IMongoService mongoService) : IAPIRequestH
     {
         var filterBuilder = Builders<ShowTime>.Filter;
         var filter = filterBuilder.Empty;
-        filter &= filterBuilder.Eq(x => x.Movie, request.MovieId);
+        filter &= filterBuilder.Eq(x => x.MovieId, request.MovieId);
         filter &= filterBuilder.Where(x => 
-            x.StartAt >= request.Date.GetDateStartTime() && 
-            x.StartAt < request.Date.GetDateEndTime());
+            x.StartAt >= request.ShowDate && 
+            x.StartAt < request.ShowDate);
         
         
         var showTimes = await _showTimeCollection
@@ -47,7 +46,7 @@ public class ListShowTimeQueryHandler(IMongoService mongoService) : IAPIRequestH
         
         if (showTimes.Count == 0) return APIResponse<List<CinemaShowTime>>.IsSuccess([]);
         
-        var cinemaIds = showTimes.Select(x => x.Cinema).Distinct();
+        var cinemaIds = showTimes.Select(x => x.CinemaId).Distinct();
         var cinemas = await _cinemaCollection
             .Find(Builders<Cinema>.Filter.In(x => x.Id, cinemaIds))
             .ToListAsync(cancellationToken);
@@ -61,7 +60,7 @@ public class ListShowTimeQueryHandler(IMongoService mongoService) : IAPIRequestH
                 CinemaName = cinema.Name,
                 CinemaAddress = cinema.Address,
                 ShowTimes = showTimes
-                    .Where(showTime => showTime.Cinema == cinema.Id)
+                    .Where(showTime => showTime.CinemaId == cinema.Id)
                     .Select(
                         x => new ShowTimeValue
                         {

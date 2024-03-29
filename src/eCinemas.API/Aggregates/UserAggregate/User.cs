@@ -2,7 +2,7 @@
 
 namespace eCinemas.API.Aggregates.UserAggregate;
 
-public class User : TrackingDocument
+public class User : TimeTrackingDocument
 {
     public string FullName { get; set; } = default!;
 

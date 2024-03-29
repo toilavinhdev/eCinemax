@@ -1,6 +1,7 @@
 ﻿using eCinemas.API.Aggregates.UserAggregate;
 using eCinemas.API.Application.Commands;
-using eCinemas.API.Application.Queries;
+using eCinemas.API.Application.Commands.UserCommands;
+using eCinemas.API.Application.Queries.UserQueries;
 using eCinemas.API.Shared.ValueObjects;
 using MediatR;
 
@@ -18,5 +19,13 @@ public class UserEndpoint : IEndpoint
         group.MapPost("/sign-in", (SignInCommand command, ISender sender) => sender.Send(command));
         
         group.MapPost("/sign-up", (SignUpCommand command, ISender sender) => sender.Send(command));
+
+        group.MapPut("/update-profile", (UpdateProfileCommand command, ISender sender) => sender.Send(command))
+             .RequireAuthorization();
+        
+        group.MapPut("/update-password", (UpdatePasswordCommand command, ISender sender) => sender.Send(command))
+             .RequireAuthorization();
+
+        // group.MapPost("/forgot-password", (ForgotPasswordCommand command, ISender sender) => sender.Send(command));
     }
 }

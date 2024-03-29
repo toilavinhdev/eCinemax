@@ -19,8 +19,7 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
             .Where(error => error != null)
             .ToList();
         if (failures.Count == 0) return await next();
-        
-        throw new BadRequestException(
-            string.Join(";", failures.Select(x => x.ErrorMessage).Distinct()));
+
+        throw new ValidationException(failures);
     }
 }

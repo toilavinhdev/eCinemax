@@ -6,7 +6,7 @@ using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Commands;
+namespace eCinemas.API.Application.Commands.CinemaCommands;
 
 public class CreateCinemaCommand : IAPIRequest<Cinema>
 {
@@ -31,8 +31,7 @@ public class CreateCinemaCommandHandler(IMongoService mongoService, IMapper mapp
     public async Task<APIResponse<Cinema>> Handle(CreateCinemaCommand request, CancellationToken cancellationToken)
     {
         var document = mapper.Map<Cinema>(request);
-        document.Rooms = [];
-        document.MarkCreated(mongoService.GetUserClaimValue()?.Id);
+        document.RoomIds = [];
         await _cinemaCollection.InsertOneAsync(document, cancellationToken:cancellationToken);
         return APIResponse<Cinema>.IsSuccess(document);
     }

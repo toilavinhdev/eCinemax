@@ -7,7 +7,7 @@ using eCinemas.API.Shared.Mediator;
 using eCinemas.API.Shared.ValueObjects;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Queries;
+namespace eCinemas.API.Application.Queries.UserQueries;
 
 public class GetMeQuery : IAPIRequest<GetMeResponse>
 {
@@ -20,7 +20,7 @@ public class GetMeQueryHandler(IMongoService mongoService, IMapper mapper) : IAP
     
     public async Task<APIResponse<GetMeResponse>> Handle(GetMeQuery request, CancellationToken cancellationToken)
     {
-        var userId = mongoService.GetUserClaimValue()?.Id;
+        var userId = mongoService.UserClaims()?.Id;
         if (userId is null) throw new NullReferenceException("UserId is required");
 
         var user = await _userCollection.Find(x => x.Id == userId).FirstOrDefaultAsync(cancellationToken);

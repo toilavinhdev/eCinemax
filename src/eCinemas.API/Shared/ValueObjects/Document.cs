@@ -10,25 +10,40 @@ public class Document
     public string Id { get; set; } = default!;
 }
 
-public class TrackingDocument : Document
+public class TimeTrackingDocument : Document
 {
     public DateTimeOffset CreatedAt { get; set; }
     
-    public string? CreatedBy { get; set; }
+    public DateTimeOffset ModifiedAt { get; set; }
     
-    public DateTimeOffset? ModifiedAt { get; set; }
-    
-    public string? ModifiedBy { get; set; }
-
-    public virtual void MarkCreated(string? createdBy = null)
+    public virtual void MarkCreated()
     {
-        CreatedAt = DateTimeOffset.Now;
-        CreatedBy = createdBy;
+        CreatedAt = DateTimeOffset.UtcNow;
+        ModifiedAt = DateTimeOffset.Now;
     }
 
-    public virtual void MarkModified(string? modifiedBy = null)
+    public virtual void MarkModified()
     {
-        ModifiedAt = DateTimeOffset.Now;
+        ModifiedAt = DateTimeOffset.UtcNow;
+    }
+}
+
+public class ModifierTrackingDocument : TimeTrackingDocument
+{
+    public string CreatedBy { get; set; } = default!;
+
+    public string ModifiedBy { get; set; } = default!;
+
+    public virtual void MarkCreated(string createdBy)
+    {
+        CreatedAt = DateTimeOffset.UtcNow;
+        CreatedBy = createdBy;
+        ModifiedBy = createdBy;
+    }
+
+    public virtual void MarkModified(string modifiedBy)
+    {
+        ModifiedAt = DateTimeOffset.UtcNow;
         ModifiedBy = modifiedBy;
     }
 }

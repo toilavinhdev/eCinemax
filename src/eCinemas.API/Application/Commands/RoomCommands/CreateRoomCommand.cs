@@ -8,7 +8,7 @@ using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Commands;
+namespace eCinemas.API.Application.Commands.RoomCommands;
 
 public class CreateRoomCommand : IAPIRequest<Room>
 {
@@ -43,7 +43,7 @@ public class CreateRoomCommandHandler(IMongoService mongoService) : IAPIRequestH
 
         var document = new Room
         {
-            Cinema = request.CinemaId,
+            CinemaId = request.CinemaId,
             Name = request.Name,
             // handle seats 2d
             Seats = request.SeatsTypes
@@ -56,13 +56,12 @@ public class CreateRoomCommandHandler(IMongoService mongoService) : IAPIRequestH
                     }).ToList())
                 .ToList()
         };
-        document.MarkCreated(mongoService.GetUserClaimValue()?.Id);
         
         await _roomCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 
         await _cinemaCollection.UpdateOneAsync(
             x => x.Id == request.CinemaId,
-            Builders<Cinema>.Update.Push(x => x.Rooms, document.Id),
+            Builders<Cinema>.Update.Push(x => x.RoomIds, document.Id),
             cancellationToken: cancellationToken);
         
         return APIResponse<Room>.IsSuccess(document);

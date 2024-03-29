@@ -4,6 +4,7 @@ import { listMovie } from "~/features/movie/movie.thunk";
 
 const initialState: IMovieState = {
   list: [],
+  loading: false,
 };
 
 const movieSlice = createSlice({

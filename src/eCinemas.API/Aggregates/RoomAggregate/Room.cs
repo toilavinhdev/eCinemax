@@ -4,10 +4,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace eCinemas.API.Aggregates.RoomAggregate;
 
-public class Room : TrackingDocument
+public class Room : TimeTrackingDocument
 {
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Cinema { get; set; } = default!;
+    public string CinemaId { get; set; } = default!;
 
     public string Name { get; set; } = default!;
 

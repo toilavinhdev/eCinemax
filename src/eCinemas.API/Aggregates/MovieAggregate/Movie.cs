@@ -2,7 +2,7 @@
 
 namespace eCinemas.API.Aggregates.MovieAggregate;
 
-public class Movie : TrackingDocument 
+public class Movie : TimeTrackingDocument 
 {
     public string Title { get; set; } = default!;
 
@@ -20,14 +20,7 @@ public class Movie : TrackingDocument
 
     public string PosterUrl { get; set; } = default!;
     
-    public DateOnly? Released { get; set; }
+    public DateTimeOffset? ReleasedAt { get; set; }
     
     public long DurationMinutes { get; set; }
-}
-
-public enum MovieStatus
-{
-    ComingSoon = 0,
-    NowShowing,
-    StopShowing
 }

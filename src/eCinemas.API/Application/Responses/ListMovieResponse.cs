@@ -26,7 +26,7 @@ public class MovieViewModel
 
     public string PosterUrl { get; set; } = default!;
     
-    public DateOnly? Released { get; set; }
+    public DateTimeOffset? ReleasedAt { get; set; }
     
     public long DurationMinutes { get; set; }
 }

@@ -1,9 +1,9 @@
 export interface IShowTimeState {
   list: ICinemaShowTime[];
-  loadingList?: boolean;
-  loadingGet?: boolean;
+  loadingList: boolean;
+  loadingGet: boolean;
   showtime?: IGetShowTimeResponse;
-  reservations?: IReservation[];
+  reservations: IReservation[];
 }
 
 export interface IListShowTimeRequest {
@@ -26,7 +26,7 @@ export interface IShowTimeValue {
 
 export interface IGetShowTimeResponse {
   id: string;
-  movie: string;
+  movieId: string;
   cinemaName: string;
   startAt: Date;
   ticket: ISeatPrice[];

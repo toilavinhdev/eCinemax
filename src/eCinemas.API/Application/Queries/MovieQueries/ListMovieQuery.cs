@@ -6,7 +6,7 @@ using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Queries;
+namespace eCinemas.API.Application.Queries.MovieQueries;
 
 public class ListMovieQuery : IAPIRequest<ListMovieResponse>, IPaginationRequest
 {
@@ -53,7 +53,7 @@ public class ListMovieQueryHandler(IMongoService mongoService) : IAPIRequestHand
                 Status = x.Status,
                 Genres = x.Genres,
                 PosterUrl = x.PosterUrl,
-                Released = x.Released,
+                ReleasedAt = x.ReleasedAt,
                 DurationMinutes = x.DurationMinutes,
             })
             .ToListAsync(cancellationToken);

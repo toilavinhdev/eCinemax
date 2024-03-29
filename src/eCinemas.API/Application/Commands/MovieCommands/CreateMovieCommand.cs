@@ -6,7 +6,7 @@ using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Commands;
+namespace eCinemas.API.Application.Commands.MovieCommands;
 
 public class CreateMovieCommand : IAPIRequest<Movie>
 {
@@ -26,7 +26,7 @@ public class CreateMovieCommand : IAPIRequest<Movie>
 
     public string PosterUrl { get; set; } = default!;
     
-    public string? ReleasedAt { get; set; }
+    public DateTimeOffset? ReleasedAt { get; set; }
     
     public long DurationMinutes { get; set; }
 }
@@ -54,8 +54,6 @@ public class CreateMovieCommandHandler(IMongoService mongoService, IMapper mappe
     public async Task<APIResponse<Movie>> Handle(CreateMovieCommand request, CancellationToken cancellationToken)
     {
         var document = mapper.Map<Movie>(request);
-        document.Released = request.ReleasedAt is not null ? DateOnly.Parse(request.ReleasedAt) : null;
-        document.MarkCreated(mongoService.GetUserClaimValue()?.Id);
         await _movieCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
         return APIResponse<Movie>.IsSuccess(document);
     }

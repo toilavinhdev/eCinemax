@@ -4,6 +4,8 @@ import { getShowtime, listShowtime } from "./showtime.thunk";
 import { RootState } from "../store";
 
 const initialState: IShowTimeState = {
+  loadingGet: false,
+  loadingList: false,
   list: [],
   reservations: [],
 };

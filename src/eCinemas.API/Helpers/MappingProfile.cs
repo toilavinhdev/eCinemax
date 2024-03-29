@@ -4,6 +4,9 @@ using eCinemas.API.Aggregates.MovieAggregate;
 using eCinemas.API.Aggregates.ShowtimeAggregate;
 using eCinemas.API.Aggregates.UserAggregate;
 using eCinemas.API.Application.Commands;
+using eCinemas.API.Application.Commands.CinemaCommands;
+using eCinemas.API.Application.Commands.MovieCommands;
+using eCinemas.API.Application.Commands.ShowTimeCommands;
 using eCinemas.API.Application.Responses;
 
 namespace eCinemas.API.Helpers;
@@ -18,7 +21,6 @@ public class MappingProfile : Profile
         CreateMap<Movie, MovieViewModel>();
 
         CreateMap<CreateCinemaCommand, Cinema>();
-        CreateMap<Cinema, CinemaViewList>();
 
         CreateMap<CreateShowTimeCommand, ShowTime>();
         CreateMap<ShowTime, GetShowTimeResponse>();

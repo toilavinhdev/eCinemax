@@ -1,6 +1,8 @@
 ﻿using eCinemas.API.Aggregates.ShowtimeAggregate;
 using eCinemas.API.Application.Commands;
+using eCinemas.API.Application.Commands.ShowTimeCommands;
 using eCinemas.API.Application.Queries;
+using eCinemas.API.Application.Queries.ShowTimeQueries;
 using eCinemas.API.Shared.ValueObjects;
 using MediatR;
 
@@ -10,9 +12,7 @@ public class ShowTimeEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/showtime")
-            .WithTags(nameof(ShowTime))
-            .RequireAuthorization();
+        var group = app.MapGroup("/api/showtime").WithTags(nameof(ShowTime));
 
         group.MapPost("get", (GetShowTimeQuery query, IMediator mediator) 
             => mediator.Send(query));
@@ -21,6 +21,7 @@ public class ShowTimeEndpoint : IEndpoint
             => mediator.Send(query));
 
         group.MapPost("create", (CreateShowTimeCommand command, IMediator mediator)
-            => mediator.Send(command));
+            => mediator.Send(command))
+            .RequireAuthorization();
     }
 }

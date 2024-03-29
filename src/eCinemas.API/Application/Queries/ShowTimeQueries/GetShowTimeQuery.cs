@@ -9,7 +9,7 @@ using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Queries;
+namespace eCinemas.API.Application.Queries.ShowTimeQueries;
 
 public class GetShowTimeQuery : IAPIRequest<GetShowTimeResponse>
 {
@@ -34,12 +34,12 @@ public class GetShowTimeQueryHandler(IMongoService mongoService, IMapper mapper)
         var document = await _showTimeCollection
             .Find(x => x.Id == request.Id)
             .FirstOrDefaultAsync(cancellationToken);
-        DocumentNotFoundException<ShowTime>.ThrowIfNotFound(document, request.Id);
+        DocumentNotFoundException<ShowTime>.ThrowIfNotFound(document, "Không tìm thấy lịch chiếu");
 
         var cinema = await _cinemaCollection
-            .Find(x => x.Id == document.Cinema)
+            .Find(x => x.Id == document.CinemaId)
             .FirstOrDefaultAsync(cancellationToken);
-        DocumentNotFoundException<Cinema>.ThrowIfNotFound(cinema, document.Cinema);
+        DocumentNotFoundException<Cinema>.ThrowIfNotFound(cinema, "Không tìm thấy rạp phim");
 
         var response = mapper.Map<GetShowTimeResponse>(document);
         response.CinemaName = cinema.Name;
