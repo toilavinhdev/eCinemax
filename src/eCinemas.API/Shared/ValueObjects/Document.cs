@@ -12,19 +12,21 @@ public class Document
 
 public class TimeTrackingDocument : Document
 {
-    public DateTimeOffset CreatedAt { get; set; }
+    [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+    public DateTime CreatedAt { get; set; }
     
-    public DateTimeOffset ModifiedAt { get; set; }
+    [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+    public DateTime ModifiedAt { get; set; }
     
     public virtual void MarkCreated()
     {
-        CreatedAt = DateTimeOffset.UtcNow;
-        ModifiedAt = DateTimeOffset.Now;
+        CreatedAt = DateTime.Now;
+        ModifiedAt = DateTime.Now;
     }
 
     public virtual void MarkModified()
     {
-        ModifiedAt = DateTimeOffset.UtcNow;
+        ModifiedAt = DateTime.Now;
     }
 }
 
@@ -36,14 +38,14 @@ public class ModifierTrackingDocument : TimeTrackingDocument
 
     public virtual void MarkCreated(string createdBy)
     {
-        CreatedAt = DateTimeOffset.UtcNow;
+        CreatedAt = DateTime.Now;
         CreatedBy = createdBy;
         ModifiedBy = createdBy;
     }
 
     public virtual void MarkModified(string modifiedBy)
     {
-        ModifiedAt = DateTimeOffset.UtcNow;
+        ModifiedAt = DateTime.Now;
         ModifiedBy = modifiedBy;
     }
 }

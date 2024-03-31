@@ -1,6 +1,7 @@
 export interface IUserState {
-  loggedIn: boolean;
-  loading?: boolean;
+  loadingSignIn: boolean;
+  loadingSignUp: boolean;
+  loadingGetMe: boolean;
   currentUser?: IGetMeResponse;
 }
 

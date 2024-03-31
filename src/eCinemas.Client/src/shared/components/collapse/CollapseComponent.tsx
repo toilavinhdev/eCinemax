@@ -2,6 +2,7 @@ import { View, Text, TouchableWithoutFeedback } from "react-native";
 import React, { ReactNode, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { colors } from "~/shared/constants";
+import { IfComponent } from "~/core/components";
 
 interface Props {
   title: string;
@@ -24,7 +25,9 @@ const CollapseComponent = (props: Props) => {
           <AntDesign name="right" size={16} color="white" />
         </View>
       </TouchableWithoutFeedback>
-      {opened && <View className="mt-3">{children}</View>}
+      <IfComponent condition={opened}>
+        <View className="mt-3">{children}</View>
+      </IfComponent>
     </View>
   );
 };

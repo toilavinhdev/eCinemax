@@ -24,7 +24,7 @@ public static class EmailHelper
         }
         catch (Exception ex)
         {
-            throw new ApplicationException("Có lỗi xảy ra");
+            throw new ApplicationException("Có lỗi xảy ra", ex);
         }
     }
 }

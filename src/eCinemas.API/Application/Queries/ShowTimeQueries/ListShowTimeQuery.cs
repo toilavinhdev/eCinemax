@@ -12,7 +12,7 @@ namespace eCinemas.API.Application.Queries.ShowTimeQueries;
 public class ListShowTimeQuery : IAPIRequest<List<CinemaShowTime>>
 {
     public string MovieId { get; set; } = default!;
-
+    
     public DateTime ShowDate { get; set; } = default!;
 }
 
@@ -20,8 +20,8 @@ public class ListShowTimeQueryValidator : AbstractValidator<ListShowTimeQuery>
 {
     public ListShowTimeQueryValidator()
     {
-        RuleFor(x => x.MovieId).NotEmpty();
-        RuleFor(x => x.ShowDate).NotEmpty();
+        RuleFor(x => x.MovieId).NotEmpty().WithMessage("Không để trống phim");
+        RuleFor(x => x.ShowDate).NotEmpty().WithMessage("Không để trống ngày chiếu");
     }
 }
 
@@ -35,10 +35,9 @@ public class ListShowTimeQueryHandler(IMongoService mongoService) : IAPIRequestH
         var filterBuilder = Builders<ShowTime>.Filter;
         var filter = filterBuilder.Empty;
         filter &= filterBuilder.Eq(x => x.MovieId, request.MovieId);
-        filter &= filterBuilder.Where(x => 
-            x.StartAt >= request.ShowDate && 
-            x.StartAt < request.ShowDate);
-        
+        filter &= filterBuilder.Where(x =>
+            x.StartAt >= request.ShowDate.ToLocalTime().Date &&
+            x.StartAt < request.ShowDate.ToLocalTime().Date.AddDays(1));
         
         var showTimes = await _showTimeCollection
             .Find(filter)
@@ -68,6 +67,7 @@ public class ListShowTimeQueryHandler(IMongoService mongoService) : IAPIRequestH
                             StartAt = x.StartAt, 
                             Available = x.Available
                         })
+                    .OrderBy(x => x.StartAt)
                     .ToList()
             }).ToList();
 

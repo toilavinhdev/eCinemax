@@ -1,7 +1,5 @@
 ﻿using eCinemas.API.Aggregates.MovieAggregate;
-using eCinemas.API.Application.Commands;
 using eCinemas.API.Application.Commands.MovieCommands;
-using eCinemas.API.Application.Queries;
 using eCinemas.API.Application.Queries.MovieQueries;
 using eCinemas.API.Shared.ValueObjects;
 using MediatR;
@@ -20,8 +18,10 @@ public class MovieEndpoint : IEndpoint
             => mediator.Send(query))
             .RequireAuthorization();
 
+        group.MapPost("/get", (GetMovieQuery query, IMediator mediator) => mediator.Send(query))
+            .RequireAuthorization();
+
         group.MapPost("/create", (CreateMovieCommand command, IMediator mediator) => mediator.Send(command))
-            .RequireAuthorization()
             .RequireAuthorization();
     }
 }

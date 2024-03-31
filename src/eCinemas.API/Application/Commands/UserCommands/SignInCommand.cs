@@ -11,7 +11,7 @@ using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
 
-namespace eCinemas.API.Application.Commands;
+namespace eCinemas.API.Application.Commands.UserCommands;
 
 public class SignInCommand : IAPIRequest<SignInResponse>
 {

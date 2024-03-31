@@ -36,10 +36,12 @@ public class UpdateProfileCommandHandler(IMongoService mongoService) : IAPIReque
             .Find(filter)
             .FirstOrDefaultAsync(cancellationToken);
         DocumentNotFoundException<User>.ThrowIfNotFound(user, "Người dùng không tồn tại");
-
+        
+        user.MarkModified();
         var update = Builders<User>.Update
             .Set(x => x.FullName, request.FullName)
-            .Set(x => x.AvatarUrl, request.AvatarUrl);
+            .Set(x => x.AvatarUrl, request.AvatarUrl)
+            .Set(x => x.ModifiedAt, user.ModifiedAt);
 
         var result = await _userCollection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
         if (!result.IsAcknowledged) throw new BadRequestException("Vui lòng thử lại");

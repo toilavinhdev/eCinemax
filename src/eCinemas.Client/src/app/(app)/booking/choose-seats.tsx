@@ -1,15 +1,17 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { IfComponent } from "~/core/components";
 import {
   ESeatStatus,
   ESeatType,
   IReservation,
   ISeatPrice,
-  removeReservation,
-  getShowtime,
-  reservation,
+  addReservation,
   clearReservations,
+  clearShowtime,
+  getShowtime,
+  removeReservation,
   showtimeTotalTicket,
 } from "~/features/showtime";
 import { useAppDispatch, useAppSelector } from "~/features/store";
@@ -25,6 +27,7 @@ const ChooseSeatsScreen = () => {
     if (showtimeId) dispatch(getShowtime(showtimeId));
 
     return () => {
+      dispatch(clearShowtime());
       dispatch(clearReservations());
     };
   }, [showtimeId]);
@@ -88,7 +91,7 @@ const SeatComponent = (props: { reservation: IReservation }) => {
       fontSize: 13,
     },
   });
-  const apperance =
+  const appearance =
     type === ESeatType.Normal
       ? "rounded-lg"
       : type === ESeatType.VIP
@@ -100,7 +103,7 @@ const SeatComponent = (props: { reservation: IReservation }) => {
   const onSelect = () => {
     if (status === ESeatStatus.SoldOut) return;
     if (!selected) {
-      dispatch(reservation(props.reservation));
+      dispatch(addReservation(props.reservation));
     } else {
       dispatch(removeReservation(props.reservation));
     }
@@ -111,7 +114,7 @@ const SeatComponent = (props: { reservation: IReservation }) => {
     <TouchableOpacity
       onPress={() => onSelect()}
       style={styles.baseContainer}
-      className={apperance}
+      className={appearance}
     >
       <Text style={styles.baseText}>{name}</Text>
     </TouchableOpacity>
@@ -122,12 +125,13 @@ const TotalComponent = () => {
   const total = useAppSelector(showtimeTotalTicket);
 
   return (
-    <View className="mt-auto mb-5">
+    <View className="mt-auto mb-12">
       <ButtonComponent
-        text={`BUY TICKETS(${total.toLocaleString()} VND)`}
+        text={`Thanh toán(${total.toLocaleString()} VND)`}
         disabled={total === 0}
-        buttonClassName="w-full mt-1"
-        onPress={() => router.push("/(main)/home/checkout")}
+        buttonClassName="w-full mt-auto mb-[20px] h-[60px]"
+        textClassName="text-[18px]"
+        onPress={() => router.push("/booking/checkout")}
       />
     </View>
   );
@@ -139,59 +143,61 @@ const SeatInfoComponent = (props: { tickets?: ISeatPrice[] }) => {
   const vipTicket = tickets?.find((x) => x.type === ESeatType.VIP);
   const coupleTicket = tickets?.find((x) => x.type === ESeatType.Couple);
   return (
-    <View className="flex items-center mt-3">
-      <View className="flex-row gap-2">
-        <View className="flex-row gap-1 items-center">
-          <View
-            className="h-[14px] w-[14px] rounded"
-            style={{ backgroundColor: colors.success }}
-          ></View>
-          <Text className="text-white text-[10px]">Sold out</Text>
-        </View>
-        <View className="flex-row gap-1 items-center">
-          <View
-            className="h-[14px] w-[14px] rounded"
-            style={{ backgroundColor: colors.primary }}
-          ></View>
-          <Text className="text-white text-[10px]">Selected</Text>
-        </View>
-      </View>
-      <View className="flex-row gap-2">
-        {normalTicket && (
+    <IfComponent condition={!!tickets && tickets.length > 0}>
+      <View className="flex items-center mt-3">
+        <View className="flex-row gap-2">
           <View className="flex-row gap-1 items-center">
             <View
               className="h-[14px] w-[14px] rounded"
-              style={{ backgroundColor: colors.gray }}
+              style={{ backgroundColor: colors.success }}
             ></View>
-            <Text className="text-white text-[10px]">
-              Normal ({normalTicket.price})
-            </Text>
+            <Text className="text-white text-[10px]">Sold out</Text>
           </View>
-        )}
-        {vipTicket && (
           <View className="flex-row gap-1 items-center">
             <View
-              className="h-[14px] w-[14px] rounded-full"
-              style={{ backgroundColor: colors.gray }}
+              className="h-[14px] w-[14px] rounded"
+              style={{ backgroundColor: colors.primary }}
             ></View>
-            <Text className="text-white text-[10px]">
-              VIP ({vipTicket?.price})
-            </Text>
+            <Text className="text-white text-[10px]">Selected</Text>
           </View>
-        )}
-        {coupleTicket && (
-          <View className="flex-row gap-1 items-center">
-            <View
-              className="h-[14px] w-[18px] rounded-t"
-              style={{ backgroundColor: colors.gray }}
-            ></View>
-            <Text className="text-white text-[10px]">
-              Couple ({coupleTicket.price})
-            </Text>
-          </View>
-        )}
+        </View>
+        <View className="flex-row gap-2">
+          {normalTicket && (
+            <View className="flex-row gap-1 items-center">
+              <View
+                className="h-[14px] w-[14px] rounded"
+                style={{ backgroundColor: colors.gray }}
+              ></View>
+              <Text className="text-white text-[10px]">
+                Normal ({normalTicket.price})
+              </Text>
+            </View>
+          )}
+          {vipTicket && (
+            <View className="flex-row gap-1 items-center">
+              <View
+                className="h-[14px] w-[14px] rounded-full"
+                style={{ backgroundColor: colors.gray }}
+              ></View>
+              <Text className="text-white text-[10px]">
+                VIP ({vipTicket?.price})
+              </Text>
+            </View>
+          )}
+          {coupleTicket && (
+            <View className="flex-row gap-1 items-center">
+              <View
+                className="h-[14px] w-[18px] rounded-t"
+                style={{ backgroundColor: colors.gray }}
+              ></View>
+              <Text className="text-white text-[10px]">
+                Couple ({coupleTicket.price})
+              </Text>
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </IfComponent>
   );
 };
 

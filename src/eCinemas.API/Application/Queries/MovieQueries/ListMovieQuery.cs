@@ -46,15 +46,8 @@ public class ListMovieQueryHandler(IMongoService mongoService) : IAPIRequestHand
             {
                 Id = x.Id,
                 Title = x.Title,
-                Plot = x.Plot,
-                Directors = x.Directors,
-                Casts = x.Casts,
-                Languages = x.Languages,
                 Status = x.Status,
-                Genres = x.Genres,
                 PosterUrl = x.PosterUrl,
-                ReleasedAt = x.ReleasedAt,
-                DurationMinutes = x.DurationMinutes,
             })
             .ToListAsync(cancellationToken);
 

@@ -1,33 +1,45 @@
 import { IMovieState } from "~/features/movie/movie.interfaces";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { listMovie } from "~/features/movie/movie.thunk";
+import { createSlice } from "@reduxjs/toolkit";
+import { getMovie, listMovie } from "~/features/movie/movie.thunk";
 
 const initialState: IMovieState = {
+  loadingList: false,
+  loadingGet: false,
   list: [],
-  loading: false,
+  movie: undefined,
 };
 
 const movieSlice = createSlice({
   name: "@movie",
   initialState: initialState,
   reducers: {
-    selectMovie: (state, action: PayloadAction<string>) => {
-      state.selectedMovie = state.list.find((x) => x.id === action.payload);
+    clearMovie: (state) => {
+      state.movie = undefined;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(listMovie.pending, (state) => {
-      state.loading = true;
+      state.loadingList = true;
     });
     builder.addCase(listMovie.fulfilled, (state, action) => {
-      state.loading = false;
+      state.loadingList = false;
       state.list = action.payload?.records ?? [];
     });
     builder.addCase(listMovie.rejected, (state) => {
-      state.loading = false;
+      state.loadingList = false;
+    });
+    builder.addCase(getMovie.pending, (state) => {
+      state.loadingGet = true;
+    });
+    builder.addCase(getMovie.fulfilled, (state, action) => {
+      state.loadingGet = false;
+      state.movie = action.payload;
+    });
+    builder.addCase(getMovie.rejected, (state) => {
+      state.loadingGet = false;
     });
   },
 });
 
-export const { selectMovie } = movieSlice.actions;
+export const { clearMovie } = movieSlice.actions;
 export default movieSlice.reducer;

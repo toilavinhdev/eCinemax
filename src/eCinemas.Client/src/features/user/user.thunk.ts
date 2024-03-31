@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { router } from "expo-router";
+import { Alert } from "react-native";
 import { getMeAPI, signInAPI, signUpAPI } from "~/features/user/user.apis";
 import {
   ISignInRequest,
@@ -17,7 +18,7 @@ export const signIn = createAsyncThunk(
       await AsyncStorage.setItem(authConst.ACCESS_TOKEN, accessToken);
       router.replace("/");
       return accessToken;
-    } catch (err) {
+    } catch (err: any) {
       thunkAPI.rejectWithValue(err);
     }
   }

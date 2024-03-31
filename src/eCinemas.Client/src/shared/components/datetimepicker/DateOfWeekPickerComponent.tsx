@@ -8,14 +8,14 @@ interface Props {
 
 const DateOfWeekPickerComponent = (props: Props) => {
   const { onChangeDate } = props;
-  const currentDate = new Date(Date.now());
-  // currentDate.setUTCHours(currentDate.getUTCHours());
-  const [selectedDate, setSelectedDate] = useState(currentDate);
+  const now = Date.now();
+  const currentDateTime = new Date(now);
+  const [selectedDate, setSelectedDate] = useState<Date>(currentDateTime);
   const days: Date[] = [];
 
-  for (let i = currentDate.getDay(); i <= 7; i++) {
-    const day = new Date(currentDate);
-    day.setDate(currentDate.getDate() + (i - currentDate.getDay()));
+  for (let i = currentDateTime.getDay(); i <= 7; i++) {
+    const day = new Date(currentDateTime);
+    day.setDate(currentDateTime.getDate() + (i - currentDateTime.getDay()));
     days.push(day);
   }
 
@@ -44,9 +44,9 @@ const DateOfWeekPickerComponent = (props: Props) => {
               {item.getDate()}
             </Text>
             <Text className="text-black text-center mt-1">
-              {item.getDate() === currentDate.getDate()
-                ? "Today"
-                : `${item.toLocaleString("en-US", { month: "2-digit" })}-${item.toLocaleString("en-US", { weekday: "short" })}`}
+              {item.getDate() === currentDateTime.getDate()
+                ? "Hôm nay"
+                : `${item.toLocaleString("vi-VN", { month: "2-digit" })}-${item.toLocaleString("vi-VN", { weekday: "short" })}`}
             </Text>
           </TouchableOpacity>
         )}

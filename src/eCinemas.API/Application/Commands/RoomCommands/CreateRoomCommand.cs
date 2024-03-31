@@ -56,6 +56,7 @@ public class CreateRoomCommandHandler(IMongoService mongoService) : IAPIRequestH
                     }).ToList())
                 .ToList()
         };
+        document.MarkCreated();
         
         await _roomCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 

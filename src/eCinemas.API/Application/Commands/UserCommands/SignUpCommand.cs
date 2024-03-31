@@ -57,11 +57,11 @@ public class SignUpCommandHandler(IMongoService mongoService, AppSettings appSet
 
         await _userCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 
-        await EmailHelper.SmptSendAsync(
-            appSettings.GmailConfig,
-            request.Email,
-            "Đăng ký tài khoản người dùng",
-            "Bạn đã đăng ký thành công tài khoản eCinemas");
+        // await EmailHelper.SmptSendAsync(
+        //     appSettings.GmailConfig,
+        //     request.Email,
+        //     "Đăng ký tài khoản người dùng",
+        //     "Bạn đã đăng ký thành công tài khoản eCinemas");
 
         return APIResponse.IsSuccess("Đăng ký thành công");
     }

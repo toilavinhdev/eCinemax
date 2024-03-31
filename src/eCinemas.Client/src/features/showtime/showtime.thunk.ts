@@ -7,12 +7,11 @@ export const listShowtime = createAsyncThunk(
   async (payload: IListShowTimeRequest, thunkAPI) => {
     try {
       const response = await listShowtimeAPI(payload);
-      const data = response.data.data;
-      return data;
+      return response.data.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
     }
-  }
+  },
 );
 
 export const getShowtime = createAsyncThunk(
@@ -20,10 +19,9 @@ export const getShowtime = createAsyncThunk(
   async (id: string, thunkAPI) => {
     try {
       const response = await getShowtimeAPI(id);
-      const data = response.data.data;
-      return data;
+      return response.data.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
     }
-  }
+  },
 );

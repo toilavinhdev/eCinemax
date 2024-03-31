@@ -47,8 +47,11 @@ public class UpdatePasswordCommandHandler(IMongoService mongoService) : IAPIRequ
         {
             throw new BadRequestException("Mật khẩu hiện tại không chính xác");
         }
-
-        var update = Builders<User>.Update.Set(x => x.PasswordHash, request.NewPassword.ToSha256());
+        
+        user.MarkModified();
+        var update = Builders<User>.Update
+            .Set(x => x.PasswordHash, request.NewPassword.ToSha256())
+            .Set(x => x.ModifiedAt, user.ModifiedAt);
         var result = await _userCollection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
         if (!result.IsAcknowledged) throw new BadRequestException("Vui lòng thử lại");
         

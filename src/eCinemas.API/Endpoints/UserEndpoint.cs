@@ -1,5 +1,4 @@
 ﻿using eCinemas.API.Aggregates.UserAggregate;
-using eCinemas.API.Application.Commands;
 using eCinemas.API.Application.Commands.UserCommands;
 using eCinemas.API.Application.Queries.UserQueries;
 using eCinemas.API.Shared.ValueObjects;

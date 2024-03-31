@@ -17,6 +17,8 @@ public class CreateMovieCommand : IAPIRequest<Movie>
     public List<string> Directors { get; set; } = default!;
 
     public List<string> Casts { get; set; } = default!;
+    
+    public int Age { get; set; } = default!;
 
     public List<string> Languages { get; set; } = default!;
     
@@ -26,7 +28,7 @@ public class CreateMovieCommand : IAPIRequest<Movie>
 
     public string PosterUrl { get; set; } = default!;
     
-    public DateTimeOffset? ReleasedAt { get; set; }
+    public DateTime? ReleasedAt { get; set; }
     
     public long DurationMinutes { get; set; }
 }
@@ -40,6 +42,7 @@ public class CreateMovieCommandValidator : AbstractValidator<CreateMovieCommand>
         RuleFor(x => x.Directors).NotEmpty();
         RuleFor(x => x.Casts).NotNull();
         RuleFor(x => x.Languages).NotEmpty();
+        RuleFor(x => x.Age).NotEmpty();
         RuleFor(x => x.Status).NotNull();
         RuleFor(x => x.Genres).NotNull();
         RuleFor(x => x.PosterUrl).NotEmpty();
@@ -54,6 +57,7 @@ public class CreateMovieCommandHandler(IMongoService mongoService, IMapper mappe
     public async Task<APIResponse<Movie>> Handle(CreateMovieCommand request, CancellationToken cancellationToken)
     {
         var document = mapper.Map<Movie>(request);
+        document.MarkCreated();
         await _movieCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
         return APIResponse<Movie>.IsSuccess(document);
     }

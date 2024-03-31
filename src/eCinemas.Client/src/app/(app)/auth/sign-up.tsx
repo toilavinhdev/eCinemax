@@ -1,12 +1,23 @@
-import { Link } from "expo-router";
 import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
+import { useAppDispatch, useAppSelector } from "~/features/store";
+import { signUp } from "~/features/user";
 import { ButtonComponent, InputComponent } from "~/shared/components";
+import { isEmailValid } from "~/shared/utils";
 
 const SignUpScreen = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector((state) => state.user.loadingSignUp);
+
+  const onSubmit = () => {
+    if (password !== confirmPassword)
+      Alert.alert("Mật khẩu nhập lại không khớp");
+    dispatch(signUp({ email, fullName, password }));
+  };
 
   return (
     <View className="flex-1 bg-white px-8">
@@ -27,22 +38,27 @@ const SignUpScreen = () => {
         containerClassName="mt-4"
       />
       <InputComponent
+        password
         value={password}
         onChangeText={(val) => setPassword(val)}
         placeholder="enter your password"
         containerClassName="mt-4"
       />
+      <InputComponent
+        password
+        value={confirmPassword}
+        onChangeText={(val) => setConfirmPassword(val)}
+        placeholder="enter your confirm password"
+        containerClassName="mt-4"
+      />
       <ButtonComponent
         text="Sign up"
+        loading={loading}
+        disabled={!fullName || !password || !isEmailValid(email)}
+        onPress={() => onSubmit()}
         textClassName="font-semibold text-[18px]"
         buttonClassName="mt-8 w-full h-[60px]"
       />
-      <Text className="text-center mt-auto mb-10 text-[15px]">
-        Already have an account?{" "}
-        <Link href="/auth/sign-in" className="underline">
-          Login
-        </Link>
-      </Text>
     </View>
   );
 };

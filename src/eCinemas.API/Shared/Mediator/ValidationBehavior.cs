@@ -1,5 +1,4 @@
-﻿using eCinemas.API.Shared.Exceptions;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 
 namespace eCinemas.API.Shared.Mediator;

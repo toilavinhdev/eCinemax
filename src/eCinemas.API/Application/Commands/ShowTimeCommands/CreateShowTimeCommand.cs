@@ -17,7 +17,7 @@ public class CreateShowTimeCommand : IAPIRequest<ShowTime>
 
     public string Room { get; set; } = default!;
 
-    public DateTimeOffset StartAt { get; set; } = default!; //iso 8601 -> datetime utc
+    public DateTime StartAt { get; set; } = default!; //iso 8601 -> datetime utc
 
     public List<SeatPrice> Ticket { get; set; } = default!;
 }
@@ -48,9 +48,12 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
         var room = await _roomCollection
             .Find(x => x.Id == request.Room)
             .FirstOrDefaultAsync(cancellationToken);
-        DocumentNotFoundException<Room>.ThrowIfNotFound(room, "Có lỗi xảy ra");
+        DocumentNotFoundException<Room>.ThrowIfNotFound(room, "Không tìm thấy phòng chiếu");
 
         var document = mapper.Map<ShowTime>(request);
+        document.MovieId = movie.Id;
+        document.RoomId = room.Id;
+        document.CinemaId = room.CinemaId;
         document.Available = room.Seats.Aggregate(0, (acc, cur) => acc + cur.Count(x => x.Type != SeatType.Blank));
         document.Reservations = room.Seats
             .Select(rowSeats => 
@@ -62,6 +65,7 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
                     Status = ReservationStatus.Idle,
                 }).ToList()
             ).ToList();
+        document.MarkCreated();
         await _showTimeCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 
         return APIResponse<ShowTime>.IsSuccess(document);

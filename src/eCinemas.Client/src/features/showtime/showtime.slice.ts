@@ -7,6 +7,7 @@ const initialState: IShowTimeState = {
   loadingGet: false,
   loadingList: false,
   list: [],
+  showtime: undefined,
   reservations: [],
 };
 
@@ -14,16 +15,22 @@ const showTimeSlice = createSlice({
   name: "@showtime",
   initialState: initialState,
   reducers: {
-    reservation: (state, action: PayloadAction<IReservation>) => {
+    addReservation: (state, action: PayloadAction<IReservation>) => {
       state.reservations?.push(action.payload);
     },
     removeReservation: (state, action: PayloadAction<IReservation>) => {
       state.reservations = state.reservations?.filter(
-        (x) => x.name !== action.payload.name
+        (x) => x.name !== action.payload.name,
       );
     },
     clearReservations: (state) => {
       state.reservations = [];
+    },
+    clearListShowtime: (state) => {
+      state.list = [];
+    },
+    clearShowtime: (state) => {
+      state.showtime = undefined;
     },
   },
   extraReducers: (builder) => {
@@ -56,9 +63,14 @@ export const showtimeTotalTicket = (state: RootState) =>
       acc +
       (state.showtime.showtime?.ticket.find((x) => x.type === cur.type)
         ?.price ?? 0),
-    0
+    0,
   ) ?? 0;
 
-export const { reservation, removeReservation, clearReservations } =
-  showTimeSlice.actions;
+export const {
+  addReservation,
+  removeReservation,
+  clearReservations,
+  clearListShowtime,
+  clearShowtime,
+} = showTimeSlice.actions;
 export default showTimeSlice.reducer;

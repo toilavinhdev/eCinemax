@@ -1,7 +1,8 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authConst } from "~/shared/constants";
 import { IAPIResponse } from "~/core/interfaces";
+import { Alert } from "react-native";
 
 export const client = axios.create({
   baseURL: process.env.EXPO_PUBLIC_BASE_URL,
@@ -18,7 +19,7 @@ client.interceptors.request.use(async (config) => {
 });
 
 client.interceptors.response.use(
-  (response) => {
+  (response: AxiosResponse) => {
     const timeLog = new Date(Date.now());
     console.log(
       `[${timeLog.getHours()}:${timeLog.getMinutes()}:${timeLog.getMilliseconds()}]`,
@@ -27,17 +28,22 @@ client.interceptors.response.use(
       JSON.stringify(response.config.params),
       JSON.stringify(response.config.data)
     );
+    const apiResponse = response.data as IAPIResponse<any>;
+    if (apiResponse.message) Alert.alert(apiResponse.message);
     return response;
   },
   (error: AxiosError) => {
     const timeLog = new Date(Date.now());
-    const errorResponse = error.response!.data as IAPIResponse<any>;
+    const response = error.response!.data as IAPIResponse<any>;
+    const { code, errors } = response;
     console.log(
       `[${timeLog.getHours()}:${timeLog.getMinutes()}:${timeLog.getMilliseconds()}]`,
       "API ERROR",
+      code,
       error.config?.url,
-      JSON.stringify(errorResponse.errors)
+      JSON.stringify(errors)
     );
-    throw new Error(errorResponse.errors?.[0]);
+    if (code === 400) Alert.alert(errors?.[0] ?? "");
+    // throw new Error(errors?.[0]);
   }
 );

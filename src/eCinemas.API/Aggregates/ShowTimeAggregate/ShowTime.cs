@@ -16,7 +16,8 @@ public class ShowTime : TimeTrackingDocument
     [BsonRepresentation(BsonType.ObjectId)]
     public string RoomId { get; set; } = default!;
     
-    public DateTimeOffset StartAt { get; set; }
+    [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+    public DateTime StartAt { get; set; }
 
     public List<SeatPrice> Ticket { get; set; } = default!;
     

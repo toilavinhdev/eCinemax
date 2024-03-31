@@ -1,10 +1,11 @@
-﻿using eCinemas.API.Shared.ValueObjects;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using eCinemas.API.Aggregates.MovieAggregate;
 
-namespace eCinemas.API.Aggregates.MovieAggregate;
+namespace eCinemas.API.Application.Responses;
 
-public class Movie : TimeTrackingDocument 
+public class GetMovieResponse
 {
+    public string Id { get; set; } = default!;
+    
     public string Title { get; set; } = default!;
 
     public string Plot { get; set; } = default!;
@@ -23,7 +24,6 @@ public class Movie : TimeTrackingDocument
 
     public string PosterUrl { get; set; } = default!;
     
-    [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
     public DateTime? ReleasedAt { get; set; }
     
     public long DurationMinutes { get; set; }

@@ -1,49 +1,38 @@
-import { useFonts } from "expo-font";
-import { Slot, SplashScreen, router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Slot, router } from "expo-router";
 import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
-import store, { useAppDispatch, useAppSelector } from "~/features/store";
+import store, { useAppDispatch } from "~/features/store";
 import { getMe } from "~/features/user";
-
-SplashScreen.preventAutoHideAsync();
+import { authConst } from "~/shared/constants";
 
 const RootLayout = () => {
-  const [loaded, error] = useFonts({
-    LexendDeca: require("../shared/assets/fonts/LexendDeca-VariableFont_wght.ttf"),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
   return (
     <Provider store={store}>
       <SafeAreaProvider>
-        <App />
+        <AppGuard />
       </SafeAreaProvider>
     </Provider>
   );
 };
 
-const App = () => {
+const AppGuard = () => {
   const dispatch = useAppDispatch();
-  const loggedIn = useAppSelector((state) => state.user.loggedIn);
 
-  useEffect(() => {
-    if (!loggedIn) {
-      router.replace("/auth");
+  const handle = async () => {
+    const accessToken = await AsyncStorage.getItem(authConst.ACCESS_TOKEN);
+
+    if (!accessToken) {
+      router.replace("/auth/sign-in");
     } else {
-      router.replace("/");
       dispatch(getMe());
     }
-  }, [loggedIn]);
+  };
+
+  useEffect(() => {
+    handle();
+  });
 
   return <Slot />;
 };

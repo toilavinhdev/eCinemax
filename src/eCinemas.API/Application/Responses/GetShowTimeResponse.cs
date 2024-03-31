@@ -12,7 +12,7 @@ public class GetShowTimeResponse
 
     public DateTimeOffset StartAt { get; set; }
 
-    public List<SeatPrice> Tickets { get; set; } = default!;
+    public List<SeatPrice> Ticket { get; set; } = default!;
     
     public List<List<Reservation>> Reservations { get; set; } = default!;
 }

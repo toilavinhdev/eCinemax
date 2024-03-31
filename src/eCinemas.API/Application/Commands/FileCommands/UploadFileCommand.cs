@@ -5,7 +5,7 @@ using FluentValidation;
 using MongoDB.Driver;
 using File = eCinemas.API.Aggregates.FileAggregate.File;
 
-namespace eCinemas.API.Application.Commands.FileCommand;
+namespace eCinemas.API.Application.Commands.FileCommands;
 
 public class UploadFileCommand : IAPIRequest<string>
 {

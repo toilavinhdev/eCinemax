@@ -1,5 +1,4 @@
-﻿using eCinemas.API.Application.Commands;
-using eCinemas.API.Application.Commands.FileCommand;
+﻿using eCinemas.API.Application.Commands.FileCommands;
 using eCinemas.API.Shared.ValueObjects;
 using MediatR;
 

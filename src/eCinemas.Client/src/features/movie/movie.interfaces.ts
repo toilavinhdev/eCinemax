@@ -1,9 +1,10 @@
 import { IPaginationResponse } from "~/core/interfaces";
 
 export interface IMovieState {
-  loading: boolean;
+  loadingList: boolean;
+  loadingGet: boolean;
   list: IMovieViewModel[];
-  selectedMovie?: IMovieViewModel;
+  movie?: IGetMovieResponse;
 }
 
 export interface IListMovieRequest {
@@ -15,18 +16,26 @@ export interface IListMovieRequest {
 export interface IListMovieResponse
   extends IPaginationResponse<IMovieViewModel> {}
 
-export interface IMovieViewModel {
+export interface IGetMovieResponse {
   id: string;
   title: string;
   plot: string;
   directors: string[];
   casts: string[];
+  age: number;
   languages: string[];
   status: EMovieStatus;
   genres: string[];
   posterUrl: string;
-  released?: any;
+  releasedAt?: Date;
   durationMinutes: number;
+}
+
+export interface IMovieViewModel {
+  id: string;
+  title: string;
+  status: EMovieStatus;
+  posterUrl: string;
 }
 
 export enum EMovieStatus {

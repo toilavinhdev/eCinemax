@@ -1,9 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getMe, signIn, signUp } from "~/features/user/user.thunk";
 import { IUserState } from "./user.interfaces";
+import { Alert } from "react-native";
 
 const initialState: IUserState = {
-  loggedIn: false,
+  loadingSignIn: false,
+  loadingSignUp: false,
+  loadingGetMe: false,
+  currentUser: undefined,
 };
 
 const userSlice = createSlice({
@@ -11,40 +15,37 @@ const userSlice = createSlice({
   initialState: initialState,
   reducers: {
     signOut: (state) => {
-      state.loggedIn = false;
       state.currentUser = undefined;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(signIn.pending, (state) => {
-      state.loading = true;
+      state.loadingSignIn = true;
     });
     builder.addCase(signIn.fulfilled, (state, action) => {
-      state.loggedIn = true;
-      state.loading = false;
+      state.loadingSignIn = false;
     });
     builder.addCase(signIn.rejected, (state) => {
-      state.loggedIn = false;
-      state.loading = false;
+      state.loadingSignIn = false;
     });
     builder.addCase(signUp.pending, (state) => {
-      state.loading = true;
+      state.loadingSignUp = true;
     });
     builder.addCase(signUp.fulfilled, (state) => {
-      state.loading = false;
+      state.loadingSignUp = false;
     });
     builder.addCase(signUp.rejected, (state) => {
-      state.loading = false;
+      state.loadingSignUp = false;
     });
     builder.addCase(getMe.pending, (state) => {
-      state.loading = true;
+      state.loadingGetMe = true;
     });
     builder.addCase(getMe.fulfilled, (state, action) => {
-      state.loading = false;
+      state.loadingGetMe = false;
       state.currentUser = action.payload;
     });
     builder.addCase(getMe.rejected, (state) => {
-      state.loading = false;
+      state.loadingGetMe = false;
     });
   },
 });

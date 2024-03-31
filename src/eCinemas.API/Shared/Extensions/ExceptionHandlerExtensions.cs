@@ -29,6 +29,9 @@ public static class ExceptionHandlerExtensions
                             case BadRequestException:
                                 await WriteResponse(context, (int)HttpStatusCode.BadRequest, GetErrors(exception));
                                 break;
+                            case ValidationException:
+                                await WriteResponse(context, (int)HttpStatusCode.BadRequest, GetErrors(exception));
+                                break;
                             default:
                                 await WriteResponse(context, (int)HttpStatusCode.InternalServerError, GetErrors(exception));
                                 break;

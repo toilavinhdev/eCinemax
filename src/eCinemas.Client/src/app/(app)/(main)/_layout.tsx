@@ -6,40 +6,45 @@ import {
 } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
-import { StyleSheet } from "react-native";
 import { colors } from "~/shared/constants";
 
 const MainLayout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarStyle: styles.tabBar,
+        headerTintColor: "white",
+        headerShadowVisible: false,
+        headerStyle: {
+          backgroundColor: colors.secondary,
+        },
+        tabBarStyle: {
+          backgroundColor: colors.secondary,
+          borderTopWidth: 0,
+        },
         tabBarActiveTintColor: colors.primary,
       }}
     >
-      <Tabs.Screen redirect name="index" />
       <Tabs.Screen
-        name="home"
+        name="index"
         options={{
-          title: "Home",
-          headerShown: false,
+          title: "Trang chủ",
           tabBarIcon: ({ focused }) => (
             <Entypo
               name="home"
-              size={28}
+              size={22}
               color={focused ? colors.primary : colors.gray}
             />
           ),
         }}
       />
       <Tabs.Screen
-        name="news"
+        name="notification"
         options={{
-          title: "Notifications",
+          title: "Thông báo",
           tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons
               name="bell"
-              size={28}
+              size={22}
               color={focused ? colors.primary : colors.gray}
             />
           ),
@@ -48,25 +53,24 @@ const MainLayout = () => {
       <Tabs.Screen
         name="voucher"
         options={{
-          title: "Voucher",
+          title: "Khuyến mại",
           tabBarIcon: ({ focused }) => (
             <MaterialIcons
               name="discount"
-              size={24}
+              size={19}
               color={focused ? colors.primary : colors.gray}
             />
           ),
         }}
       ></Tabs.Screen>
       <Tabs.Screen
-        name="profile"
+        name="other"
         options={{
-          title: "User",
-          headerShown: false,
+          title: "Khác",
           tabBarIcon: ({ focused }) => (
             <FontAwesome
-              name="user"
-              size={25}
+              name="bars"
+              size={22}
               color={focused ? colors.primary : colors.gray}
             />
           ),
@@ -77,7 +81,3 @@ const MainLayout = () => {
 };
 
 export default MainLayout;
-
-const styles = StyleSheet.create({
-  tabBar: { backgroundColor: colors.secondary, borderTopWidth: 0 },
-});

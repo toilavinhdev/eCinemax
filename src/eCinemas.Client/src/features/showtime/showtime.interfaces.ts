@@ -8,7 +8,7 @@ export interface IShowTimeState {
 
 export interface IListShowTimeRequest {
   movieId: string;
-  date: Date;
+  showDate: Date;
 }
 
 export interface ICinemaShowTime {

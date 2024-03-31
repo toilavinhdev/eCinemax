@@ -1,7 +1,11 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import { Text, View } from "react-native";
-import { ButtonComponent, InputComponent } from "~/shared/components";
+import {
+  ButtonComponent,
+  InputComponent,
+  TextDivideComponent,
+} from "~/shared/components";
 import { isEmailValid } from "~/shared/utils";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { signIn } from "~/features/user";
@@ -10,7 +14,7 @@ const SignInScreen = () => {
   const [email, setEmail] = useState("hoangdvinh68@gmail.com");
   const [password, setPassword] = useState("Password@123");
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state) => state.user.loading);
+  const loading = useAppSelector((state) => state.user.loadingSignIn);
 
   const onSubmit = async () => {
     if (!isEmailValid(email) || !password) return;
@@ -30,8 +34,8 @@ const SignInScreen = () => {
         containerClassName="mt-9"
       />
       <InputComponent
+        password
         value={password}
-        password={true}
         onChangeText={(val) => setPassword(val)}
         placeholder="enter your password"
         containerClassName="mt-4"
@@ -44,12 +48,13 @@ const SignInScreen = () => {
         textClassName="font-semibold text-[18px]"
         buttonClassName="mt-8 w-full h-[60px]"
       />
-      <Text className="text-center mt-auto mb-10 text-[15px]">
-        Do not have an account?{" "}
-        <Link href="/auth/sign-up" className="underline">
-          Sign up
-        </Link>
-      </Text>
+      <TextDivideComponent text="Or" containerClassName="my-8" />
+      <ButtonComponent
+        text="Create new an account"
+        onPress={() => router.push("/auth/sign-up")}
+        textClassName="font-semibold text-[16px]"
+        buttonClassName="w-full h-[60px]"
+      />
     </View>
   );
 };
