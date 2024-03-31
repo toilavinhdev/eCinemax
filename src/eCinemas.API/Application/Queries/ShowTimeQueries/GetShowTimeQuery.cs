@@ -41,6 +41,8 @@ public class GetShowTimeQueryHandler(IMongoService mongoService, IMapper mapper)
             .FirstOrDefaultAsync(cancellationToken);
         DocumentNotFoundException<Cinema>.ThrowIfNotFound(cinema, "Không tìm thấy rạp phim");
 
+        if (document.Status == ShowTimeStatus.Finished) throw new BadRequestException("Lịch chiếu đã kết thúc");
+
         var response = mapper.Map<GetShowTimeResponse>(document);
         response.CinemaName = cinema.Name;
 

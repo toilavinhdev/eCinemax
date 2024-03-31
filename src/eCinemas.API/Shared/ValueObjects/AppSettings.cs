@@ -1,4 +1,6 @@
-﻿namespace eCinemas.API.Shared.ValueObjects;
+﻿using eCinemas.API.Shared.BackgroundJob;
+
+namespace eCinemas.API.Shared.ValueObjects;
 
 public class AppSettings
 {
@@ -13,6 +15,8 @@ public class AppSettings
     public GoogleOAuthConfig GoogleOAuthConfig { get; set; } = default!;
 
     public GmailConfig GmailConfig { get; set; } = default!;
+
+    public HangfireConfig HangfireConfig { get; set; } = default!;
 }
 
 public class StaticFileConfig

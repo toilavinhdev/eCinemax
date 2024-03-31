@@ -1,5 +1,4 @@
-﻿using eCinemas.API.Aggregates.RoomAggregate;
-using eCinemas.API.Shared.ValueObjects;
+﻿using eCinemas.API.Shared.ValueObjects;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -24,11 +23,6 @@ public class ShowTime : TimeTrackingDocument
     public int Available { get; set; }
     
     public List<List<Reservation>> Reservations { get; set; } = default!;
-}
-
-public class SeatPrice
-{
-    public SeatType Type { get; set; }
     
-    public int Price { get; set; }
+    public ShowTimeStatus Status { get; set; }
 }

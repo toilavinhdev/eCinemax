@@ -50,6 +50,9 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
             .FirstOrDefaultAsync(cancellationToken);
         DocumentNotFoundException<Room>.ThrowIfNotFound(room, "Không tìm thấy phòng chiếu");
 
+        if (request.StartAt < DateTime.Now)
+            throw new BadRequestException("Thời gian chiếu phải lớn hơn hiện tại");
+
         var document = mapper.Map<ShowTime>(request);
         document.MovieId = movie.Id;
         document.RoomId = room.Id;
@@ -65,6 +68,7 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
                     Status = ReservationStatus.Idle,
                 }).ToList()
             ).ToList();
+        document.Status = ShowTimeStatus.Upcoming;
         document.MarkCreated();
         await _showTimeCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 

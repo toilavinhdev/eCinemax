@@ -38,6 +38,7 @@ public class ListShowTimeQueryHandler(IMongoService mongoService) : IAPIRequestH
         filter &= filterBuilder.Where(x =>
             x.StartAt >= request.ShowDate.ToLocalTime().Date &&
             x.StartAt < request.ShowDate.ToLocalTime().Date.AddDays(1));
+        filter &= filterBuilder.Eq(x => x.Status, ShowTimeStatus.Upcoming);
         
         var showTimes = await _showTimeCollection
             .Find(filter)

@@ -1,5 +1,6 @@
 using eCinemas.API;
 using eCinemas.API.Services;
+using eCinemas.API.Shared.BackgroundJob;
 using eCinemas.API.Shared.Extensions;
 using eCinemas.API.Shared.Mediator;
 using FluentValidation;
@@ -15,6 +16,7 @@ services.AddHttpContextAccessor();
 services.AddEndpointDefinitions(Metadata.Assembly);
 services.AddJwtBearerAuth(appSettings.JwtConfig);
 services.AddAuthorization();
+services.AddHangfireBackgroundJob(appSettings.MongoConfig);
 services.AddValidatorsFromAssembly(Metadata.Assembly);
 services.AddMediatR(
     config =>
@@ -26,6 +28,7 @@ services.AddAutoMapper(Metadata.Assembly);
 services.AddTransient<IBaseService, BaseService>();
 services.AddTransient<IStorageService, StorageService>();
 services.AddScoped<IMongoService, MongoService>();
+services.AddScoped<IHangfireCronJob, UpdateShowTimeStatusService>();
 
 var app = builder.Build();
 app.UseDefaultExceptionHandler();
@@ -36,6 +39,8 @@ app.UseAuthorization();
 app.UsePhysicalStaticFile(appSettings.StaticFileConfig);
 app.UseHttpsRedirection();
 app.MapEndpointDefinitions();
+app.UseHangfireBackgroundJob(appSettings.HangfireConfig);
+app.UseRecurringJobDefinitions();
 app.MapGet("/ping", () => "Pong");
 app.MapGet("/check-auth", () => "OK").RequireAuthorization();
 
