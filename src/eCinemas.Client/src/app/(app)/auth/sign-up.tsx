@@ -14,8 +14,11 @@ const SignUpScreen = () => {
   const loading = useAppSelector((state) => state.user.loadingSignUp);
 
   const onSubmit = () => {
-    if (password !== confirmPassword)
+    if (password !== confirmPassword) {
       Alert.alert("Mật khẩu nhập lại không khớp");
+      return;
+    }
+
     dispatch(signUp({ email, fullName, password }));
   };
 
@@ -26,18 +29,21 @@ const SignUpScreen = () => {
         Sign up with on of following options
       </Text>
       <InputComponent
+        label="Tên đầy đủ"
         value={fullName}
         onChangeText={(val) => setFullName(val)}
         placeholder="enter your full name"
         containerClassName="mt-10"
       />
       <InputComponent
+        label="Địa chỉ email"
         value={email}
         onChangeText={(val) => setEmail(val)}
         placeholder="enter your email"
         containerClassName="mt-4"
       />
       <InputComponent
+        label="Mật khẩu"
         password
         value={password}
         onChangeText={(val) => setPassword(val)}
@@ -46,13 +52,14 @@ const SignUpScreen = () => {
       />
       <InputComponent
         password
+        label="Xác nhận mật khẩu"
         value={confirmPassword}
         onChangeText={(val) => setConfirmPassword(val)}
         placeholder="enter your confirm password"
         containerClassName="mt-4"
       />
       <ButtonComponent
-        text="Sign up"
+        text="Đăng ký"
         loading={loading}
         disabled={!fullName || !password || !isEmailValid(email)}
         onPress={() => onSubmit()}

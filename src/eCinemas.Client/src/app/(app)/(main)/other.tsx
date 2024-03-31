@@ -61,6 +61,7 @@ const OtherScreen = () => {
           {
             title: "Đổi mật khẩu",
             icon: <MaterialIcons name="password" size={24} color="white" />,
+            onPress: () => router.push("/auth/update-password"),
           },
           {
             title: "Lịch sử giao dịch",

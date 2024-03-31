@@ -2,6 +2,7 @@ export interface IUserState {
   loadingSignIn: boolean;
   loadingSignUp: boolean;
   loadingGetMe: boolean;
+  loadingUpdatePassword: boolean;
   currentUser?: IGetMeResponse;
 }
 
@@ -32,4 +33,10 @@ export interface IGetMeResponse {
   fullName: string;
   email: string;
   avatarUrl?: string;
+}
+
+export interface IUpdatePasswordRequest {
+  email: string;
+  currentPassword: string;
+  newPassword: string;
 }

@@ -1,10 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { router } from "expo-router";
-import { getMeAPI, signInAPI, signUpAPI } from "~/features/user/user.apis";
+import {
+  getMeAPI,
+  signInAPI,
+  signUpAPI,
+  updatePasswordAPI,
+} from "~/features/user/user.apis";
 import {
   ISignInRequest,
   ISignUpRequest,
+  IUpdatePasswordRequest,
 } from "~/features/user/user.interfaces";
 import { authConst } from "~/shared/constants";
 
@@ -42,3 +48,12 @@ export const getMe = createAsyncThunk("@user/me", async () => {
     console.log(err);
   }
 });
+
+export const updatePassword = createAsyncThunk(
+  "@user/updatePassword",
+  async (payload: IUpdatePasswordRequest, thunkAPI) => {
+    try {
+      await updatePasswordAPI(payload);
+    } catch (err) {}
+  }
+);

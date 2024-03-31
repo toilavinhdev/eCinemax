@@ -28,20 +28,22 @@ const SignInScreen = () => {
         Login with on of following options
       </Text>
       <InputComponent
+        label="Địa chỉ email"
         value={email}
         onChangeText={(val) => setEmail(val)}
-        placeholder="enter your email"
+        placeholder="Nhập địa chỉ email"
         containerClassName="mt-9"
       />
       <InputComponent
+        label="Mật khẩu"
         password
         value={password}
         onChangeText={(val) => setPassword(val)}
-        placeholder="enter your password"
+        placeholder="Nhập mật khẩu"
         containerClassName="mt-4"
       />
       <ButtonComponent
-        text="Login"
+        text="Đăng nhập"
         loading={loading}
         disabled={!isEmailValid(email) || !password || loading}
         onPress={onSubmit}
@@ -50,7 +52,7 @@ const SignInScreen = () => {
       />
       <TextDivideComponent text="Or" containerClassName="my-8" />
       <ButtonComponent
-        text="Create new an account"
+        text="Tạo tài khoản mới"
         onPress={() => router.push("/auth/sign-up")}
         textClassName="font-semibold text-[16px]"
         buttonClassName="w-full h-[60px]"

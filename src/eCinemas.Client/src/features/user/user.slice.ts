@@ -1,12 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getMe, signIn, signUp } from "~/features/user/user.thunk";
+import {
+  getMe,
+  signIn,
+  signUp,
+  updatePassword,
+} from "~/features/user/user.thunk";
 import { IUserState } from "./user.interfaces";
-import { Alert } from "react-native";
 
 const initialState: IUserState = {
   loadingSignIn: false,
   loadingSignUp: false,
   loadingGetMe: false,
+  loadingUpdatePassword: false,
   currentUser: undefined,
 };
 
@@ -46,6 +51,15 @@ const userSlice = createSlice({
     });
     builder.addCase(getMe.rejected, (state) => {
       state.loadingGetMe = false;
+    });
+    builder.addCase(updatePassword.pending, (state) => {
+      state.loadingUpdatePassword = true;
+    });
+    builder.addCase(updatePassword.fulfilled, (state) => {
+      state.loadingUpdatePassword = false;
+    });
+    builder.addCase(updatePassword.rejected, (state) => {
+      state.loadingUpdatePassword = false;
     });
   },
 });
