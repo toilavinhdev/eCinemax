@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { ButtonComponent, InputComponent } from "~/shared/components";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { updatePassword } from "~/features/user";
+import { router } from "expo-router";
 
 const UpdatePasswordScreen = () => {
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state) => state.user.loadingUpdatePassword);
+  const status = useAppSelector((state) => state.user.status);
   const currentUser = useAppSelector((state) => state.user.currentUser);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -23,7 +24,7 @@ const UpdatePasswordScreen = () => {
         email: currentUser.email,
         newPassword,
         currentPassword,
-      })
+      }),
     );
   };
 
@@ -57,10 +58,20 @@ const UpdatePasswordScreen = () => {
         />
       </View>
       <ButtonComponent
-        loading={loading}
+        loading={status === "loading"}
+        disabled={status === "loading"}
         text="Xác nhận"
         onPress={() => onSubmit()}
-        buttonClassName="w-full mt-12 h-[55px]"
+        textClassName="font-semibold text-[18px]"
+        buttonClassName="mt-8 w-full h-[60px]"
+      />
+      <ButtonComponent
+        disabled={status === "loading"}
+        text="Hủy"
+        onPress={() => router.back()}
+        textClassName="font-semibold text-[18px]"
+        buttonClassName="mt-5 w-full h-[60px]"
+        appearance="text"
       />
     </View>
   );

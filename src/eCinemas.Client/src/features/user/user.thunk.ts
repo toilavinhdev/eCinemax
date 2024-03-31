@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { router } from "expo-router";
 import {
   getMeAPI,
   signInAPI,
@@ -13,47 +12,62 @@ import {
   IUpdatePasswordRequest,
 } from "~/features/user/user.interfaces";
 import { authConst } from "~/shared/constants";
+import { Alert } from "react-native";
+import { router } from "expo-router";
 
 export const signIn = createAsyncThunk(
   "@user/signIn",
-  async (payload: ISignInRequest, thunkAPI) => {
+  async (payload: ISignInRequest, { rejectWithValue }) => {
     try {
       const response = await signInAPI(payload);
       const accessToken = response.data.data.accessToken;
       await AsyncStorage.setItem(authConst.ACCESS_TOKEN, accessToken);
-      router.replace("/");
       return accessToken;
     } catch (err: any) {
-      thunkAPI.rejectWithValue(err);
+      Alert.alert(err.message);
+      return rejectWithValue(err.message);
     }
-  }
+  },
 );
 
 export const signUp = createAsyncThunk(
   "@user/signUp",
-  async (payload: ISignUpRequest, thunkAPI) => {
+  async (payload: ISignUpRequest, { rejectWithValue }) => {
     try {
       await signUpAPI(payload);
-    } catch (err) {
-      thunkAPI.rejectWithValue(err);
+      Alert.alert("Đăng ký thành công", undefined, [
+        {
+          text: "Đăng nhập",
+          onPress: () => router.replace("/auth/sign-in"),
+        },
+      ]);
+    } catch (err: any) {
+      Alert.alert(err.message);
+      return rejectWithValue(err.message);
     }
-  }
+  },
 );
 
-export const getMe = createAsyncThunk("@user/me", async () => {
-  try {
-    const response = await getMeAPI();
-    return response.data.data;
-  } catch (err) {
-    console.log(err);
-  }
-});
+export const getMe = createAsyncThunk(
+  "@user/me",
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const response = await getMeAPI();
+      return response.data.data;
+    } catch (err: any) {
+      return rejectWithValue(err.message);
+    }
+  },
+);
 
 export const updatePassword = createAsyncThunk(
   "@user/updatePassword",
-  async (payload: IUpdatePasswordRequest, thunkAPI) => {
+  async (payload: IUpdatePasswordRequest, { rejectWithValue }) => {
     try {
       await updatePasswordAPI(payload);
-    } catch (err) {}
-  }
+    } catch (err: any) {
+      Alert.alert(err.message);
+      return rejectWithValue(err.message);
+    }
+  },
 );

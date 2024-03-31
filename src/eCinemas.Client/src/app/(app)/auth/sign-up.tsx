@@ -4,14 +4,15 @@ import { useAppDispatch, useAppSelector } from "~/features/store";
 import { signUp } from "~/features/user";
 import { ButtonComponent, InputComponent } from "~/shared/components";
 import { isEmailValid } from "~/shared/utils";
+import { router } from "expo-router";
 
 const SignUpScreen = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [password, setPassword] = useState("Password@123");
+  const [confirmPassword, setConfirmPassword] = useState("Password@123");
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state) => state.user.loadingSignUp);
+  const status = useAppSelector((state) => state.user.status);
 
   const onSubmit = () => {
     if (password !== confirmPassword) {
@@ -60,11 +61,18 @@ const SignUpScreen = () => {
       />
       <ButtonComponent
         text="Đăng ký"
-        loading={loading}
+        loading={status === "loading"}
         disabled={!fullName || !password || !isEmailValid(email)}
         onPress={() => onSubmit()}
         textClassName="font-semibold text-[18px]"
         buttonClassName="mt-8 w-full h-[60px]"
+      />
+      <ButtonComponent
+        text="Đã có tài khoản? Đăng nhập ngay"
+        onPress={() => router.push("/auth/sign-in")}
+        textClassName="font-semibold text-[14px]"
+        buttonClassName="w-full mt-auto mb-10"
+        appearance="text"
       />
     </View>
   );

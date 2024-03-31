@@ -1,6 +1,6 @@
-import { Link, router } from "expo-router";
-import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { router } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Alert, Text, View } from "react-native";
 import {
   ButtonComponent,
   InputComponent,
@@ -14,7 +14,7 @@ const SignInScreen = () => {
   const [email, setEmail] = useState("hoangdvinh68@gmail.com");
   const [password, setPassword] = useState("Password@123");
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state) => state.user.loadingSignIn);
+  const status = useAppSelector((state) => state.user.status);
 
   const onSubmit = async () => {
     if (!isEmailValid(email) || !password) return;
@@ -44,18 +44,19 @@ const SignInScreen = () => {
       />
       <ButtonComponent
         text="Đăng nhập"
-        loading={loading}
-        disabled={!isEmailValid(email) || !password || loading}
+        loading={status === "loading"}
+        disabled={!isEmailValid(email) || !password || status === "loading"}
         onPress={onSubmit}
         textClassName="font-semibold text-[18px]"
         buttonClassName="mt-8 w-full h-[60px]"
       />
-      <TextDivideComponent text="Or" containerClassName="my-8" />
+      <TextDivideComponent text="Hoặc" containerClassName="my-10" />
       <ButtonComponent
-        text="Tạo tài khoản mới"
+        text="Chưa có tài khoản? Tạo tài khoản mới"
         onPress={() => router.push("/auth/sign-up")}
-        textClassName="font-semibold text-[16px]"
-        buttonClassName="w-full h-[60px]"
+        textClassName="font-semibold text-[14px]"
+        buttonClassName="w-full mt-auto mb-10"
+        appearance="text"
       />
     </View>
   );

@@ -1,10 +1,10 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { Slot, router } from "expo-router";
 import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
-import store, { useAppDispatch } from "~/features/store";
-import { getMe } from "~/features/user";
+import store, { useAppDispatch, useAppSelector } from "~/features/store";
+import { getMe, setAuthenticated } from "~/features/user";
 import { authConst } from "~/shared/constants";
 
 const RootLayout = () => {
@@ -19,20 +19,22 @@ const RootLayout = () => {
 
 const AppGuard = () => {
   const dispatch = useAppDispatch();
-
-  const handle = async () => {
-    const accessToken = await AsyncStorage.getItem(authConst.ACCESS_TOKEN);
-
-    if (!accessToken) {
-      router.replace("/auth/sign-in");
-    } else {
-      dispatch(getMe());
-    }
-  };
+  const authenticated = useAppSelector((state) => state.user.authenticated);
+  const { getItem } = useAsyncStorage(authConst.ACCESS_TOKEN);
 
   useEffect(() => {
-    handle();
-  });
+    const checkAuth = async () => {
+      if (await getItem()) {
+        dispatch(setAuthenticated(true));
+        dispatch(getMe({}));
+        router.replace("/");
+      } else {
+        dispatch(setAuthenticated(false));
+        router.replace("/auth/sign-in");
+      }
+    };
+    checkAuth().then();
+  }, [authenticated]);
 
   return <Slot />;
 };

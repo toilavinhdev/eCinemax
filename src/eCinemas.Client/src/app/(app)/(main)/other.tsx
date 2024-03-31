@@ -19,16 +19,13 @@ const OtherScreen = () => {
   const dispatch = useAppDispatch();
 
   const onLogout = async () => {
-    const logout = async () => {
-      dispatch(signOut());
-      router.replace("/auth/sign-in");
-      await AsyncStorage.removeItem(authConst.ACCESS_TOKEN);
-    };
-
     Alert.alert("Bạn có muốn đăng xuất không", undefined, [
       {
         text: "Đồng ý",
-        onPress: () => logout(),
+        onPress: async () => {
+          await AsyncStorage.removeItem(authConst.ACCESS_TOKEN);
+          dispatch(signOut());
+        },
       },
       {
         text: "Hủy",
@@ -61,7 +58,7 @@ const OtherScreen = () => {
           {
             title: "Đổi mật khẩu",
             icon: <MaterialIcons name="password" size={24} color="white" />,
-            onPress: () => router.push("/auth/update-password"),
+            onPress: () => router.push("/user/update-password"),
           },
           {
             title: "Lịch sử giao dịch",

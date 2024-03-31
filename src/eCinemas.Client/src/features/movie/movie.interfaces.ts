@@ -1,8 +1,8 @@
 import { IPaginationResponse } from "~/core/interfaces";
 
 export interface IMovieState {
-  loadingList: boolean;
-  loadingGet: boolean;
+  status: "idle" | "loading" | "success" | "failed";
+  error: string | null;
   list: IMovieViewModel[];
   movie?: IGetMovieResponse;
 }

@@ -144,24 +144,24 @@ const SeatInfoComponent = (props: { tickets?: ISeatPrice[] }) => {
   const coupleTicket = tickets?.find((x) => x.type === ESeatType.Couple);
   return (
     <IfComponent condition={!!tickets && tickets.length > 0}>
-      <View className="flex items-center mt-3">
+      <View className="flex items-center mt-6">
         <View className="flex-row gap-2">
           <View className="flex-row gap-1 items-center">
             <View
               className="h-[14px] w-[14px] rounded"
               style={{ backgroundColor: colors.success }}
             ></View>
-            <Text className="text-white text-[10px]">Sold out</Text>
+            <Text className="text-white text-[10px]">Đã hết</Text>
           </View>
           <View className="flex-row gap-1 items-center">
             <View
               className="h-[14px] w-[14px] rounded"
               style={{ backgroundColor: colors.primary }}
             ></View>
-            <Text className="text-white text-[10px]">Selected</Text>
+            <Text className="text-white text-[10px]">Đang chọn</Text>
           </View>
         </View>
-        <View className="flex-row gap-2">
+        <View className="flex-row gap-2 mt-1">
           {normalTicket && (
             <View className="flex-row gap-1 items-center">
               <View
@@ -169,7 +169,7 @@ const SeatInfoComponent = (props: { tickets?: ISeatPrice[] }) => {
                 style={{ backgroundColor: colors.gray }}
               ></View>
               <Text className="text-white text-[10px]">
-                Normal ({normalTicket.price})
+                Ghế thường ({normalTicket.price})
               </Text>
             </View>
           )}
@@ -180,7 +180,7 @@ const SeatInfoComponent = (props: { tickets?: ISeatPrice[] }) => {
                 style={{ backgroundColor: colors.gray }}
               ></View>
               <Text className="text-white text-[10px]">
-                VIP ({vipTicket?.price})
+                Ghế VIP ({vipTicket?.price})
               </Text>
             </View>
           )}
@@ -191,7 +191,7 @@ const SeatInfoComponent = (props: { tickets?: ISeatPrice[] }) => {
                 style={{ backgroundColor: colors.gray }}
               ></View>
               <Text className="text-white text-[10px]">
-                Couple ({coupleTicket.price})
+                Ghế đôi ({coupleTicket.price})
               </Text>
             </View>
           )}

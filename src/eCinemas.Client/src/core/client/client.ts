@@ -21,15 +21,14 @@ client.interceptors.request.use(async (config) => {
 client.interceptors.response.use(
   (response: AxiosResponse) => {
     const timeLog = new Date(Date.now());
+    const { url, params, data } = response.config;
     console.log(
       `[${timeLog.getHours()}:${timeLog.getMinutes()}:${timeLog.getMilliseconds()}]`,
       "API RESPONSE",
-      response.config.url,
-      JSON.stringify(response.config.params),
-      JSON.stringify(response.config.data)
+      url,
+      JSON.stringify(params),
+      JSON.stringify(data),
     );
-    const apiResponse = response.data as IAPIResponse<any>;
-    if (apiResponse.message) Alert.alert(apiResponse.message);
     return response;
   },
   (error: AxiosError) => {
@@ -41,9 +40,8 @@ client.interceptors.response.use(
       "API ERROR",
       code,
       error.config?.url,
-      JSON.stringify(errors)
+      JSON.stringify(errors),
     );
-    if (code === 400) Alert.alert(errors?.[0] ?? "");
-    // throw new Error(errors?.[0]);
-  }
+    throw new Error(errors?.[0]);
+  },
 );

@@ -1,9 +1,8 @@
 export interface IUserState {
-  loadingSignIn: boolean;
-  loadingSignUp: boolean;
-  loadingGetMe: boolean;
-  loadingUpdatePassword: boolean;
-  currentUser?: IGetMeResponse;
+  authenticated: boolean;
+  status: "idle" | "loading" | "success" | "failed";
+  error: string | null;
+  currentUser: IGetMeResponse | null;
 }
 
 export interface IUserClaimValue {

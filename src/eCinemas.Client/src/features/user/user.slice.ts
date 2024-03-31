@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   getMe,
   signIn,
@@ -8,61 +8,71 @@ import {
 import { IUserState } from "./user.interfaces";
 
 const initialState: IUserState = {
-  loadingSignIn: false,
-  loadingSignUp: false,
-  loadingGetMe: false,
-  loadingUpdatePassword: false,
-  currentUser: undefined,
+  authenticated: false,
+  status: "idle",
+  error: null,
+  currentUser: null,
 };
 
 const userSlice = createSlice({
   name: "@user",
   initialState: initialState,
   reducers: {
+    setAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.authenticated = action.payload;
+    },
     signOut: (state) => {
-      state.currentUser = undefined;
+      state.currentUser = null;
+      state.authenticated = false;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(signIn.pending, (state) => {
-      state.loadingSignIn = true;
+      state.status = "loading";
+      state.error = null;
     });
     builder.addCase(signIn.fulfilled, (state, action) => {
-      state.loadingSignIn = false;
+      state.status = "success";
+      state.authenticated = true;
     });
-    builder.addCase(signIn.rejected, (state) => {
-      state.loadingSignIn = false;
+    builder.addCase(signIn.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload as string;
     });
     builder.addCase(signUp.pending, (state) => {
-      state.loadingSignUp = true;
+      state.status = "loading";
+      state.error = null;
     });
     builder.addCase(signUp.fulfilled, (state) => {
-      state.loadingSignUp = false;
+      state.status = "success";
     });
-    builder.addCase(signUp.rejected, (state) => {
-      state.loadingSignUp = false;
+    builder.addCase(signUp.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload as string;
     });
     builder.addCase(getMe.pending, (state) => {
-      state.loadingGetMe = true;
+      state.status = "loading";
+      state.error = null;
     });
     builder.addCase(getMe.fulfilled, (state, action) => {
-      state.loadingGetMe = false;
+      state.status = "success";
       state.currentUser = action.payload;
     });
     builder.addCase(getMe.rejected, (state) => {
-      state.loadingGetMe = false;
+      state.status = "failed";
     });
     builder.addCase(updatePassword.pending, (state) => {
-      state.loadingUpdatePassword = true;
+      state.status = "loading";
+      state.error = null;
     });
     builder.addCase(updatePassword.fulfilled, (state) => {
-      state.loadingUpdatePassword = false;
+      state.status = "success";
     });
     builder.addCase(updatePassword.rejected, (state) => {
-      state.loadingUpdatePassword = false;
+      state.status = "failed";
     });
   },
 });
 
-export const { signOut } = userSlice.actions;
+export const { setAuthenticated, signOut } = userSlice.actions;
 export default userSlice.reducer;

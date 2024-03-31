@@ -1,7 +1,7 @@
 export interface IShowTimeState {
   list: ICinemaShowTime[];
-  loadingList: boolean;
-  loadingGet: boolean;
+  status: "idle" | "loading" | "success" | "failed";
+  error: string | null;
   showtime?: IGetShowTimeResponse;
   reservations: IReservation[];
 }

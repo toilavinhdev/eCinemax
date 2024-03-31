@@ -4,8 +4,8 @@ import { getShowtime, listShowtime } from "./showtime.thunk";
 import { RootState } from "../store";
 
 const initialState: IShowTimeState = {
-  loadingGet: false,
-  loadingList: false,
+  status: "idle",
+  error: null,
   list: [],
   showtime: undefined,
   reservations: [],
@@ -35,24 +35,26 @@ const showTimeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(listShowtime.pending, (state) => {
-      state.loadingList = true;
+      state.status = "loading";
+      state.error = null;
     });
     builder.addCase(listShowtime.fulfilled, (state, action) => {
-      state.loadingList = false;
+      state.status = "success";
       state.list = action.payload!;
     });
     builder.addCase(listShowtime.rejected, (state) => {
-      state.loadingList = false;
+      state.status = "failed";
     });
     builder.addCase(getShowtime.pending, (state) => {
-      state.loadingGet = true;
+      state.status = "loading";
+      state.error = null;
     });
     builder.addCase(getShowtime.fulfilled, (state, action) => {
-      state.loadingGet = false;
+      state.status = "success";
       state.showtime = action.payload;
     });
     builder.addCase(getShowtime.rejected, (state) => {
-      state.loadingGet = false;
+      state.status = "failed";
     });
   },
 });

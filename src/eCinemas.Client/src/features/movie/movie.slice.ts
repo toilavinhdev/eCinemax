@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getMovie, listMovie } from "~/features/movie/movie.thunk";
 
 const initialState: IMovieState = {
-  loadingList: false,
-  loadingGet: false,
+  status: "idle",
+  error: null,
   list: [],
   movie: undefined,
 };
@@ -19,24 +19,27 @@ const movieSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(listMovie.pending, (state) => {
-      state.loadingList = true;
+      state.status = "loading";
+      state.error = null;
     });
     builder.addCase(listMovie.fulfilled, (state, action) => {
-      state.loadingList = false;
+      state.status = "success";
       state.list = action.payload?.records ?? [];
     });
     builder.addCase(listMovie.rejected, (state) => {
-      state.loadingList = false;
+      state.status = "failed";
     });
     builder.addCase(getMovie.pending, (state) => {
-      state.loadingGet = true;
+      state.status = "loading";
+      state.error = null;
     });
     builder.addCase(getMovie.fulfilled, (state, action) => {
-      state.loadingGet = false;
+      state.status = "success";
+
       state.movie = action.payload;
     });
     builder.addCase(getMovie.rejected, (state) => {
-      state.loadingGet = false;
+      state.status = "failed";
     });
   },
 });
