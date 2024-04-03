@@ -1,10 +1,12 @@
-import { View, Text } from "react-native";
 import React from "react";
+import { View } from "react-native";
+import { NoDataComponent } from "~/shared/components";
+import { colors } from "~/shared/constants";
 
 const VoucherScreen = () => {
   return (
-    <View>
-      <Text>VoucherScreen</Text>
+    <View className="flex-1" style={{ backgroundColor: colors.dark }}>
+      <NoDataComponent />
     </View>
   );
 };

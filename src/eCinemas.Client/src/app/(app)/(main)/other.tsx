@@ -27,6 +27,7 @@ const OtherScreen = () => {
           await AsyncStorage.removeItem(authConst.ACCESS_TOKEN);
           dispatch(signOut());
         },
+        style: "destructive",
       },
       {
         text: "Hủy",

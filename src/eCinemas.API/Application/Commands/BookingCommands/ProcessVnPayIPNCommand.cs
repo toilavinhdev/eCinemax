@@ -56,7 +56,7 @@ public class ProcessVnPayIPNCommandHandler(AppSettings appSettings,
             // Todo: Update reservation status
             showTime.Reservations
                 .SelectMany(x => x)
-                .Where(x => booking.SeatNames.Any(seat => seat == x.Name))
+                .Where(x => booking.Seats.SelectMany(y => y.SeatNames).Any(seatName => seatName == x.Name))
                 .ToList()
                 .ForEach(reservation =>
                 {
@@ -86,7 +86,7 @@ public class ProcessVnPayIPNCommandHandler(AppSettings appSettings,
             // Todo: Update reservation status
             showTime.Reservations
                 .SelectMany(x => x)
-                .Where(x => booking.SeatNames.Any(seat => seat == x.Name))
+                .Where(x => booking.Seats.SelectMany(y => y.SeatNames).Any(seatName => seatName == x.Name))
                 .ToList()
                 .ForEach(reservation =>
                 {

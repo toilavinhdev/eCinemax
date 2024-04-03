@@ -1,5 +1,7 @@
 ﻿using eCinemas.API.Aggregates.UserAggregate;
+using eCinemas.API.Application.Responses;
 using eCinemas.API.Infrastructure.Persistence;
+using eCinemas.API.Shared.Constants;
 using eCinemas.API.Shared.Exceptions;
 using eCinemas.API.Shared.Mediator;
 using eCinemas.API.Shared.ValueObjects;
@@ -8,9 +10,11 @@ using MongoDB.Driver;
 
 namespace eCinemas.API.Application.Commands.UserCommands;
 
-public class UpdateProfileCommand : IAPIRequest
+public class UpdateProfileCommand : IAPIRequest<GetMeResponse>
 {
     public string FullName { get; set; } = default!;
+
+    public string Email { get; set; } = default!;
     
     public string? AvatarUrl { get; set; }
 }
@@ -21,14 +25,17 @@ public class UpdateProfileCommandValidator : AbstractValidator<UpdateProfileComm
     {
         RuleFor(x => x.FullName)
             .NotEmpty().WithMessage("Tên không được bỏ trống");
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email không được bỏ trống")
+            .Matches(RegexConstant.EmailRegex).WithMessage("Email không đúng định dạng");;
     }
 }
 
-public class UpdateProfileCommandHandler(IMongoService mongoService) : IAPIRequestHandler<UpdateProfileCommand>
+public class UpdateProfileCommandHandler(IMongoService mongoService) : IAPIRequestHandler<UpdateProfileCommand, GetMeResponse>
 {
     private readonly IMongoCollection<User> _userCollection = mongoService.Collection<User>();
     
-    public async Task<APIResponse> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
+    public async Task<APIResponse<GetMeResponse>> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
         var filter = Builders<User>.Filter.Eq(x => x.Id, mongoService.UserClaims().Id);
         
@@ -36,15 +43,32 @@ public class UpdateProfileCommandHandler(IMongoService mongoService) : IAPIReque
             .Find(filter)
             .FirstOrDefaultAsync(cancellationToken);
         DocumentNotFoundException<User>.ThrowIfNotFound(user, "Người dùng không tồn tại");
-        
+
+        var existedEmail = await _userCollection.Find(x => x.Email == request.Email).AnyAsync(cancellationToken);
+        if (existedEmail && request.Email != user.Email) throw new BadRequestException("Email đã tồn tại");
+
+        user.FullName = request.FullName;
+        user.Email = request.Email;
+        user.AvatarUrl = request.AvatarUrl;
         user.MarkModified();
+        
         var update = Builders<User>.Update
-            .Set(x => x.FullName, request.FullName)
-            .Set(x => x.AvatarUrl, request.AvatarUrl)
+            .Set(x => x.FullName, user.FullName)
+            .Set(x => x.Email, user.Email)
+            .Set(x => x.AvatarUrl, user.AvatarUrl)
             .Set(x => x.ModifiedAt, user.ModifiedAt);
 
         var result = await _userCollection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
         if (!result.IsAcknowledged) throw new BadRequestException("Vui lòng thử lại");
-        return APIResponse.IsSuccess("Cập nhật thành công");
+        
+        return APIResponse<GetMeResponse>.IsSuccess(
+            new GetMeResponse
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                AvatarUrl = user.AvatarUrl
+            },
+            "Cập nhật thành công");
     }
 }

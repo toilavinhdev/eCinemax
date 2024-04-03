@@ -1,4 +1,5 @@
 import { router } from "expo-router";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -13,7 +14,6 @@ import { useAppDispatch, useAppSelector } from "~/features/store";
 import { CollapseComponent, NoDataComponent } from "~/shared/components";
 import { DateOfWeekPickerComponent } from "~/shared/components/datetimepicker";
 import { colors } from "~/shared/constants";
-import { IfComponent } from "~/core/components";
 
 const ChooseCinemaScreen = () => {
   const movie = useAppSelector((state) => state.movie.movie);
@@ -82,11 +82,7 @@ const ListShowTimeComponent = (props: { onLoadData: () => void }) => {
                 >
                   <View className="w-[86px] py-2 ">
                     <Text className="text-black text-center">
-                      {new Date(showtime.startAt).toLocaleTimeString("vi-VN", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hourCycle: "h11",
-                      })}
+                      {moment(showtime.startAt).format("HH:mm")}
                     </Text>
                   </View>
                 </TouchableOpacity>

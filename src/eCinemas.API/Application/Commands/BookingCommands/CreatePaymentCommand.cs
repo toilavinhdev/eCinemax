@@ -16,8 +16,6 @@ public class CreatePaymentCommand : IAPIRequest<CreatePaymentResponse>
     public string BookingId { get; set; } = default!;
     
     public PaymentDestination Destination { get; set; }
-
-    public string? BankCode { get; set; }
 }
 
 public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentCommand>
@@ -82,7 +80,7 @@ public class CreatePaymentCommandHandler(IMongoService mongoService,
                     vnp_ReturnUrl = appSettings.Host + appSettings.VnPayConfig.ReturnEndpoint,
                     vnp_Command = "pay",
                     vnp_Amount = amount * 100,
-                    vnp_BankCode = request.BankCode,
+                    vnp_BankCode = null,
                     vnp_CreateDate = DateTime.Now.ToString("yyyyMMddHHmmss"),
                     vnp_CurrCode = "VND",
                     vnp_IpAddr = mongoService.IpAddress() ?? string.Empty,

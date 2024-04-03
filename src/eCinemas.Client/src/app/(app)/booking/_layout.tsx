@@ -1,5 +1,7 @@
 import { Stack } from "expo-router";
 import React from "react";
+import { Text } from "react-native";
+import { ButtonBackComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
 
 const BookingLayout = () => {
@@ -16,7 +18,13 @@ const BookingLayout = () => {
         options={{ title: "Chọn rạp chiếu" }}
       />
       <Stack.Screen name="choose-seats" options={{ title: "Chọn ghế" }} />
-      <Stack.Screen name="checkout" options={{ title: "Thanh toán" }} />
+      <Stack.Screen
+        name="checkout"
+        options={{
+          title: "Thanh toán",
+          headerLeft: () => <ButtonBackComponent text="Hủy" />,
+        }}
+      />
     </Stack>
   );
 };

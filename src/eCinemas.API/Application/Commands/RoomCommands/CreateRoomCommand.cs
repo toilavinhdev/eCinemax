@@ -7,6 +7,7 @@ using eCinemas.API.Shared.Mediator;
 using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace eCinemas.API.Application.Commands.RoomCommands;
 
@@ -57,7 +58,9 @@ public class CreateRoomCommandHandler(IMongoService mongoService) : IAPIRequestH
             CinemaId = request.CinemaId,
             Name = request.Name,
             Seats = seats,
-            SeatCount = seats.Count
+            SeatCount = seats
+                .SelectMany(x => x)
+                .Count(x => x.Type != SeatType.Blank)
         };
         document.MarkCreated();
         

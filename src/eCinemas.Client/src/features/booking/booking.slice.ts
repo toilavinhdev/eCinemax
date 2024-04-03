@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IBookingState } from "./booking.interfaces";
-import { createBooking } from "./booking.thunk";
+import { createBooking, getBooking } from "./booking.thunk";
 
 const initialState: IBookingState = {
   status: "idle",
   error: null,
+  booking: null,
 };
 
 const bookingSlice = createSlice({
@@ -16,10 +17,23 @@ const bookingSlice = createSlice({
       state.status = "loading";
       state.error = null;
     });
-    builder.addCase(createBooking.fulfilled, (state) => {
+    builder.addCase(createBooking.fulfilled, (state, action) => {
       state.status = "success";
+      state.booking = action.payload;
     });
     builder.addCase(createBooking.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.payload as string;
+    });
+    builder.addCase(getBooking.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    });
+    builder.addCase(getBooking.fulfilled, (state, action) => {
+      state.status = "success";
+      state.booking = action.payload;
+    });
+    builder.addCase(getBooking.rejected, (state, action) => {
       state.status = "error";
       state.error = action.payload as string;
     });

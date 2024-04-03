@@ -1,5 +1,4 @@
 ﻿using eCinemas.API.Aggregates.BookingAggregate;
-using eCinemas.API.Aggregates.RoomAggregate;
 using eCinemas.API.Aggregates.ShowtimeAggregate;
 using eCinemas.API.Infrastructure.Persistence;
 using eCinemas.API.Shared.Exceptions;
@@ -22,7 +21,7 @@ public class UpdateBookingStatusCommandHandler(IMongoService mongoService) : IRe
         var bookingFilterBuilder = Builders<Booking>.Filter;
         var bookingFilter = bookingFilterBuilder.Empty;
         bookingFilter &= bookingFilterBuilder.Eq(x => x.Status, BookingStatus.WaitForPay);
-        bookingFilter &= bookingFilterBuilder.Gt(x => x.PaymentExpiredAt, DateTime.Now);
+        bookingFilter &= bookingFilterBuilder.Lt(x => x.PaymentExpiredAt, DateTime.Now);
 
         var cursor = await _bookingCollection.FindAsync(bookingFilter, cancellationToken: cancellationToken);
 
@@ -53,14 +52,7 @@ public class UpdateBookingStatusCommandHandler(IMongoService mongoService) : IRe
                         reservation.ReservationBy = null;
                     });
                 
-                showTime.Available = showTime.Reservations
-                    .Aggregate(0, 
-                        (acc, cur) => acc + cur.Count(
-                            x => x.Type != SeatType.Blank && 
-                                 x.Status == ReservationStatus.Idle));
-                
                 var showTimeUpdate = Builders<ShowTime>.Update
-                    .Set(x => x.Available, showTime.Available)
                     .Set(x => x.Reservations, showTime.Reservations);
                 await _showTimeCollection.UpdateOneAsync(
                     showTimeFilter, 

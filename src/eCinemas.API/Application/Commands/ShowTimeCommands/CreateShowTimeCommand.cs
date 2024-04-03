@@ -45,6 +45,9 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
             .Find(x => x.Id == request.Movie)
             .FirstOrDefaultAsync(cancellationToken);
         DocumentNotFoundException<Movie>.ThrowIfNotFound(movie, "Không tìm thấy phim");
+        if (movie.Status != MovieStatus.NowShowing) 
+            throw new BadRequestException("Phim chưa được phép chiếu");
+        
         var room = await _roomCollection
             .Find(x => x.Id == request.Room)
             .FirstOrDefaultAsync(cancellationToken);
@@ -57,7 +60,6 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
         document.MovieId = movie.Id;
         document.RoomId = room.Id;
         document.CinemaId = room.CinemaId;
-        document.Available = room.Seats.Aggregate(0, (acc, cur) => acc + cur.Count(x => x.Type != SeatType.Blank));
         document.Reservations = room.Seats
             .Select(rowSeats => 
                 rowSeats.Select(seat => new Reservation

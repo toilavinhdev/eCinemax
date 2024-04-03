@@ -24,11 +24,15 @@ public class ShowTime : TimeTrackingDocument
 
     public List<SeatPrice> Ticket { get; set; } = default!;
     
-    public int Available { get; set; }
-    
     public List<List<Reservation>> Reservations { get; set; } = default!;
     
     public ShowTimeStatus Status { get; set; }
+    
+    public int Available => Reservations
+        .Aggregate(0, 
+            (acc, cur) => acc + cur.Count(
+                x => x.Type != SeatType.Blank && 
+                     x.Status == ReservationStatus.Idle));
 }
 
 public class SeatPrice
