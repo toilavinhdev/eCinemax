@@ -2,7 +2,7 @@
 using eCinemas.API.Aggregates.MovieAggregate;
 using eCinemas.API.Aggregates.RoomAggregate;
 using eCinemas.API.Aggregates.ShowtimeAggregate;
-using eCinemas.API.Services;
+using eCinemas.API.Infrastructure.Persistence;
 using eCinemas.API.Shared.Exceptions;
 using eCinemas.API.Shared.Mediator;
 using eCinemas.API.Shared.ValueObjects;
@@ -68,6 +68,7 @@ public class CreateShowTimeCommandHandler(IMongoService mongoService, IMapper ma
                     Status = ReservationStatus.Idle,
                 }).ToList()
             ).ToList();
+        document.FinishAt = document.StartAt.AddMinutes(movie.DurationMinutes);
         document.Status = ShowTimeStatus.Upcoming;
         document.MarkCreated();
         await _showTimeCollection.InsertOneAsync(document, cancellationToken: cancellationToken);

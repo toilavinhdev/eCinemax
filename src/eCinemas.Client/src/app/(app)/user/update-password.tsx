@@ -1,15 +1,21 @@
-import { View, Text, Alert } from "react-native";
+import { router } from "expo-router";
 import React, { useState } from "react";
-import { ButtonComponent, InputComponent } from "~/shared/components";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  View,
+} from "react-native";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { updatePassword } from "~/features/user";
-import { router } from "expo-router";
+import { ButtonComponent, InputComponent } from "~/shared/components";
 
 const UpdatePasswordScreen = () => {
   const dispatch = useAppDispatch();
   const status = useAppSelector((state) => state.user.status);
   const currentUser = useAppSelector((state) => state.user.currentUser);
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("Password@123");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
@@ -24,13 +30,20 @@ const UpdatePasswordScreen = () => {
         email: currentUser.email,
         newPassword,
         currentPassword,
-      }),
+      })
     );
   };
 
   return (
-    <View className="flex-1 items-center justify-center px-6">
-      <Text className="font-medium text-[18px]">Đặt lại mật khẩu của bạn</Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1 items-center justify-center px-6"
+    >
+      <View>
+        <Text className="font-medium text-[18px]">
+          Đặt lại mật khẩu của bạn
+        </Text>
+      </View>
       <View className="w-full mt-8">
         <InputComponent
           label="Mật khẩu hiện tại"
@@ -70,10 +83,10 @@ const UpdatePasswordScreen = () => {
         text="Hủy"
         onPress={() => router.back()}
         textClassName="font-semibold text-[18px]"
-        buttonClassName="mt-5 w-full h-[60px]"
+        buttonClassName="mt-2 w-full h-[60px]"
         appearance="text"
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

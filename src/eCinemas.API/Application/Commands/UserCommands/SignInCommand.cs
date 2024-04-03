@@ -2,7 +2,7 @@
 using eCinemas.API.Aggregates.UserAggregate;
 using eCinemas.API.Application.Responses;
 using eCinemas.API.Helpers;
-using eCinemas.API.Services;
+using eCinemas.API.Infrastructure.Persistence;
 using eCinemas.API.Shared.Constants;
 using eCinemas.API.Shared.Exceptions;
 using eCinemas.API.Shared.Extensions;

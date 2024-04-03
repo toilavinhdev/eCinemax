@@ -27,7 +27,7 @@ export const signIn = createAsyncThunk(
       Alert.alert(err.message);
       return rejectWithValue(err.message);
     }
-  },
+  }
 );
 
 export const signUp = createAsyncThunk(
@@ -45,7 +45,7 @@ export const signUp = createAsyncThunk(
       Alert.alert(err.message);
       return rejectWithValue(err.message);
     }
-  },
+  }
 );
 
 export const getMe = createAsyncThunk(
@@ -57,7 +57,7 @@ export const getMe = createAsyncThunk(
     } catch (err: any) {
       return rejectWithValue(err.message);
     }
-  },
+  }
 );
 
 export const updatePassword = createAsyncThunk(
@@ -65,9 +65,15 @@ export const updatePassword = createAsyncThunk(
   async (payload: IUpdatePasswordRequest, { rejectWithValue }) => {
     try {
       await updatePasswordAPI(payload);
+      Alert.alert("Cập nhật mật khẩu thành công", undefined, [
+        {
+          text: "Xác nhận",
+          onPress: () => router.replace("/other"),
+        },
+      ]);
     } catch (err: any) {
-      Alert.alert(err.message);
+      Alert.alert(err.message ?? "Có lỗi xảy ra");
       return rejectWithValue(err.message);
     }
-  },
+  }
 );

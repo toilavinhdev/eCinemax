@@ -12,4 +12,6 @@ public class Room : TimeTrackingDocument
     public string Name { get; set; } = default!;
 
     public List<List<Seat>> Seats { get; set; } = default!;
+    
+    public int SeatCount { get; set; }
 }

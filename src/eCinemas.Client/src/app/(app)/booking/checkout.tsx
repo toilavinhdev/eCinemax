@@ -1,3 +1,4 @@
+import { Entypo } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { IReservation, showtimeTotalTicket } from "~/features/showtime";
@@ -5,17 +6,38 @@ import { useAppSelector } from "~/features/store";
 import { ButtonComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
 import { GetSeatName } from "~/shared/utils";
-import { Entypo } from "@expo/vector-icons";
 
 interface IGroupedReservations {
   [key: number]: IReservation[];
 }
 
 const CheckoutScreen = () => {
+  return (
+    <View
+      style={{ flex: 1, backgroundColor: colors.dark, paddingHorizontal: 10 }}
+    >
+      <BillComponent />
+      <PaymentDurationComponent />
+      <PaymentDestinationComponent />
+    </View>
+  );
+};
+
+const BillComponent = () => {
   const [groupedReservations, setGroupedReservations] =
     useState<IGroupedReservations>({});
   const currentShowtime = useAppSelector((state) => state.showtime.showtime);
   const reservations = useAppSelector((state) => state.showtime.reservations);
+
+  const reservationString = () =>
+    Object.keys(groupedReservations).reduce<string>((acc, key, idx, arr) => {
+      const name = GetSeatName(Number.parseInt(key));
+      const quantity = groupedReservations[Number.parseInt(key)].length;
+      return (
+        acc + `${quantity} ${name}` + `${arr.length - 1 !== idx ? ", " : ""}`
+      );
+    }, "");
+
   const total = useAppSelector(showtimeTotalTicket);
   const cinemaName = currentShowtime?.cinemaName;
   const startAt = new Date(currentShowtime?.startAt ?? new Date());
@@ -36,19 +58,8 @@ const CheckoutScreen = () => {
     handleGroupByReservation();
   }, [reservations]);
 
-  const reservationString = () =>
-    Object.keys(groupedReservations).reduce<string>((acc, key, idx, arr) => {
-      const name = GetSeatName(Number.parseInt(key));
-      const quantity = groupedReservations[Number.parseInt(key)].length;
-      return (
-        acc + `${quantity} ${name}` + `${arr.length - 1 !== idx ? ", " : ""}`
-      );
-    }, "");
-
   return (
-    <View
-      style={{ flex: 1, backgroundColor: colors.dark, paddingHorizontal: 10 }}
-    >
+    <View>
       <Text className="text-white mt-10">Hóa đơn</Text>
       <View
         className="p-4 rounded-lg mt-4 space-y-8"
@@ -76,14 +87,41 @@ const CheckoutScreen = () => {
           </Text>
         </View>
       </View>
-      <View className="mt-auto mb-[70px]">
-        <Text className="text-white mt-10">Phương thức thanh toán</Text>
-        <ButtonComponent
-          text="VNPay"
-          buttonClassName="w-full mt-4 h-[60px]"
-          textClassName="text-[18px] font-semibold"
-        />
-      </View>
+    </View>
+  );
+};
+
+const PaymentDurationComponent = () => {
+  const [durationMinutes, setDurationMinutes] = useState(10 * 60);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDurationMinutes((pre) => pre - 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  return (
+    <View className="mx-auto mt-10">
+      <Text className="text-gray-300">
+        Thời gian thanh toán còn lại: {durationMinutes} giây
+      </Text>
+    </View>
+  );
+};
+
+const PaymentDestinationComponent = () => {
+  return (
+    <View className="mt-auto mb-[70px]">
+      <Text className="text-white mt-10">Phương thức thanh toán</Text>
+      <ButtonComponent
+        text="VNPay"
+        buttonClassName="w-full mt-4 h-[60px]"
+        textClassName="text-[18px] font-semibold"
+      />
     </View>
   );
 };

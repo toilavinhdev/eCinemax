@@ -1,4 +1,5 @@
 ﻿using eCinemas.API.Shared.BackgroundJob;
+using eCinemas.API.Shared.Library.VnPay;
 
 namespace eCinemas.API.Shared.ValueObjects;
 
@@ -17,6 +18,8 @@ public class AppSettings
     public GmailConfig GmailConfig { get; set; } = default!;
 
     public HangfireConfig HangfireConfig { get; set; } = default!;
+
+    public VnPayConfig VnPayConfig { get; set; } = default!;
 }
 
 public class StaticFileConfig

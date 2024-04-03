@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using eCinemas.API.Aggregates.CinemaAggregate;
-using eCinemas.API.Services;
+using eCinemas.API.Infrastructure.Persistence;
 using eCinemas.API.Shared.Mediator;
 using eCinemas.API.Shared.ValueObjects;
 using FluentValidation;
