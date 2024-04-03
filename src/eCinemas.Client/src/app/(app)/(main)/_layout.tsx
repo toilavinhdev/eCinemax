@@ -6,6 +6,8 @@ import {
 } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
+import { Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors } from "~/shared/constants";
 
 const MainLayout = () => {
@@ -35,6 +37,7 @@ const MainLayout = () => {
               color={focused ? colors.primary : colors.gray}
             />
           ),
+          header: () => <HomeHeaderComponent />,
         }}
       />
       <Tabs.Screen
@@ -77,6 +80,30 @@ const MainLayout = () => {
         }}
       ></Tabs.Screen>
     </Tabs>
+  );
+};
+
+const HomeHeaderComponent = () => {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View
+      className="h-[60px] px-3 flex-row justify-center items-center"
+      style={{
+        paddingTop: insets.top,
+        height: insets.top + 60,
+        backgroundColor: colors.secondary,
+      }}
+    >
+      <View>
+        <Text
+          className="font-[900] text-[24px]"
+          style={{ color: colors.primary }}
+        >
+          ECINEMAX
+        </Text>
+      </View>
+    </View>
   );
 };
 

@@ -1,12 +1,6 @@
 import { router } from "expo-router";
 import React, { useState } from "react";
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Text,
-  View,
-} from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { updatePassword } from "~/features/user";
 import { ButtonComponent, InputComponent } from "~/shared/components";
@@ -37,13 +31,8 @@ const UpdatePasswordScreen = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 items-center justify-center px-6"
+      className="flex-1 px-6"
     >
-      <View>
-        <Text className="font-medium text-[18px]">
-          Đặt lại mật khẩu của bạn
-        </Text>
-      </View>
       <View className="w-full mt-8">
         <InputComponent
           label="Mật khẩu hiện tại"
@@ -70,22 +59,24 @@ const UpdatePasswordScreen = () => {
           containerClassName="w-full mt-4"
         />
       </View>
-      <ButtonComponent
-        loading={status === "loading"}
-        disabled={status === "loading"}
-        text="Xác nhận"
-        onPress={() => onSubmit()}
-        textClassName="font-semibold text-[18px]"
-        buttonClassName="mt-8 w-full h-[60px]"
-      />
-      <ButtonComponent
-        disabled={status === "loading"}
-        text="Hủy"
-        onPress={() => router.back()}
-        textClassName="font-semibold text-[18px]"
-        buttonClassName="mt-2 w-full h-[60px]"
-        appearance="text"
-      />
+      <View className="mt-auto mb-[40px]">
+        <ButtonComponent
+          loading={status === "loading"}
+          disabled={status === "loading"}
+          text="Xác nhận"
+          onPress={() => onSubmit()}
+          textClassName="font-semibold text-[18px]"
+          buttonClassName="mt-8 w-full h-[60px]"
+        />
+        <ButtonComponent
+          disabled={status === "loading"}
+          text="Hủy"
+          onPress={() => router.back()}
+          textClassName="font-semibold text-[18px]"
+          buttonClassName="mt-2 w-full h-[60px]"
+          appearance="text"
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 };

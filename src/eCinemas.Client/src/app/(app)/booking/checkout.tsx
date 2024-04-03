@@ -1,89 +1,105 @@
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
-import { IReservation, showtimeTotalTicket } from "~/features/showtime";
-import { useAppSelector } from "~/features/store";
-import { ButtonComponent } from "~/shared/components";
+import { RefreshControl, ScrollView, Text, View } from "react-native";
+import { getBooking } from "~/features/booking";
+import { clearReservations } from "~/features/showtime";
+import { useAppDispatch, useAppSelector } from "~/features/store";
+import { ButtonComponent, NoDataComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
 import { GetSeatName } from "~/shared/utils";
 
-interface IGroupedReservations {
-  [key: number]: IReservation[];
-}
-
 const CheckoutScreen = () => {
+  const { bookingId } = useLocalSearchParams<{ bookingId: string }>();
+  const booking = useAppSelector((state) => state.booking.booking);
+  const dispatch = useAppDispatch();
+
+  const loadBooking = () => {
+    if (bookingId) dispatch(getBooking(bookingId));
+  };
+
+  useEffect(() => {
+    if (!booking) {
+      loadBooking();
+    }
+
+    return () => {
+      dispatch(clearReservations());
+    };
+  });
+
   return (
     <View
       style={{ flex: 1, backgroundColor: colors.dark, paddingHorizontal: 10 }}
     >
-      <BillComponent />
-      <PaymentDurationComponent />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={loadBooking} />
+        }
+      >
+        <BillComponent />
+        <PaymentDurationComponent />
+      </ScrollView>
       <PaymentDestinationComponent />
     </View>
   );
 };
 
 const BillComponent = () => {
-  const [groupedReservations, setGroupedReservations] =
-    useState<IGroupedReservations>({});
-  const currentShowtime = useAppSelector((state) => state.showtime.showtime);
-  const reservations = useAppSelector((state) => state.showtime.reservations);
+  const booking = useAppSelector((state) => state.booking.booking);
 
-  const reservationString = () =>
-    Object.keys(groupedReservations).reduce<string>((acc, key, idx, arr) => {
-      const name = GetSeatName(Number.parseInt(key));
-      const quantity = groupedReservations[Number.parseInt(key)].length;
-      return (
-        acc + `${quantity} ${name}` + `${arr.length - 1 !== idx ? ", " : ""}`
-      );
-    }, "");
-
-  const total = useAppSelector(showtimeTotalTicket);
-  const cinemaName = currentShowtime?.cinemaName;
-  const startAt = new Date(currentShowtime?.startAt ?? new Date());
-
-  useEffect(() => {
-    const handleGroupByReservation = () => {
-      const grouped = reservations.reduce<IGroupedReservations>((acc, cur) => {
-        if (!acc[cur.type]) {
-          acc[cur.type] = [cur];
-        } else {
-          acc[cur.type].push(cur);
-        }
-        return acc;
-      }, {});
-      setGroupedReservations(grouped);
-    };
-
-    handleGroupByReservation();
-  }, [reservations]);
+  if (!booking)
+    return (
+      <View className="flex-1 items-center justify-center">
+        <NoDataComponent />
+      </View>
+    );
 
   return (
     <View>
       <Text className="text-white mt-10">Hóa đơn</Text>
       <View
-        className="p-4 rounded-lg mt-4 space-y-8"
+        className="p-4 rounded-lg mt-4"
         style={{ backgroundColor: colors.secondary }}
       >
-        <Text className="text-white text-[18px]">{cinemaName}</Text>
-        <View className="flex-row gap-x-2 items-center">
-          <Entypo name="calendar" size={21} color="white" />
-          <Text className="text-white">
-            {startAt.toLocaleString("vi-VN", {
-              weekday: "long",
-              dateStyle: "full",
-              timeStyle: "short",
-            })}
+        <View>
+          <Text className="text-white text-[18px]">{booking?.cinemaName}</Text>
+          <Text className="text-gray-300 text-[12px] mt-1">
+            {booking?.cinemaAddress}
           </Text>
         </View>
-        <View className="flex-row gap-x-2 items-center">
-          <Entypo name="ticket" size={24} color="white" />
-          <Text className="text-white">{reservationString()}</Text>
+
+        <View className="space-y-4 mt-6">
+          <View className="flex-row gap-x-4 items-center">
+            <MaterialIcons name="movie" size={22} color="white" />
+            <Text className="text-white">{booking?.movieTitle}</Text>
+          </View>
+          <View className="flex-row gap-x-4 items-center">
+            <Entypo name="calendar" size={21} color="white" />
+            <Text className="text-white">
+              {moment(booking?.showTimeStartAt).format(
+                "dddd, HH:mm - DD/MM/YYYY"
+              )}
+            </Text>
+          </View>
+          <View className="flex-row gap-x-4 items-center">
+            <Entypo name="ticket" size={22} color="white" />
+            <View className="space-y-1">
+              {booking.seats.map((seat) => (
+                <Text key={seat.type} className="text-white">
+                  {seat.quantity} {GetSeatName(seat.type)}:{" "}
+                  {seat.seatNames.join(", ")}
+                </Text>
+              ))}
+            </View>
+          </View>
         </View>
-        <View>
-          <Text className="text-white text-[16px]">Total</Text>
+
+        <View className="mt-10">
+          <Text className="text-white text-[16px]">Tổng cộng</Text>
           <Text className="text-white font-semibold text-[22px]">
-            {total.toLocaleString("vi-VN")} VND
+            {booking?.total.toLocaleString("vi-VN")} VND
           </Text>
         </View>
       </View>

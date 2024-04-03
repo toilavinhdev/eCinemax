@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   RefreshControl,
@@ -159,7 +159,6 @@ const TotalComponent = () => {
 
   const onSubmit = () => {
     if (!showtime) return;
-    console.log("clicked");
 
     dispatch(
       createBooking({

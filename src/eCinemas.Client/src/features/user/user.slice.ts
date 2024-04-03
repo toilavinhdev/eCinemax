@@ -4,6 +4,7 @@ import {
   signIn,
   signUp,
   updatePassword,
+  updateProfile,
 } from "~/features/user/user.thunk";
 import { IUserState } from "./user.interfaces";
 
@@ -69,6 +70,18 @@ const userSlice = createSlice({
       state.status = "success";
     });
     builder.addCase(updatePassword.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload as string;
+    });
+    builder.addCase(updateProfile.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    });
+    builder.addCase(updateProfile.fulfilled, (state, action) => {
+      state.status = "success";
+      state.currentUser = action.payload;
+    });
+    builder.addCase(updateProfile.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.payload as string;
     });

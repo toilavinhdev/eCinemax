@@ -42,7 +42,7 @@ public class CreateMovieCommandValidator : AbstractValidator<CreateMovieCommand>
         RuleFor(x => x.Directors).NotEmpty();
         RuleFor(x => x.Casts).NotNull();
         RuleFor(x => x.Languages).NotEmpty();
-        RuleFor(x => x.Age).NotEmpty();
+        RuleFor(x => x.Age).NotNull().GreaterThanOrEqualTo(0);
         RuleFor(x => x.Status).NotNull();
         RuleFor(x => x.Genres).NotNull();
         RuleFor(x => x.PosterUrl).NotEmpty();

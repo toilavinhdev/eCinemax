@@ -1,28 +1,29 @@
 ﻿using eCinemas.API.Aggregates.BookingAggregate;
-using eCinemas.API.Aggregates.RoomAggregate;
 using eCinemas.API.Aggregates.ShowtimeAggregate;
 using eCinemas.API.Infrastructure.Persistence;
 using eCinemas.API.Shared.Exceptions;
 using eCinemas.API.Shared.Mediator;
 using eCinemas.API.Shared.ValueObjects;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace eCinemas.API.Application.Commands.BookingCommands;
 
-public class CreateBookingCommand : IAPIRequest
+public class CreateBookingCommand : IRequest<string>
 {
     public string ShowTimeId { get; set; } = default!;
 
     public List<string> SeatNames { get; set; } = default!;
 }
 
-public class CreateBookingCommandHandler(IMongoService mongoService) : IAPIRequestHandler<CreateBookingCommand>
+public class CreateBookingCommandHandler(IMongoService mongoService) : IRequestHandler<CreateBookingCommand, string>
 {
     private readonly IMongoCollection<Booking> _bookingCollection = mongoService.Collection<Booking>();
     private readonly IMongoCollection<ShowTime> _showTimeCollection = mongoService.Collection<ShowTime>();
+    private const int BookingDurationInMinutes = 10; // Hết hạn thanh toán sau 10 phút, sử dụng job để track
     
-    public async Task<APIResponse> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
     {
         var showTimeFilterBuilder = Builders<ShowTime>.Filter;
         var showTimeFilter = showTimeFilterBuilder.Empty;
@@ -34,6 +35,8 @@ public class CreateBookingCommandHandler(IMongoService mongoService) : IAPIReque
          DocumentNotFoundException<ShowTime>.ThrowIfNotFound(showTime, "Không tìm thấy lịch chiếu");
          
          var total = 0;
+
+         var bookingSeats = new List<BookingSeat>();
          
          foreach (var seatName in request.SeatNames)
          {
@@ -44,12 +47,28 @@ public class CreateBookingCommandHandler(IMongoService mongoService) : IAPIReque
              if (reservation is null) throw new BadRequestException($"Không tìm thấy ghế ngồi {seatName}");
              if (reservation.Status == ReservationStatus.SoldOut)
                  throw new BadRequestException($"Ghế đã hết: {seatName}");
+             if (reservation.Status == ReservationStatus.AwaitingPayment)
+                 throw new BadRequestException($"Ghế đã được đặt: {seatName}");
              
              reservation.Status = ReservationStatus.AwaitingPayment;
              reservation.ReservationAt = DateTime.Now;
              reservation.ReservationBy = mongoService.UserClaims().Id;
              total += showTime.Ticket.Find(x => x.Type == reservation.Type)?.Price
                       ?? throw new NullReferenceException("Lỗi hệ thống chưa cài đặt giá vé cho ghế này");
+
+             var bookingSeat = bookingSeats.FirstOrDefault(x => x.Type == reservation.Type);
+             if (bookingSeat is not null)
+             {
+                 bookingSeat.SeatNames.Add(reservation.Name);
+             }
+             else
+             {
+                 bookingSeats.Add(new BookingSeat
+                 {
+                     Type = reservation.Type,
+                     SeatNames = [reservation.Name],
+                 });
+             }
          }
 
          var booking = new Booking
@@ -57,27 +76,21 @@ public class CreateBookingCommandHandler(IMongoService mongoService) : IAPIReque
              Id = ObjectId.GenerateNewId().ToString(),
              ShowTimeId = showTime.Id,
              Total = total,
-             SeatNames = request.SeatNames,
+             Seats = bookingSeats,
              Status = BookingStatus.WaitForPay,
-             PaymentExpiredAt = DateTime.Now.AddMinutes(10) // Hết hạn thanh toán sau 10 phút, sử dụng job để track
+             PaymentExpiredAt = DateTime.Now.AddMinutes(BookingDurationInMinutes)
          };
          booking.MarkCreated(mongoService.UserClaims().Id);
          await _bookingCollection.InsertOneAsync(booking, cancellationToken: cancellationToken);
         
          // Cập nhật trạng thái ghế đang chờ thanh toán của lịch chiếu
-         showTime.Available = showTime.Reservations
-             .Aggregate(0, 
-                 (acc, cur) => acc + cur.Count(
-                     x => x.Type != SeatType.Blank && 
-                          x.Status == ReservationStatus.Idle));
          var showTimeUpdate = Builders<ShowTime>.Update
-             .Set(x => x.Reservations, showTime.Reservations)
-             .Set(x => x.Available, showTime.Available);
+             .Set(x => x.Reservations, showTime.Reservations);
          await _showTimeCollection.UpdateOneAsync(
              showTimeFilter, 
              showTimeUpdate, 
              cancellationToken: cancellationToken);
          
-         return APIResponse.IsSuccess();
+         return booking.Id;
     }
 }

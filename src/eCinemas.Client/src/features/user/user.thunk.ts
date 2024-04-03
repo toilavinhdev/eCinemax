@@ -5,11 +5,13 @@ import {
   signInAPI,
   signUpAPI,
   updatePasswordAPI,
+  updateProfileAPI,
 } from "~/features/user/user.apis";
 import {
   ISignInRequest,
   ISignUpRequest,
   IUpdatePasswordRequest,
+  IUpdateProfileRequest,
 } from "~/features/user/user.interfaces";
 import { authConst } from "~/shared/constants";
 import { Alert } from "react-native";
@@ -65,12 +67,33 @@ export const updatePassword = createAsyncThunk(
   async (payload: IUpdatePasswordRequest, { rejectWithValue }) => {
     try {
       await updatePasswordAPI(payload);
-      Alert.alert("Cập nhật mật khẩu thành công", undefined, [
+      Alert.alert("Thay đổi mật khẩu thành công", undefined, [
         {
           text: "Xác nhận",
           onPress: () => router.replace("/other"),
         },
       ]);
+    } catch (err: any) {
+      Alert.alert(err.message ?? "Có lỗi xảy ra");
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const updateProfile = createAsyncThunk(
+  "@user/updateProfile",
+  async (payload: IUpdateProfileRequest, { rejectWithValue }) => {
+    try {
+      const response = await updateProfileAPI(payload);
+      console.log(JSON.stringify(response.data.data));
+
+      Alert.alert("Cập nhật hồ sơ thành công", undefined, [
+        {
+          text: "Xác nhận",
+          onPress: () => router.replace("/other"),
+        },
+      ]);
+      return response.data.data;
     } catch (err: any) {
       Alert.alert(err.message ?? "Có lỗi xảy ra");
       return rejectWithValue(err.message);

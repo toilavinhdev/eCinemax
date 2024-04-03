@@ -1,11 +1,14 @@
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { Slot, router } from "expo-router";
+import moment from "moment";
 import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import store, { useAppDispatch, useAppSelector } from "~/features/store";
 import { getMe, setAuthenticated } from "~/features/user";
 import { authConst } from "~/shared/constants";
+
+moment.locale("vi");
 
 const RootLayout = () => {
   return (

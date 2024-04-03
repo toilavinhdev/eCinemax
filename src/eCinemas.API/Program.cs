@@ -18,7 +18,7 @@ services.AddHttpContextAccessor();
 services.AddEndpointDefinitions(Metadata.Assembly);
 services.AddJwtBearerAuth(appSettings.JwtConfig);
 services.AddAuthorization();
-// services.AddHangfireBackgroundJob(appSettings.MongoConfig);
+services.AddHangfireBackgroundJob(appSettings.MongoConfig);
 services.AddValidatorsFromAssembly(Metadata.Assembly);
 services.AddMediatR(
     config =>
@@ -42,8 +42,8 @@ app.UseAuthorization();
 app.UsePhysicalStaticFile(appSettings.StaticFileConfig);
 app.UseHttpsRedirection();
 app.MapEndpointDefinitions();
-// app.UseHangfireBackgroundJob(appSettings.HangfireConfig);
-// app.UseRecurringJobDefinitions();
+app.UseHangfireBackgroundJob(appSettings.HangfireConfig);
+app.UseRecurringJobDefinitions();
 app.MapGet("/ping", () => "Pong");
 app.MapGet("/check-auth", () => "OK").RequireAuthorization();
 

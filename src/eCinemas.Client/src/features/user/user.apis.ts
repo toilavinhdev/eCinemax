@@ -6,6 +6,7 @@ import {
   ISignInResponse,
   ISignUpRequest,
   IUpdatePasswordRequest,
+  IUpdateProfileRequest,
 } from "~/features/user/user.interfaces";
 
 const endpoints = {
@@ -13,6 +14,7 @@ const endpoints = {
   signUp: "/api/user/sign-up",
   me: "/api/user/me",
   updatePassword: "/api/user/update-password",
+  updateProfile: "/api/user/update-profile",
 };
 
 export const signInAPI = async (payload: ISignInRequest) =>
@@ -39,5 +41,12 @@ export const updatePasswordAPI = async (payload: IUpdatePasswordRequest) =>
   await client.request<IAPIResponse<any>>({
     method: "PUT",
     url: endpoints.updatePassword,
+    data: payload,
+  });
+
+export const updateProfileAPI = async (payload: IUpdateProfileRequest) =>
+  await client.request<IAPIResponse<IGetMeResponse>>({
+    method: "PUT",
+    url: endpoints.updateProfile,
     data: payload,
   });
