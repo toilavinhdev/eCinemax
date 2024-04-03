@@ -1,4 +1,4 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React from "react";
@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { IfComponent } from "~/core/components";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { signOut } from "~/features/user/user.slice";
 import { authConst, colors } from "~/shared/constants";
@@ -38,14 +39,35 @@ const OtherScreen = () => {
   return (
     <View style={{ backgroundColor: colors.dark, flex: 1 }} className="px-4">
       {user && (
-        <View className="flex-row items-center gap-x-6 mt-6">
-          <Image
-            source={require("../../../shared/assets/images/default-avatar.jpg")}
-            className="h-[54px] w-[54px] rounded-full"
-          />
-          <Text className="text-white text-[18px] font-medium">
-            {user?.fullName}
-          </Text>
+        <View className="flex-row items-center justify-between gap-x-3 mt-6">
+          <View className="flex-row items-center gap-x-3">
+            <IfComponent
+              condition={!!user.avatarUrl}
+              elseTemplate={
+                <Image
+                  source={require("../../../shared/assets/images/default-avatar.jpg")}
+                  className="h-[54px] w-[54px] rounded-full"
+                />
+              }
+            >
+              <Image
+                source={{ uri: user.avatarUrl }}
+                className="h-[54px] w-[54px] rounded-full"
+              />
+            </IfComponent>
+
+            <View className="space-y-1">
+              <Text className="text-white text-[18px] font-medium">
+                {user?.fullName}
+              </Text>
+              <Text className="text-[12px] text-gray-300">{user?.email}</Text>
+            </View>
+          </View>
+          <TouchableOpacity onPress={() => router.push("/user/update-profile")}>
+            <Text>
+              <FontAwesome5 name="user-edit" size={24} color="white" />,
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
 

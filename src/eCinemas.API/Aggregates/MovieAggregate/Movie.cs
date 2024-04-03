@@ -28,3 +28,10 @@ public class Movie : TimeTrackingDocument
     
     public long DurationMinutes { get; set; }
 }
+
+public enum MovieStatus
+{
+    ComingSoon = 0,
+    NowShowing,
+    StopShowing
+}

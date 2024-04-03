@@ -68,8 +68,9 @@ const userSlice = createSlice({
     builder.addCase(updatePassword.fulfilled, (state) => {
       state.status = "success";
     });
-    builder.addCase(updatePassword.rejected, (state) => {
+    builder.addCase(updatePassword.rejected, (state, action) => {
       state.status = "failed";
+      state.error = action.payload as string;
     });
   },
 });

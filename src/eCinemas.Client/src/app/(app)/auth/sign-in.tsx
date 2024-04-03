@@ -1,6 +1,12 @@
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  View,
+} from "react-native";
 import {
   ButtonComponent,
   InputComponent,
@@ -22,7 +28,10 @@ const SignInScreen = () => {
   };
 
   return (
-    <View className="flex-1 bg-white px-8">
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1 bg-white px-8"
+    >
       <Text className="font-medium text-[36px] mt-20">Login</Text>
       <Text className="font-light text-[12px] mt-2">
         Login with on of following options
@@ -58,7 +67,7 @@ const SignInScreen = () => {
         buttonClassName="w-full mt-auto mb-10"
         appearance="text"
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -1,6 +1,6 @@
 ﻿using eCinemas.API.Aggregates.CinemaAggregate;
 using eCinemas.API.Aggregates.RoomAggregate;
-using eCinemas.API.Services;
+using eCinemas.API.Infrastructure.Persistence;
 using eCinemas.API.Shared.Exceptions;
 using eCinemas.API.Shared.Extensions;
 using eCinemas.API.Shared.Mediator;
@@ -40,21 +40,24 @@ public class CreateRoomCommandHandler(IMongoService mongoService) : IAPIRequestH
             .Find(x => x.Id == request.CinemaId)
             .AnyAsync(cancellationToken);
         if (!existedCinema) throw new DocumentNotFoundException<Cinema>(request.CinemaId);
+        
+        // handle seats 2d
+        var seats = request.SeatsTypes
+            .Select((columnTypes, rowIndex) =>
+                columnTypes.Select((columnType, columnIndex) => new Seat
+                {
+                    Row = rowIndex.ToSeatCharacter().ToString(),
+                    Column = columnIndex + 1,
+                    Type = columnType
+                }).ToList())
+            .ToList();
 
         var document = new Room
         {
             CinemaId = request.CinemaId,
             Name = request.Name,
-            // handle seats 2d
-            Seats = request.SeatsTypes
-                .Select((columnTypes, rowIndex) => 
-                    columnTypes.Select((columnType, columnIndex) => new Seat
-                    {
-                        Row = rowIndex.ToSeatCharacter().ToString(),
-                        Column = columnIndex + 1,
-                        Type = columnType
-                    }).ToList())
-                .ToList()
+            Seats = seats,
+            SeatCount = seats.Count
         };
         document.MarkCreated();
         

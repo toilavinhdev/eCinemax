@@ -59,5 +59,6 @@ export enum ESeatType {
 
 export enum ESeatStatus {
   Empty = 0,
+  AwaitingPayment,
   SoldOut,
 }

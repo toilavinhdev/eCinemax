@@ -1,11 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using eCinemas.API.Shared.ValueObjects;
 
-namespace eCinemas.API.Services;
+namespace eCinemas.API.Infrastructure.Services;
 
 public interface IBaseService
 {
     UserClaimValue UserClaims();
+    
+    string? IpAddress();
 }
 
 public class BaseService(IHttpContextAccessor httpContextAccessor) : IBaseService
@@ -32,5 +34,10 @@ public class BaseService(IHttpContextAccessor httpContextAccessor) : IBaseServic
             Email = decodedToken.Claims.FirstOrDefault(x => x.Type.Equals("email"))?.Value 
                     ?? throw new NullReferenceException("Claim type 'email' is required"),
         };
+    }
+
+    public string? IpAddress()
+    {
+        return httpContextAccessor.HttpContext?.Connection.LocalIpAddress?.ToString();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using eCinemas.API.Shared.ValueObjects;
 
-namespace eCinemas.API.Services;
+namespace eCinemas.API.Infrastructure.Services;
 
 public interface IStorageService : IBaseService
 {
@@ -29,7 +29,7 @@ public class StorageService(IHttpContextAccessor httpContextAccessor, AppSetting
 
     private string GetUrl(string bucketToFile)
     {
-        return $"{appSettings.StaticFileConfig.External}/{bucketToFile}";
+        return $"{appSettings.Host}{appSettings.StaticFileConfig.External}/{bucketToFile}";
     }
     
     private string InitialBucket(string path)

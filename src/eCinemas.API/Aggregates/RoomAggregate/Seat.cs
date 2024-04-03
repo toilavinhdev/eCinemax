@@ -10,3 +10,11 @@ public class Seat
     
     public SeatType Type { get; set; }
 }
+
+public enum SeatType
+{
+    Blank = 0,
+    Normal,
+    VIP,
+    Couple
+}

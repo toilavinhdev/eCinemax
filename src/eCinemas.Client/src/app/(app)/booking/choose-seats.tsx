@@ -1,7 +1,15 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { IfComponent } from "~/core/components";
+import { createBooking } from "~/features/booking";
 import {
   ESeatStatus,
   ESeatType,
@@ -23,8 +31,12 @@ const ChooseSeatsScreen = () => {
   const dispatch = useAppDispatch();
   const showtime = useAppSelector((state) => state.showtime.showtime);
 
-  useEffect(() => {
+  const loadShowtime = () => {
     if (showtimeId) dispatch(getShowtime(showtimeId));
+  };
+
+  useEffect(() => {
+    loadShowtime();
 
     return () => {
       dispatch(clearShowtime());
@@ -35,8 +47,14 @@ const ChooseSeatsScreen = () => {
   return (
     <View className="flex-1 px-2" style={{ backgroundColor: colors.dark }}>
       <ScreenComponent />
-      <RoomComponent reservations={showtime?.reservations ?? []} />
-      <SeatInfoComponent tickets={showtime?.ticket} />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={loadShowtime} />
+        }
+      >
+        <RoomComponent reservations={showtime?.reservations ?? []} />
+        <SeatInfoComponent tickets={showtime?.ticket} />
+      </ScrollView>
       <TotalComponent />
     </View>
   );
@@ -79,11 +97,15 @@ const SeatComponent = (props: { reservation: IReservation }) => {
       margin: 4,
       paddingVertical: 6,
       backgroundColor:
-        status === ESeatStatus.SoldOut
-          ? colors.success
-          : selected
-            ? colors.primary
-            : colors.gray,
+        type === ESeatType.Empty
+          ? ""
+          : status === ESeatStatus.SoldOut
+            ? colors.success
+            : status === ESeatStatus.AwaitingPayment
+              ? colors.blue
+              : selected
+                ? colors.primary
+                : colors.gray,
     },
     baseText: {
       color: status === ESeatStatus.SoldOut ? "white" : "black",
@@ -93,7 +115,7 @@ const SeatComponent = (props: { reservation: IReservation }) => {
   });
   const appearance =
     type === ESeatType.Normal
-      ? "rounded-lg"
+      ? ""
       : type === ESeatType.VIP
         ? "rounded-full"
         : type === ESeatType.Couple
@@ -101,7 +123,12 @@ const SeatComponent = (props: { reservation: IReservation }) => {
           : "";
 
   const onSelect = () => {
-    if (status === ESeatStatus.SoldOut) return;
+    if (
+      type === ESeatType.Empty ||
+      status === ESeatStatus.AwaitingPayment ||
+      status === ESeatStatus.SoldOut
+    )
+      return;
     if (!selected) {
       dispatch(addReservation(props.reservation));
     } else {
@@ -116,22 +143,41 @@ const SeatComponent = (props: { reservation: IReservation }) => {
       style={styles.baseContainer}
       className={appearance}
     >
-      <Text style={styles.baseText}>{name}</Text>
+      <Text style={styles.baseText}>
+        {type === ESeatType.Empty ? "" : name}
+      </Text>
     </TouchableOpacity>
   );
 };
 
 const TotalComponent = () => {
+  const dispatch = useAppDispatch();
   const total = useAppSelector(showtimeTotalTicket);
+  const status = useAppSelector((state) => state.booking.status);
+  const showtime = useAppSelector((state) => state.showtime.showtime);
+  const reservatons = useAppSelector((state) => state.showtime.reservations);
+
+  const onSubmit = () => {
+    if (!showtime) return;
+    console.log("clicked");
+
+    dispatch(
+      createBooking({
+        showTimeId: showtime.id,
+        seatNames: reservatons.map((x) => x.name),
+      })
+    );
+  };
 
   return (
     <View className="mt-auto mb-12">
       <ButtonComponent
-        text={`Thanh toán(${total.toLocaleString()} VND)`}
-        disabled={total === 0}
+        text={`Đặt vé(${total.toLocaleString()} VND)`}
+        disabled={total === 0 || status === "loading"}
+        loading={status === "loading"}
         buttonClassName="w-full mt-auto mb-[20px] h-[60px]"
         textClassName="text-[18px]"
-        onPress={() => router.push("/booking/checkout")}
+        onPress={onSubmit}
       />
     </View>
   );
@@ -156,6 +202,13 @@ const SeatInfoComponent = (props: { tickets?: ISeatPrice[] }) => {
           <View className="flex-row gap-1 items-center">
             <View
               className="h-[14px] w-[14px] rounded"
+              style={{ backgroundColor: colors.blue }}
+            ></View>
+            <Text className="text-white text-[10px]">Đang chờ thanh toán</Text>
+          </View>
+          <View className="flex-row gap-1 items-center">
+            <View
+              className="h-[14px] w-[14px] rounded"
               style={{ backgroundColor: colors.primary }}
             ></View>
             <Text className="text-white text-[10px]">Đang chọn</Text>
@@ -165,7 +218,7 @@ const SeatInfoComponent = (props: { tickets?: ISeatPrice[] }) => {
           {normalTicket && (
             <View className="flex-row gap-1 items-center">
               <View
-                className="h-[14px] w-[14px] rounded"
+                className="h-[14px] w-[14px]"
                 style={{ backgroundColor: colors.gray }}
               ></View>
               <Text className="text-white text-[10px]">

@@ -1,9 +1,10 @@
-﻿using eCinemas.API.Shared.ValueObjects;
+﻿using eCinemas.API.Infrastructure.Services;
+using eCinemas.API.Shared.ValueObjects;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Events;
 
-namespace eCinemas.API.Services;
+namespace eCinemas.API.Infrastructure.Persistence;
 
 public interface IMongoService : IBaseService
 {
