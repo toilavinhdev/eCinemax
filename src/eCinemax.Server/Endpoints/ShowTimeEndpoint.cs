@@ -3,6 +3,7 @@ using eCinemax.Server.Application.Commands.ShowTimeCommands;
 using eCinemax.Server.Application.Queries.ShowTimeQueries;
 using eCinemax.Server.Shared.ValueObjects;
 using MediatR;
+using Todo.NET.Extensions;
 
 namespace eCinemax.Server.Endpoints;
 

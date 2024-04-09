@@ -1,6 +1,6 @@
 ﻿using eCinemax.Server.Application.Commands.BookingCommands;
-using eCinemax.Server.Shared.BackgroundJob;
 using MediatR;
+using Todo.NET.Hangfire;
 
 namespace eCinemax.Server.Infrastructure.Schedule;
 

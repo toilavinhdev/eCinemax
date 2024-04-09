@@ -1,5 +1,4 @@
-﻿using eCinemax.Server.Shared.BackgroundJob;
-using eCinemax.Server.Shared.Library.VnPay;
+﻿using eCinemax.Server.Shared.Library.VnPay;
 
 namespace eCinemax.Server.Shared.ValueObjects;
 
@@ -60,5 +59,14 @@ public class GmailConfig
     
     public string Mail { get; set; } = default!;
     
+    public string Password { get; set; } = default!;
+}
+
+public class HangfireConfig
+{
+    public string Title { get; set; } = default!;
+
+    public string UserName { get; set; } = default!;
+
     public string Password { get; set; } = default!;
 }

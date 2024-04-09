@@ -1,5 +1,4 @@
-﻿using eCinemax.Server.Shared.Extensions;
-using eCinemax.Server.Aggregates.BookingAggregate;
+﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
 using eCinemax.Server.Application.Responses;
 using eCinemax.Server.Infrastructure.Persistence;
@@ -8,6 +7,7 @@ using eCinemax.Server.Shared.Library.VnPay;
 using eCinemax.Server.Shared.Mediator;
 using eCinemax.Server.Shared.ValueObjects;
 using MongoDB.Driver;
+using Todo.NET.Extensions;
 
 namespace eCinemax.Server.Application.Commands.BookingCommands;
 

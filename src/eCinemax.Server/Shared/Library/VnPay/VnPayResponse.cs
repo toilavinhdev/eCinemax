@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
-using eCinemax.Server.Shared.Extensions;
+using Todo.NET.Extensions;
 
 namespace eCinemax.Server.Shared.Library.VnPay;
 

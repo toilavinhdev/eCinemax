@@ -1,8 +1,6 @@
 ﻿using System.Security.Claims;
-using eCinemax.Server.Shared.Extensions;
 using eCinemax.Server.Aggregates.UserAggregate;
 using eCinemax.Server.Application.Responses;
-using eCinemax.Server.Helpers;
 using eCinemax.Server.Infrastructure.Persistence;
 using eCinemax.Server.Shared.Constants;
 using eCinemax.Server.Shared.Exceptions;
@@ -10,6 +8,8 @@ using eCinemax.Server.Shared.Mediator;
 using eCinemax.Server.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
+using Todo.NET.Extensions;
+using Todo.NET.Security;
 
 namespace eCinemax.Server.Application.Commands.UserCommands;
 
@@ -54,7 +54,7 @@ public class SignInCommandHandler(IMongoService mongoService, AppSettings appSet
             new("email", user.Email)
         };
 
-        var accessToken = JwtBearerProvider.GenerateAccessToken(
+        var accessToken = JwtBearer.GenerateAccessToken(
             appSettings.JwtConfig.TokenSingingKey, 
             claims,
             DateTime.Now.AddMinutes(appSettings.JwtConfig.AccessTokenDurationInMinutes));

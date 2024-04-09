@@ -1,8 +1,8 @@
 ﻿using eCinemax.Server.Aggregates.UserAggregate;
 using eCinemax.Server.Application.Commands.UserCommands;
 using eCinemax.Server.Application.Queries.UserQueries;
-using eCinemax.Server.Shared.ValueObjects;
 using MediatR;
+using Todo.NET.Extensions;
 
 namespace eCinemax.Server.Endpoints;
 
