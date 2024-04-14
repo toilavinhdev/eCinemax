@@ -4,3 +4,4 @@ export * from "./swipper";
 export * from "./collapse";
 export * from "./divide";
 export * from "./no-data";
+export * from "./spinner";

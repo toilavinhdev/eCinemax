@@ -15,12 +15,15 @@ const showTimeSlice = createSlice({
   name: "@showtime",
   initialState: initialState,
   reducers: {
+    refreshStatus: (state) => {
+      (state.status = "idle"), (state.error = null);
+    },
     addReservation: (state, action: PayloadAction<IReservation>) => {
       state.reservations?.push(action.payload);
     },
     removeReservation: (state, action: PayloadAction<IReservation>) => {
       state.reservations = state.reservations?.filter(
-        (x) => x.name !== action.payload.name,
+        (x) => x.name !== action.payload.name
       );
     },
     clearReservations: (state) => {
@@ -65,10 +68,11 @@ export const showtimeTotalTicket = (state: RootState) =>
       acc +
       (state.showtime.showtime?.ticket.find((x) => x.type === cur.type)
         ?.price ?? 0),
-    0,
+    0
   ) ?? 0;
 
 export const {
+  refreshStatus,
   addReservation,
   removeReservation,
   clearReservations,

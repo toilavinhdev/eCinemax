@@ -23,5 +23,8 @@ public class MovieEndpoint : IEndpoint
 
         group.MapPost("/create", (CreateMovieCommand command, IMediator mediator) => mediator.Send(command))
             .RequireAuthorization();
+        
+        group.MapPost("/mark", (MarkMovieCommand command, IMediator mediator) => mediator.Send(command))
+            .RequireAuthorization();
     }
 }

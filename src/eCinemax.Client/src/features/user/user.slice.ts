@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import {
   getMe,
   signIn,
@@ -9,7 +9,6 @@ import {
 import { IUserState } from "./user.interfaces";
 
 const initialState: IUserState = {
-  authenticated: false,
   status: "idle",
   error: null,
   currentUser: null,
@@ -19,16 +18,12 @@ const userSlice = createSlice({
   name: "@user",
   initialState: initialState,
   reducers: {
-    setAuthenticated: (state, action: PayloadAction<boolean>) => {
-      state.authenticated = action.payload;
-    },
     refreshStatus: (state) => {
       state.status = "idle";
       state.error = null;
     },
     signOut: (state) => {
       state.currentUser = null;
-      state.authenticated = false;
     },
   },
   extraReducers: (builder) => {
@@ -38,7 +33,6 @@ const userSlice = createSlice({
     });
     builder.addCase(signIn.fulfilled, (state, action) => {
       state.status = "success";
-      state.authenticated = true;
     });
     builder.addCase(signIn.rejected, (state, action) => {
       state.status = "failed";
@@ -88,5 +82,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setAuthenticated, refreshStatus, signOut } = userSlice.actions;
+export const { refreshStatus, signOut } = userSlice.actions;
 export default userSlice.reducer;

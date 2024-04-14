@@ -28,6 +28,7 @@ const DateOfWeekPickerComponent = (props: Props) => {
     <View>
       <FlatList
         horizontal
+        showsHorizontalScrollIndicator={false}
         data={days}
         renderItem={({ item }) => (
           <TouchableOpacity

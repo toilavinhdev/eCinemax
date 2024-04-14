@@ -33,6 +33,10 @@ public class GetMovieQueryHandler(IMongoService mongoService, IMapper mapper) : 
             .Find(x => x.Id == request.Id)
             .FirstOrDefaultAsync(cancellationToken);
         DocumentNotFoundException<Movie>.ThrowIfNotFound(movie, "Không tìm thấy phim");
-        return APIResponse<GetMovieResponse>.IsSuccess(mapper.Map<GetMovieResponse>(movie));
+        
+        var data = mapper.Map<GetMovieResponse>(movie);
+        data.Marked = movie.UserMarks!.Any(x => x == mongoService.UserClaims().Id);
+
+        return APIResponse<GetMovieResponse>.IsSuccess(data);
     }
 }

@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, Text } from "react-native";
+import { Alert, ScrollView, Text } from "react-native";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { refreshStatus, signIn } from "~/features/user";
 import {
@@ -16,7 +16,7 @@ const SignInScreen = () => {
   const dispatch = useAppDispatch();
   const { status, error } = useAppSelector((state) => state.user);
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (isEmptyOrWhitespace(email)) {
       Alert.alert("Vui lòng nhập email");
       return;
@@ -29,30 +29,24 @@ const SignInScreen = () => {
       Alert.alert("Email không đúng định dạng");
       return;
     }
-    if (password.length < 6) {
-      Alert.alert("Mật khẩu tối thiểu 6 ký tự");
-      return;
-    }
     dispatch(signIn({ email, password }));
   };
 
   useEffect(() => {
     if (status === "failed" && error) {
-      Alert.alert(error);
+      Alert.alert(error, undefined, [
+        {
+          onPress: () => dispatch(refreshStatus()),
+        },
+      ]);
+    } else if (status === "success") {
+      router.replace("/");
       dispatch(refreshStatus());
-      return;
-    }
-    if (status === "success") {
-      dispatch(refreshStatus());
-      return;
     }
   }, [status]);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 bg-white px-8"
-    >
+    <ScrollView className="flex-1 bg-white px-8">
       <Text className="font-medium text-[36px] mt-20">Login</Text>
       <Text className="font-light text-[12px] mt-2">
         Login with on of following options
@@ -83,13 +77,13 @@ const SignInScreen = () => {
       <TextDivideComponent text="Hoặc" containerClassName="my-10" />
       <ButtonComponent
         text="Chưa có tài khoản? Tạo tài khoản mới"
-        onPress={() => router.push("/auth/sign-up")}
+        onPress={() => router.replace("/auth/sign-up")}
         disabled={status === "loading"}
         textClassName="font-semibold text-[14px]"
         buttonClassName="w-full mt-auto mb-10"
         appearance="text"
       />
-    </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

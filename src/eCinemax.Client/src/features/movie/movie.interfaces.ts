@@ -4,14 +4,17 @@ export interface IMovieState {
   status: "idle" | "loading" | "success" | "failed";
   error: string | null;
   list: IMovieViewModel[];
-  movie?: IGetMovieResponse;
   pagination?: IPagination;
+  collection: IMovieViewModel[];
+  collectionPagination?: IPagination;
+  movie?: IGetMovieResponse;
 }
 
 export interface IListMovieRequest {
   pageIndex: number;
   pageSize: number;
   status: EMovieStatus;
+  queryMark?: boolean;
 }
 
 export interface IListMovieResponse
@@ -30,6 +33,7 @@ export interface IGetMovieResponse {
   posterUrl: string;
   releasedAt?: Date;
   durationMinutes: number;
+  marked: boolean;
 }
 
 export interface IMovieViewModel {
@@ -43,4 +47,9 @@ export enum EMovieStatus {
   ComingSoon = 0,
   NowShowing,
   StopShowing,
+}
+
+export interface IMarkMovieRequest {
+  ids: string[];
+  isMark: boolean;
 }

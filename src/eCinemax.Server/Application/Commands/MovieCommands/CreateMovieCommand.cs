@@ -57,6 +57,7 @@ public class CreateMovieCommandHandler(IMongoService mongoService, IMapper mappe
     public async Task<APIResponse<Movie>> Handle(CreateMovieCommand request, CancellationToken cancellationToken)
     {
         var document = mapper.Map<Movie>(request);
+        document.UserMarks = [];
         document.MarkCreated();
         await _movieCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
         return APIResponse<Movie>.IsSuccess(document);

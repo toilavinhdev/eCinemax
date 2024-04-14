@@ -14,8 +14,7 @@
         <PackageReference Include="MediatR" Version="12.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2"/>
         <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
-        <PackageReference Include="toilavinh.Todo.NET.Extensions" Version="1.1.0" />
+        <PackageReference Include="toilavinh.Todo.NET.Extensions" Version="1.2.0" />
         <PackageReference Include="toilavinh.Todo.NET.Hangfire" Version="1.1.0" />
         <PackageReference Include="toilavinh.Todo.NET.Security" Version="1.0.0" />
     </ItemGroup>

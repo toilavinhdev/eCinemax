@@ -4,20 +4,13 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Redirect, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import React from "react";
 import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useAppSelector } from "~/features/store";
 import { colors } from "~/shared/constants";
 
 const MainLayout = () => {
-  const { authenticated } = useAppSelector((state) => state.user);
-
-  if (!authenticated) {
-    return <Redirect href="/auth/sign-in" />;
-  }
-
   return (
     <Tabs
       screenOptions={{

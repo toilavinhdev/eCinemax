@@ -1,10 +1,10 @@
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { Alert, ScrollView, Text } from "react-native";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { refreshStatus, signUp } from "~/features/user";
 import { ButtonComponent, InputComponent } from "~/shared/components";
 import { isEmailValid, isEmptyOrWhitespace } from "~/shared/utils";
-import { router } from "expo-router";
 
 const SignUpScreen = () => {
   const [fullName, setFullName] = useState<string>("");
@@ -40,12 +40,13 @@ const SignUpScreen = () => {
   };
 
   useEffect(() => {
-    if (error) {
-      Alert.alert(error);
-      dispatch(refreshStatus());
-      return;
-    }
-    if (status === "success") {
+    if (status === "failed" && error) {
+      Alert.alert(error, undefined, [
+        {
+          onPress: () => dispatch(refreshStatus()),
+        },
+      ]);
+    } else if (status === "success") {
       Alert.alert("Đăng ký thành công", undefined, [
         {
           onPress: () => {
@@ -54,13 +55,12 @@ const SignUpScreen = () => {
           },
         },
       ]);
-      return;
     }
   }, [status]);
 
   return (
-    <View className="flex-1 bg-white px-8">
-      <Text className="font-medium text-[36px] mt-20">Sign Up</Text>
+    <ScrollView className="flex-1 bg-white px-8">
+      <Text className="font-medium text-[36px] mt-20">Sign Up {status}</Text>
       <Text className="font-light text-[12px] mt-2">
         Sign up with on of following options
       </Text>
@@ -107,10 +107,10 @@ const SignUpScreen = () => {
         disabled={status === "loading"}
         onPress={() => router.push("/auth/sign-in")}
         textClassName="font-semibold text-[14px]"
-        buttonClassName="w-full mt-auto mb-10"
+        buttonClassName="w-full mt-3 mb-10"
         appearance="text"
       />
-    </View>
+    </ScrollView>
   );
 };
 

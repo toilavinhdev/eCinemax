@@ -15,8 +15,8 @@ builder.SetupEnvironment<AppSettings>("AppSettings", out var appSettings);
 builder.SetupSerilog();
 
 var services = builder.Services;
-services.AddCors();
-services.AddSwaggerDocument();
+services.AddPolicyCors("eCinemax");
+services.AddSwaggerDocument("eCinemax.Server", "v1");
 services.AddHttpContextAccessor();
 services.AddEndpointDefinitions(Metadata.Assembly);
 services.AddJwtBearerAuth(appSettings.JwtConfig.TokenSingingKey);
@@ -40,13 +40,11 @@ services.AddScoped<IHangfireCronJob, BookingStatusTrackingService>();
 
 var app = builder.Build();
 app.UseDefaultExceptionHandler();
-app.UseCors(o => o.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-app.UseSwaggerDocument();
+app.UsePolicyCors("eCinemax");
+app.UseSwaggerDocument("eCinemax API");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UsePhysicalStaticFiles(
-    appSettings.StaticFileConfig.Location, 
-    appSettings.StaticFileConfig.External);
+app.UsePhysicalStaticFiles(appSettings.StaticFileConfig.Location, appSettings.StaticFileConfig.External);
 app.UseHttpsRedirection();
 app.MapEndpointDefinitions();
 // app.UseHangfireManagement(

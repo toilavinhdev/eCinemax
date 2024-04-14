@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { refreshStatus, updatePassword } from "~/features/user";
 import { ButtonComponent, InputComponent } from "~/shared/components";
@@ -56,10 +56,7 @@ const UpdatePasswordScreen = () => {
   }, [status]);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 px-6"
-    >
+    <ScrollView className="flex-1 px-6">
       <View className="w-full mt-8">
         <InputComponent
           label="Mật khẩu hiện tại"
@@ -104,7 +101,7 @@ const UpdatePasswordScreen = () => {
           appearance="text"
         />
       </View>
-    </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

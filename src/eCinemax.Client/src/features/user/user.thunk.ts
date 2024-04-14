@@ -14,15 +14,13 @@ import {
   IUpdateProfileRequest,
 } from "~/features/user/user.interfaces";
 import { authConst } from "~/shared/constants";
-import { Alert } from "react-native";
-import { router } from "expo-router";
 
 export const signIn = createAsyncThunk(
   "@user/signIn",
   async (payload: ISignInRequest, { rejectWithValue }) => {
     try {
       const response = await signInAPI(payload);
-      const accessToken = response.data.data.accessToken;
+      const { accessToken } = response.data.data;
       await AsyncStorage.setItem(authConst.ACCESS_TOKEN, accessToken);
       return accessToken;
     } catch (err: any) {

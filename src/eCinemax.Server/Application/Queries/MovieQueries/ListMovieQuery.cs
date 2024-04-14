@@ -15,6 +15,8 @@ public class ListMovieQuery : IAPIRequest<ListMovieResponse>, IPaginationRequest
     public int PageSize { get; set; }
     
     public MovieStatus Status { get; set; }
+
+    public bool QueryMark { get; set; } = false;
 }
 
 public class ListMovieQueryValidator : AbstractValidator<ListMovieQuery>
@@ -32,10 +34,15 @@ public class ListMovieQueryHandler(IMongoService mongoService) : IAPIRequestHand
         
     public async Task<APIResponse<ListMovieResponse>> Handle(ListMovieQuery request, CancellationToken cancellationToken)
     {
+        var currentUserId = mongoService.UserClaims().Id;
+        
         var builder = Builders<Movie>.Filter;
         var filter = builder.Empty;
-
-        filter &= builder.Eq(x => x.Status, request.Status);
+        
+        // TODO: Cần optimize query cho UserMarks với dữ liệu lớn
+        filter &= !request.QueryMark
+            ? builder.Eq(x => x.Status, request.Status)
+            : builder.Where(x => x.UserMarks!.Any(y => y == currentUserId));
 
         var fluent = _movieCollection.Find(filter);
         var totalRecord = await fluent.CountDocumentsAsync(cancellationToken);

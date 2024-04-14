@@ -1,4 +1,4 @@
-import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React from "react";
@@ -11,13 +11,11 @@ import {
   View,
 } from "react-native";
 import { IfComponent } from "~/core/components";
-import { useAppDispatch, useAppSelector } from "~/features/store";
-import { signOut } from "~/features/user/user.slice";
+import { useAppSelector } from "~/features/store";
 import { authConst, colors } from "~/shared/constants";
 
 const OtherScreen = () => {
   const user = useAppSelector((state) => state.user.currentUser);
-  const dispatch = useAppDispatch();
 
   const onLogout = async () => {
     Alert.alert("Bạn có muốn đăng xuất không", undefined, [
@@ -25,7 +23,7 @@ const OtherScreen = () => {
         text: "Đồng ý",
         onPress: async () => {
           await AsyncStorage.removeItem(authConst.ACCESS_TOKEN);
-          dispatch(signOut());
+          router.replace("/auth/sign-in");
         },
         style: "destructive",
       },
@@ -75,8 +73,11 @@ const OtherScreen = () => {
       <FlatList
         data={[
           {
-            title: "Ngôn ngữ",
-            icon: <MaterialIcons name="language" size={24} color="white" />,
+            title: "Bộ sưu tập",
+            icon: <FontAwesome name="bookmark" size={22} color="white" />,
+            onPress: () => {
+              router.push("/collection");
+            },
           },
           {
             title: "Đổi mật khẩu",
@@ -93,6 +94,7 @@ const OtherScreen = () => {
             onPress: () => onLogout(),
           },
         ]}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={item.onPress}

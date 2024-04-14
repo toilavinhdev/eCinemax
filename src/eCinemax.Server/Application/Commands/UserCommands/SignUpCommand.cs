@@ -29,8 +29,7 @@ public class SignUpCommandValidator : AbstractValidator<SignUpCommand>
             .NotEmpty().WithMessage("Email không được bỏ trống")
             .Matches(RegexConstant.EmailRegex).WithMessage("Email không đúng định dạng");;
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Mật khẩu không được bỏ trống")
-            .MinimumLength(6).WithMessage("Mật khẩu tối thiểu 6 ký tự");
+            .NotEmpty().WithMessage("Mật khẩu không được bỏ trống");
     }
 }
 

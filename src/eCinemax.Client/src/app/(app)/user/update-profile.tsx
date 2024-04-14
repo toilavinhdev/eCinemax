@@ -1,22 +1,23 @@
-import {
-  View,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { ButtonComponent, InputComponent } from "~/shared/components";
 import { router } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Alert, ScrollView, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "~/features/store";
-import { isEmailValid, isEmptyOrWhitespace } from "~/shared/utils";
 import { refreshStatus, updateProfile } from "~/features/user";
+import { ButtonComponent, InputComponent } from "~/shared/components";
+import { isEmailValid, isEmptyOrWhitespace } from "~/shared/utils";
 
 const UpdateProfileScreen = () => {
   const [fullName, setFullName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const { status, error, currentUser } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+
+  const fillData = () => {
+    if (currentUser) {
+      setFullName(currentUser.fullName);
+      setEmail(currentUser.email);
+    }
+  };
 
   const onSubmit = () => {
     if (isEmptyOrWhitespace(fullName)) {
@@ -32,10 +33,7 @@ const UpdateProfileScreen = () => {
   };
 
   useEffect(() => {
-    if (currentUser) {
-      setFullName(currentUser.fullName);
-      setEmail(currentUser.email);
-    }
+    fillData();
   }, []);
 
   useEffect(() => {
@@ -48,7 +46,7 @@ const UpdateProfileScreen = () => {
       Alert.alert("Cập nhật thông tin thành công", undefined, [
         {
           onPress: () => {
-            router.back();
+            router.replace("/other");
             dispatch(refreshStatus());
           },
         },
@@ -57,10 +55,7 @@ const UpdateProfileScreen = () => {
   }, [status]);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 px-6"
-    >
+    <ScrollView className="flex-1 px-6">
       <View className="w-full mt-8">
         <InputComponent
           label="Tên của bạn"
@@ -93,7 +88,7 @@ const UpdateProfileScreen = () => {
           appearance="text"
         />
       </View>
-    </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

@@ -4,7 +4,7 @@ import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { hideGlobalLoading, showGlobalLoading } from "~/features/common";
 import { EMovieStatus, IMovieViewModel, listMovie } from "~/features/movie";
 import { useAppDispatch, useAppSelector } from "~/features/store";
-import { NoDataComponent } from "~/shared/components";
+import { NoDataComponent, SpinnerFooterComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
 
 const HomeScreen = () => {
@@ -16,12 +16,10 @@ const HomeScreen = () => {
   const dispatch = useAppDispatch();
   const { list, pagination, status } = useAppSelector((state) => state.movie);
 
-  const loadData = () => {
-    console.log("LOAD DATA", pageIndex);
-
+  const loadData = (idx: number) => {
     dispatch(
       listMovie({
-        pageIndex,
+        pageIndex: idx,
         pageSize: PAGE_SIZE,
         status: movieStatusFilter,
       })
@@ -30,21 +28,21 @@ const HomeScreen = () => {
 
   const refresh = () => {
     setPageIndex(1);
-    loadData();
+    loadData(1);
   };
 
   const nextBatch = () => {
-    if (!pagination?.hasNextPage) return;
-    console.log("NEXT BATCH");
-
+    if (!pagination?.hasNextPage || status === "loading") return;
+    loadData(pageIndex + 1);
     setPageIndex(pageIndex + 1);
-    console.log("COMPONENT", pageIndex);
-
-    loadData();
   };
 
   useEffect(() => {
-    console.log("STATUS CHANGE TO REFRESH 1");
+    refresh();
+  }, []);
+
+  // Mỗi khi đổi filter trạng thái phim -> refresh (match với ìninite scroll)
+  useEffect(() => {
     refresh();
   }, [movieStatusFilter]);
 
@@ -58,10 +56,6 @@ const HomeScreen = () => {
 
   return (
     <View style={{ backgroundColor: colors.dark }} className="flex-1 px-1">
-      <Text className="text-white">
-        {pageIndex}.{PAGE_SIZE}.'{list.length}'.{movieStatusFilter}.
-        {JSON.stringify(pagination)}
-      </Text>
       <MovieStatusComponent
         currentStatus={movieStatusFilter}
         setStatus={setMovieStatusFilter}
@@ -75,7 +69,11 @@ const HomeScreen = () => {
         refreshing={false}
         onEndReachedThreshold={0}
         onEndReached={nextBatch}
+        showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => <NoDataComponent />}
+        ListFooterComponent={() => (
+          <SpinnerFooterComponent show={pagination?.hasNextPage ?? false} />
+        )}
       />
     </View>
   );

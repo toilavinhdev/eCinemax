@@ -10,7 +10,11 @@ import {
   View,
 } from "react-native";
 import { hideGlobalLoading, showGlobalLoading } from "~/features/common";
-import { clearListShowtime, listShowtime } from "~/features/showtime";
+import {
+  clearListShowtime,
+  listShowtime,
+  refreshStatus,
+} from "~/features/showtime";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { CollapseComponent, NoDataComponent } from "~/shared/components";
 import { DateOfWeekPickerComponent } from "~/shared/components/datetimepicker";
@@ -32,6 +36,7 @@ const ChooseCinemaScreen = () => {
 
     return () => {
       dispatch(clearListShowtime());
+      dispatch(refreshStatus());
     };
   }, [selectedDate, movie]);
 
@@ -58,16 +63,18 @@ const ListShowTimeComponent = (props: { onLoadData: () => void }) => {
   const listOfShowtime = useAppSelector((state) => state.showtime.list);
   const status = useAppSelector((state) => state.showtime.status);
 
-  if (listOfShowtime.length === 0 && status === "success") {
-    return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={false} onRefresh={onLoadData} />
-        }
-      >
-        <NoDataComponent text="Không có lịch chiếu" />
-      </ScrollView>
-    );
+  if (listOfShowtime.length === 0) {
+    if (status === "success" || status === "failed") {
+      return (
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={false} onRefresh={onLoadData} />
+          }
+        >
+          <NoDataComponent text="Không có lịch chiếu" />
+        </ScrollView>
+      );
+    }
   }
 
   return (

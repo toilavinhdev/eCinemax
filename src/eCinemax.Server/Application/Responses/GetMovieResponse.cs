@@ -27,4 +27,6 @@ public class GetMovieResponse
     public DateTime? ReleasedAt { get; set; }
     
     public long DurationMinutes { get; set; }
+    
+    public bool Marked { get; set; }
 }

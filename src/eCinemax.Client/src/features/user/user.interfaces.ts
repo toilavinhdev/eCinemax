@@ -1,5 +1,4 @@
 export interface IUserState {
-  authenticated: boolean;
   status: "idle" | "loading" | "success" | "failed";
   error: string | null;
   currentUser: IGetMeResponse | null;

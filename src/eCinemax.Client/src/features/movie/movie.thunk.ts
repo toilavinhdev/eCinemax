@@ -1,25 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getMovieAPI, listMovieAPI } from "~/features/movie/movie.apis";
+import {
+  getMovieAPI,
+  listMovieAPI,
+  markMovieAPI,
+} from "~/features/movie/movie.apis";
 import {
   IListMovieRequest,
-  IMovieViewModel,
+  IMarkMovieRequest,
 } from "~/features/movie/movie.interfaces";
-import { RootState } from "../store";
 
 export const listMovie = createAsyncThunk(
   "@movie/list",
-  async (payload: IListMovieRequest, { rejectWithValue, getState }) => {
+  async (payload: IListMovieRequest, { rejectWithValue }) => {
     try {
-      console.log("COMPONENT TO THUNK", payload.pageIndex);
-
       const response = await listMovieAPI(payload);
-      const { records, pagination } = response.data.data;
-      const state = getState() as RootState;
-      const list = state.movie.list;
-
-      return payload.pageIndex === 1
-        ? { pagination, records }
-        : { pagination, records: [...list, ...records] };
+      return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -31,6 +26,30 @@ export const getMovie = createAsyncThunk(
   async (id: string, thunkAPI) => {
     try {
       const response = await getMovieAPI(id);
+      return response.data.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const getCollectionMovie = createAsyncThunk(
+  "@movie/collection",
+  async (payload: IListMovieRequest, { rejectWithValue }) => {
+    try {
+      const response = await listMovieAPI(payload);
+      return response.data.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const markMovie = createAsyncThunk(
+  "@movie/mark",
+  async (payload: IMarkMovieRequest, thunkAPI) => {
+    try {
+      const response = await markMovieAPI(payload);
       return response.data.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
