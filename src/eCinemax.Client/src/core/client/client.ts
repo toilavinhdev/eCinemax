@@ -2,7 +2,6 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authConst } from "~/shared/constants";
 import { IAPIResponse } from "~/core/interfaces";
-import { Alert } from "react-native";
 
 export const client = axios.create({
   baseURL: process.env.EXPO_PUBLIC_BASE_URL,
@@ -27,7 +26,7 @@ client.interceptors.response.use(
       "API RESPONSE",
       url,
       JSON.stringify(params),
-      JSON.stringify(data),
+      JSON.stringify(data)
     );
     return response;
   },
@@ -40,8 +39,8 @@ client.interceptors.response.use(
       "API ERROR",
       code,
       error.config?.url,
-      JSON.stringify(errors),
+      JSON.stringify(errors)
     );
     throw new Error(errors?.[0]);
-  },
+  }
 );

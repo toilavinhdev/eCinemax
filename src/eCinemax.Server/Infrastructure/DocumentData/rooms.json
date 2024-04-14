@@ -1,0 +1,1253 @@
+﻿[{
+  "_id": "6614bb88cf10ca64aa93b26e",
+  "CreatedAt": "2024-04-09T03:52:40.336Z",
+  "ModifiedAt": "2024-04-09T03:52:40.336Z",
+  "CinemaId": "6614bac8cf10ca64aa93b26a",
+  "Name": "QG-Q1",
+  "Seats": [
+    [
+      {
+        "Row": "A",
+        "Column": 1,
+        "Type": 1
+      },
+      {
+        "Row": "A",
+        "Column": 2,
+        "Type": 1
+      },
+      {
+        "Row": "A",
+        "Column": 3,
+        "Type": 1
+      },
+      {
+        "Row": "A",
+        "Column": 4,
+        "Type": 1
+      },
+      {
+        "Row": "A",
+        "Column": 5,
+        "Type": 1
+      },
+      {
+        "Row": "A",
+        "Column": 6,
+        "Type": 1
+      },
+      {
+        "Row": "A",
+        "Column": 7,
+        "Type": 1
+      }
+    ],
+    [
+      {
+        "Row": "B",
+        "Column": 1,
+        "Type": 1
+      },
+      {
+        "Row": "B",
+        "Column": 2,
+        "Type": 1
+      },
+      {
+        "Row": "B",
+        "Column": 3,
+        "Type": 1
+      },
+      {
+        "Row": "B",
+        "Column": 4,
+        "Type": 1
+      },
+      {
+        "Row": "B",
+        "Column": 5,
+        "Type": 1
+      },
+      {
+        "Row": "B",
+        "Column": 6,
+        "Type": 1
+      },
+      {
+        "Row": "B",
+        "Column": 7,
+        "Type": 1
+      }
+    ],
+    [
+      {
+        "Row": "C",
+        "Column": 1,
+        "Type": 2
+      },
+      {
+        "Row": "C",
+        "Column": 2,
+        "Type": 2
+      },
+      {
+        "Row": "C",
+        "Column": 3,
+        "Type": 2
+      },
+      {
+        "Row": "C",
+        "Column": 4,
+        "Type": 2
+      },
+      {
+        "Row": "C",
+        "Column": 5,
+        "Type": 2
+      },
+      {
+        "Row": "C",
+        "Column": 6,
+        "Type": 2
+      },
+      {
+        "Row": "C",
+        "Column": 7,
+        "Type": 2
+      }
+    ],
+    [
+      {
+        "Row": "D",
+        "Column": 1,
+        "Type": 2
+      },
+      {
+        "Row": "D",
+        "Column": 2,
+        "Type": 2
+      },
+      {
+        "Row": "D",
+        "Column": 3,
+        "Type": 2
+      },
+      {
+        "Row": "D",
+        "Column": 4,
+        "Type": 2
+      },
+      {
+        "Row": "D",
+        "Column": 5,
+        "Type": 2
+      },
+      {
+        "Row": "D",
+        "Column": 6,
+        "Type": 2
+      },
+      {
+        "Row": "D",
+        "Column": 7,
+        "Type": 2
+      }
+    ],
+    [
+      {
+        "Row": "E",
+        "Column": 1,
+        "Type": 0
+      },
+      {
+        "Row": "E",
+        "Column": 2,
+        "Type": 2
+      },
+      {
+        "Row": "E",
+        "Column": 3,
+        "Type": 2
+      },
+      {
+        "Row": "E",
+        "Column": 4,
+        "Type": 2
+      },
+      {
+        "Row": "E",
+        "Column": 5,
+        "Type": 2
+      },
+      {
+        "Row": "E",
+        "Column": 6,
+        "Type": 2
+      },
+      {
+        "Row": "E",
+        "Column": 7,
+        "Type": 0
+      }
+    ]
+  ],
+  "SeatCount": 33
+},
+  {
+    "_id": "6614bbc9cf10ca64aa93b26f",
+    "CreatedAt": "2024-04-09T03:53:45.060Z",
+    "ModifiedAt": "2024-04-09T03:53:45.060Z",
+    "CinemaId": "6614bac8cf10ca64aa93b26a",
+    "Name": "QG-Q2",
+    "Seats": [
+      [
+        {
+          "Row": "A",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "B",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "C",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "D",
+          "Column": 1,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 2,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 3,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 4,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 5,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 6,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 7,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 8,
+          "Type": 2
+        }
+      ],
+      [
+        {
+          "Row": "E",
+          "Column": 1,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 2,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 3,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 4,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 5,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 6,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 7,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 8,
+          "Type": 2
+        }
+      ]
+    ],
+    "SeatCount": 40
+  },
+  {
+    "_id": "6614bbe1cf10ca64aa93b270",
+    "CreatedAt": "2024-04-09T03:54:09.915Z",
+    "ModifiedAt": "2024-04-09T03:54:09.915Z",
+    "CinemaId": "6614baeecf10ca64aa93b26b",
+    "Name": "GP-G1",
+    "Seats": [
+      [
+        {
+          "Row": "A",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "B",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "C",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "D",
+          "Column": 1,
+          "Type": 0
+        },
+        {
+          "Row": "D",
+          "Column": 2,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 3,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 4,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 5,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 6,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 7,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 8,
+          "Type": 2
+        }
+      ],
+      [
+        {
+          "Row": "E",
+          "Column": 1,
+          "Type": 0
+        },
+        {
+          "Row": "E",
+          "Column": 2,
+          "Type": 0
+        },
+        {
+          "Row": "E",
+          "Column": 3,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 4,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 5,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 6,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 7,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 8,
+          "Type": 2
+        }
+      ]
+    ],
+    "SeatCount": 37
+  },
+  {
+    "_id": "6614bbf7cf10ca64aa93b271",
+    "CreatedAt": "2024-04-09T03:54:31.590Z",
+    "ModifiedAt": "2024-04-09T03:54:31.590Z",
+    "CinemaId": "6614baeecf10ca64aa93b26b",
+    "Name": "GP-G1",
+    "Seats": [
+      [
+        {
+          "Row": "A",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "B",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "C",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "D",
+          "Column": 1,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 2,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 3,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 4,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 5,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 6,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 7,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 8,
+          "Type": 2
+        }
+      ],
+      [
+        {
+          "Row": "E",
+          "Column": 1,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 2,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 3,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 4,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 5,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 6,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 7,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 8,
+          "Type": 0
+        }
+      ]
+    ],
+    "SeatCount": 39
+  },
+  {
+    "_id": "6614bc07cf10ca64aa93b272",
+    "CreatedAt": "2024-04-09T03:54:47.146Z",
+    "ModifiedAt": "2024-04-09T03:54:47.146Z",
+    "CinemaId": "6614bb2dcf10ca64aa93b26c",
+    "Name": "VC-V1",
+    "Seats": [
+      [
+        {
+          "Row": "A",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "B",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "C",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "D",
+          "Column": 1,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 2,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 3,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 4,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 5,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 6,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 7,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 8,
+          "Type": 2
+        }
+      ],
+      [
+        {
+          "Row": "E",
+          "Column": 1,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 2,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 3,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 4,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 5,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 6,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 7,
+          "Type": 2
+        },
+        {
+          "Row": "E",
+          "Column": 8,
+          "Type": 2
+        }
+      ]
+    ],
+    "SeatCount": 40
+  },
+  {
+    "_id": "6614bc1fcf10ca64aa93b273",
+    "CreatedAt": "2024-04-09T03:55:11.777Z",
+    "ModifiedAt": "2024-04-09T03:55:11.777Z",
+    "CinemaId": "6614bb50cf10ca64aa93b26d",
+    "Name": "HG-H1",
+    "Seats": [
+      [
+        {
+          "Row": "A",
+          "Column": 1,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "A",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "B",
+          "Column": 1,
+          "Type": 0
+        },
+        {
+          "Row": "B",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "B",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "C",
+          "Column": 1,
+          "Type": 0
+        },
+        {
+          "Row": "C",
+          "Column": 2,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 3,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 4,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 5,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 6,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 7,
+          "Type": 1
+        },
+        {
+          "Row": "C",
+          "Column": 8,
+          "Type": 1
+        }
+      ],
+      [
+        {
+          "Row": "D",
+          "Column": 1,
+          "Type": 0
+        },
+        {
+          "Row": "D",
+          "Column": 2,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 3,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 4,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 5,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 6,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 7,
+          "Type": 2
+        },
+        {
+          "Row": "D",
+          "Column": 8,
+          "Type": 2
+        }
+      ]
+    ],
+    "SeatCount": 29
+  }]

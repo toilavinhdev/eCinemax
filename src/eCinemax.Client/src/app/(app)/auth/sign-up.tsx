@@ -1,20 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "~/features/store";
-import { signUp } from "~/features/user";
+import { refreshStatus, signUp } from "~/features/user";
 import { ButtonComponent, InputComponent } from "~/shared/components";
-import { isEmailValid } from "~/shared/utils";
+import { isEmailValid, isEmptyOrWhitespace } from "~/shared/utils";
 import { router } from "expo-router";
 
 const SignUpScreen = () => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("Password@123");
-  const [confirmPassword, setConfirmPassword] = useState("Password@123");
+  const [fullName, setFullName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.user.status);
+  const { status, error } = useAppSelector((state) => state.user);
 
   const onSubmit = () => {
+    if (isEmptyOrWhitespace(fullName)) {
+      Alert.alert("Vui lòng nhập tên");
+      return;
+    }
+    if (isEmptyOrWhitespace(email)) {
+      Alert.alert("Vui lòng nhập email");
+      return;
+    }
+    if (isEmptyOrWhitespace(password) || isEmptyOrWhitespace(confirmPassword)) {
+      Alert.alert("Vui lòng nhập mật khẩu");
+      return;
+    }
+    if (!isEmailValid(email)) {
+      Alert.alert("Email không đúng định dạng");
+      return;
+    }
     if (password !== confirmPassword) {
       Alert.alert("Mật khẩu nhập lại không khớp");
       return;
@@ -22,6 +38,25 @@ const SignUpScreen = () => {
 
     dispatch(signUp({ email, fullName, password }));
   };
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert(error);
+      dispatch(refreshStatus());
+      return;
+    }
+    if (status === "success") {
+      Alert.alert("Đăng ký thành công", undefined, [
+        {
+          onPress: () => {
+            dispatch(refreshStatus());
+            router.replace("/auth/sign-in");
+          },
+        },
+      ]);
+      return;
+    }
+  }, [status]);
 
   return (
     <View className="flex-1 bg-white px-8">
@@ -62,13 +97,14 @@ const SignUpScreen = () => {
       <ButtonComponent
         text="Đăng ký"
         loading={status === "loading"}
-        disabled={!fullName || !password || !isEmailValid(email)}
+        disabled={status === "loading"}
         onPress={() => onSubmit()}
         textClassName="font-semibold text-[18px]"
         buttonClassName="mt-8 w-full h-[60px]"
       />
       <ButtonComponent
         text="Đã có tài khoản? Đăng nhập ngay"
+        disabled={status === "loading"}
         onPress={() => router.push("/auth/sign-in")}
         textClassName="font-semibold text-[14px]"
         buttonClassName="w-full mt-auto mb-10"

@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 import React from "react";
-import { Text } from "react-native";
 import { ButtonBackComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
 

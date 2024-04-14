@@ -1,10 +1,11 @@
-import { IPaginationResponse } from "~/core/interfaces";
+import { IPagination, IPaginationResponse } from "~/core/interfaces";
 
 export interface IMovieState {
   status: "idle" | "loading" | "success" | "failed";
   error: string | null;
   list: IMovieViewModel[];
   movie?: IGetMovieResponse;
+  pagination?: IPagination;
 }
 
 export interface IListMovieRequest {

@@ -43,7 +43,10 @@ public static class SwaggerExtensions
     public static IApplicationBuilder UseSwaggerDocument(this IApplicationBuilder app)
     {
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(c =>
+        {
+            c.DocumentTitle = "eCinemax.API";
+        });
         return app;
     }
 }

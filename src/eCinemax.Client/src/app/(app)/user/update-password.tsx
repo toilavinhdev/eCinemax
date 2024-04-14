@@ -1,19 +1,28 @@
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "~/features/store";
-import { updatePassword } from "~/features/user";
+import { refreshStatus, updatePassword } from "~/features/user";
 import { ButtonComponent, InputComponent } from "~/shared/components";
+import { isEmptyOrWhitespace } from "~/shared/utils";
 
 const UpdatePasswordScreen = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.user.status);
+  const { status, error } = useAppSelector((state) => state.user);
   const currentUser = useAppSelector((state) => state.user.currentUser);
-  const [currentPassword, setCurrentPassword] = useState("Password@123");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
 
   const onSubmit = () => {
+    if (
+      isEmptyOrWhitespace(newPassword) ||
+      isEmptyOrWhitespace(confirmNewPassword) ||
+      isEmptyOrWhitespace(currentPassword)
+    ) {
+      Alert.alert("Vui lòng nhập đầy đủ mật khẩu");
+      return;
+    }
     if (newPassword !== confirmNewPassword) {
       Alert.alert("Mật khẩu nhập lại không khớp");
       return;
@@ -27,6 +36,24 @@ const UpdatePasswordScreen = () => {
       })
     );
   };
+
+  useEffect(() => {
+    if (status === "failed" && error) {
+      Alert.alert(error);
+      dispatch(refreshStatus());
+    }
+    if (status === "success") {
+      Alert.alert("Thay đổi mật khẩu thành công", undefined, [
+        {
+          text: "Xác nhận",
+          onPress: () => {
+            router.replace("/other");
+            dispatch(refreshStatus());
+          },
+        },
+      ]);
+    }
+  }, [status]);
 
   return (
     <KeyboardAvoidingView

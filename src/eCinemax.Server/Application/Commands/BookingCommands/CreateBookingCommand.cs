@@ -1,4 +1,9 @@
-﻿using eCinemax.Server.Shared.Mediator;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using eCinemax.Server.Shared.Mediator;
 using eCinemax.Server.Shared.ValueObjects;
 using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;

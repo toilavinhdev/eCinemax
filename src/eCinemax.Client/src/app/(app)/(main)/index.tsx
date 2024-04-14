@@ -1,36 +1,80 @@
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { hideGlobalLoading, showGlobalLoading } from "~/features/common";
 import { EMovieStatus, IMovieViewModel, listMovie } from "~/features/movie";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { NoDataComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
 
 const HomeScreen = () => {
-  const [status, setStatus] = useState<EMovieStatus>(EMovieStatus.NowShowing);
+  const [movieStatusFilter, setMovieStatusFilter] = useState<EMovieStatus>(
+    EMovieStatus.NowShowing
+  );
   const [pageIndex, setPageIndex] = useState<number>(1);
-  const pageSize = 15;
+  const PAGE_SIZE = 12;
   const dispatch = useAppDispatch();
-  const featureMovieSelector = useAppSelector((state) => state.movie);
+  const { list, pagination, status } = useAppSelector((state) => state.movie);
 
   const loadData = () => {
-    dispatch(listMovie({ pageIndex, pageSize, status }));
+    console.log("LOAD DATA", pageIndex);
+
+    dispatch(
+      listMovie({
+        pageIndex,
+        pageSize: PAGE_SIZE,
+        status: movieStatusFilter,
+      })
+    );
+  };
+
+  const refresh = () => {
+    setPageIndex(1);
+    loadData();
+  };
+
+  const nextBatch = () => {
+    if (!pagination?.hasNextPage) return;
+    console.log("NEXT BATCH");
+
+    setPageIndex(pageIndex + 1);
+    console.log("COMPONENT", pageIndex);
+
+    loadData();
   };
 
   useEffect(() => {
-    loadData();
-  }, [status, pageIndex]);
+    console.log("STATUS CHANGE TO REFRESH 1");
+    refresh();
+  }, [movieStatusFilter]);
+
+  useEffect(() => {
+    if (status === "loading") {
+      dispatch(showGlobalLoading());
+    } else {
+      dispatch(hideGlobalLoading());
+    }
+  }, [status]);
 
   return (
     <View style={{ backgroundColor: colors.dark }} className="flex-1 px-1">
-      <MovieStatusComponent currentStatus={status} setStatus={setStatus} />
+      <Text className="text-white">
+        {pageIndex}.{PAGE_SIZE}.'{list.length}'.{movieStatusFilter}.
+        {JSON.stringify(pagination)}
+      </Text>
+      <MovieStatusComponent
+        currentStatus={movieStatusFilter}
+        setStatus={setMovieStatusFilter}
+      />
       <FlatList
-        data={featureMovieSelector.list}
+        data={list}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <MovieComponent item={item} />}
         numColumns={3}
-        onRefresh={() => loadData()}
+        onRefresh={refresh}
         refreshing={false}
+        onEndReachedThreshold={0}
+        onEndReached={nextBatch}
         ListEmptyComponent={() => <NoDataComponent />}
       />
     </View>

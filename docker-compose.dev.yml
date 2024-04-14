@@ -1,0 +1,10 @@
+﻿services:
+  ecinemax.server:
+    image: ecinemax.server
+    build:
+      context: .
+      dockerfile: src/eCinemax.Server/Dockerfile
+    container_name: ecinemax.server
+    ports:
+      - "9010:5005"
+    restart: always

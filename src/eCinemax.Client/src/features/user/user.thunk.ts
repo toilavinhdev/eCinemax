@@ -26,7 +26,6 @@ export const signIn = createAsyncThunk(
       await AsyncStorage.setItem(authConst.ACCESS_TOKEN, accessToken);
       return accessToken;
     } catch (err: any) {
-      Alert.alert(err.message);
       return rejectWithValue(err.message);
     }
   }
@@ -37,14 +36,7 @@ export const signUp = createAsyncThunk(
   async (payload: ISignUpRequest, { rejectWithValue }) => {
     try {
       await signUpAPI(payload);
-      Alert.alert("Đăng ký thành công", undefined, [
-        {
-          text: "Đăng nhập",
-          onPress: () => router.replace("/auth/sign-in"),
-        },
-      ]);
     } catch (err: any) {
-      Alert.alert(err.message);
       return rejectWithValue(err.message);
     }
   }
@@ -67,14 +59,7 @@ export const updatePassword = createAsyncThunk(
   async (payload: IUpdatePasswordRequest, { rejectWithValue }) => {
     try {
       await updatePasswordAPI(payload);
-      Alert.alert("Thay đổi mật khẩu thành công", undefined, [
-        {
-          text: "Xác nhận",
-          onPress: () => router.replace("/other"),
-        },
-      ]);
     } catch (err: any) {
-      Alert.alert(err.message ?? "Có lỗi xảy ra");
       return rejectWithValue(err.message);
     }
   }
@@ -85,17 +70,8 @@ export const updateProfile = createAsyncThunk(
   async (payload: IUpdateProfileRequest, { rejectWithValue }) => {
     try {
       const response = await updateProfileAPI(payload);
-      console.log(JSON.stringify(response.data.data));
-
-      Alert.alert("Cập nhật hồ sơ thành công", undefined, [
-        {
-          text: "Xác nhận",
-          onPress: () => router.replace("/other"),
-        },
-      ]);
       return response.data.data;
     } catch (err: any) {
-      Alert.alert(err.message ?? "Có lỗi xảy ra");
       return rejectWithValue(err.message);
     }
   }

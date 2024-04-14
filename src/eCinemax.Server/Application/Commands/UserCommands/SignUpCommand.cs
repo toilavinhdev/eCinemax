@@ -34,7 +34,7 @@ public class SignUpCommandValidator : AbstractValidator<SignUpCommand>
     }
 }
 
-public class SignUpCommandHandler(IMongoService mongoService, AppSettings appSettings) : IAPIRequestHandler<SignUpCommand>
+public class SignUpCommandHandler(IMongoService mongoService) : IAPIRequestHandler<SignUpCommand>
 {
     private readonly IMongoCollection<User> _userCollection = mongoService.Collection<User>();
     
@@ -55,12 +55,6 @@ public class SignUpCommandHandler(IMongoService mongoService, AppSettings appSet
         document.MarkCreated();
 
         await _userCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
-
-        // await EmailHelper.SmptSendAsync(
-        //     appSettings.GmailConfig,
-        //     request.Email,
-        //     "Đăng ký tài khoản người dùng",
-        //     "Bạn đã đăng ký thành công tài khoản eCinemaxx");
 
         return APIResponse.IsSuccess("Đăng ký thành công");
     }

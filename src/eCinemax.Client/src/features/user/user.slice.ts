@@ -22,6 +22,10 @@ const userSlice = createSlice({
     setAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.authenticated = action.payload;
     },
+    refreshStatus: (state) => {
+      state.status = "idle";
+      state.error = null;
+    },
     signOut: (state) => {
       state.currentUser = null;
       state.authenticated = false;
@@ -52,16 +56,12 @@ const userSlice = createSlice({
       state.error = action.payload as string;
     });
     builder.addCase(getMe.pending, (state) => {
-      state.status = "loading";
       state.error = null;
     });
     builder.addCase(getMe.fulfilled, (state, action) => {
-      state.status = "success";
       state.currentUser = action.payload;
     });
-    builder.addCase(getMe.rejected, (state) => {
-      state.status = "failed";
-    });
+    builder.addCase(getMe.rejected, (state) => {});
     builder.addCase(updatePassword.pending, (state) => {
       state.status = "loading";
       state.error = null;
@@ -88,5 +88,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setAuthenticated, signOut } = userSlice.actions;
+export const { setAuthenticated, refreshStatus, signOut } = userSlice.actions;
 export default userSlice.reducer;

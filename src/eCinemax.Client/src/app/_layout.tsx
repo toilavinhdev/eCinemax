@@ -4,6 +4,7 @@ import moment from "moment";
 import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
+import { SpinnerOverlayComponent } from "~/core/components";
 import store, { useAppDispatch, useAppSelector } from "~/features/store";
 import { getMe, setAuthenticated } from "~/features/user";
 import { authConst } from "~/shared/constants";
@@ -15,6 +16,7 @@ const RootLayout = () => {
     <Provider store={store}>
       <SafeAreaProvider>
         <AppGuard />
+        <SpinnerOverlayComponent></SpinnerOverlayComponent>
       </SafeAreaProvider>
     </Provider>
   );

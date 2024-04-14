@@ -21,9 +21,9 @@ services.AddHttpContextAccessor();
 services.AddEndpointDefinitions(Metadata.Assembly);
 services.AddJwtBearerAuth(appSettings.JwtConfig.TokenSingingKey);
 services.AddAuthorization();
-services.AddHangfireMongo("Hangfire",
-    appSettings.MongoConfig.ConnectionString, 
-    appSettings.MongoConfig.DatabaseName);
+// services.AddHangfireMongo("Hangfire",
+//     appSettings.MongoConfig.ConnectionString, 
+//     appSettings.MongoConfig.DatabaseName);
 services.AddValidatorsFromAssembly(Metadata.Assembly);
 services.AddMediatR(
     config =>
@@ -49,14 +49,16 @@ app.UsePhysicalStaticFiles(
     appSettings.StaticFileConfig.External);
 app.UseHttpsRedirection();
 app.MapEndpointDefinitions();
-app.UseHangfireManagement(
-    appSettings.HangfireConfig.Title,
-    appSettings.HangfireConfig.UserName,
-    appSettings.HangfireConfig.Password);
-app.UseHangfireRecurringJobs();
+// app.UseHangfireManagement(
+//     appSettings.HangfireConfig.Title,
+//     appSettings.HangfireConfig.UserName,
+//     appSettings.HangfireConfig.Password);
+// app.UseHangfireRecurringJobs();
 
 app.Map("/", () => "eCinemax.Server");
 app.MapGet("/ping", () => "Pong");
 app.MapGet("/check-auth", () => "OK").RequireAuthorization();
+
+await MongoInitialization.SeedAsync(app.Services);
 
 app.Run();

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { hideGlobalLoading, showGlobalLoading } from "~/features/common";
 import { clearListShowtime, listShowtime } from "~/features/showtime";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { CollapseComponent, NoDataComponent } from "~/shared/components";
@@ -16,8 +17,9 @@ import { DateOfWeekPickerComponent } from "~/shared/components/datetimepicker";
 import { colors } from "~/shared/constants";
 
 const ChooseCinemaScreen = () => {
-  const movie = useAppSelector((state) => state.movie.movie);
+  const { movie } = useAppSelector((state) => state.movie);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()));
+  const status = useAppSelector((state) => state.showtime.status);
   const dispatch = useAppDispatch();
 
   const loadData = () => {
@@ -33,6 +35,14 @@ const ChooseCinemaScreen = () => {
     };
   }, [selectedDate, movie]);
 
+  useEffect(() => {
+    if (status === "loading") {
+      dispatch(showGlobalLoading());
+    } else {
+      dispatch(hideGlobalLoading());
+    }
+  }, [status]);
+
   return (
     <View className="flex-1 p-2" style={{ backgroundColor: colors.dark }}>
       <DateOfWeekPickerComponent
@@ -46,15 +56,16 @@ const ChooseCinemaScreen = () => {
 const ListShowTimeComponent = (props: { onLoadData: () => void }) => {
   const { onLoadData } = props;
   const listOfShowtime = useAppSelector((state) => state.showtime.list);
+  const status = useAppSelector((state) => state.showtime.status);
 
-  if (listOfShowtime.length === 0) {
+  if (listOfShowtime.length === 0 && status === "success") {
     return (
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={false} onRefresh={onLoadData} />
         }
       >
-        <NoDataComponent />
+        <NoDataComponent text="Không có lịch chiếu" />
       </ScrollView>
     );
   }

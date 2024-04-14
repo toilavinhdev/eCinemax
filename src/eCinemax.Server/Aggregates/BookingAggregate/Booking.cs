@@ -1,4 +1,6 @@
-﻿using eCinemax.Server.Aggregates.RoomAggregate;
+﻿using System;
+using System.Collections.Generic;
+using eCinemax.Server.Aggregates.RoomAggregate;
 using eCinemax.Server.Shared.ValueObjects;
 using MongoDB.Bson.Serialization.Attributes;
 

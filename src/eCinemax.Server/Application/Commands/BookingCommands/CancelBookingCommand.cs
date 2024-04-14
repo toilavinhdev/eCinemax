@@ -1,4 +1,6 @@
-﻿using eCinemax.Server.Aggregates.BookingAggregate;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
 using eCinemax.Server.Infrastructure.Persistence;
 using eCinemax.Server.Shared.Exceptions;

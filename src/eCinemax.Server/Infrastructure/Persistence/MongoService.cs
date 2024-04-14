@@ -1,8 +1,6 @@
 ﻿using eCinemax.Server.Infrastructure.Services;
 using eCinemax.Server.Shared.ValueObjects;
-using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Events;
 
 namespace eCinemax.Server.Infrastructure.Persistence;
 
@@ -15,16 +13,9 @@ public class MongoService : BaseService, IMongoService
 {
     private readonly IMongoDatabase _database;
     
-    public MongoService(AppSettings appSettings, ILogger<MongoService> logger, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+    public MongoService(AppSettings appSettings, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
     {
         var settings = MongoClientSettings.FromConnectionString(appSettings.MongoConfig.ConnectionString);
-        settings.ClusterConfigurator = builder =>
-        {
-            builder.Subscribe<CommandStartedEvent>(e =>
-            {
-                logger.LogInformation($"Mongo driver execute command {e.CommandName}: {e.Command.ToJson()}");
-            });
-        };
         var client = new MongoClient(settings);
         _database = client.GetDatabase(appSettings.MongoConfig.DatabaseName);
     }

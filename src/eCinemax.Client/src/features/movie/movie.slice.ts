@@ -1,5 +1,5 @@
-import { IMovieState } from "~/features/movie/movie.interfaces";
 import { createSlice } from "@reduxjs/toolkit";
+import { IMovieState } from "~/features/movie/movie.interfaces";
 import { getMovie, listMovie } from "~/features/movie/movie.thunk";
 
 const initialState: IMovieState = {
@@ -7,6 +7,7 @@ const initialState: IMovieState = {
   error: null,
   list: [],
   movie: undefined,
+  pagination: undefined,
 };
 
 const movieSlice = createSlice({
@@ -24,7 +25,9 @@ const movieSlice = createSlice({
     });
     builder.addCase(listMovie.fulfilled, (state, action) => {
       state.status = "success";
-      state.list = action.payload?.records ?? [];
+      const { records, pagination } = action.payload;
+      state.list = records;
+      state.pagination = pagination;
     });
     builder.addCase(listMovie.rejected, (state) => {
       state.status = "failed";
