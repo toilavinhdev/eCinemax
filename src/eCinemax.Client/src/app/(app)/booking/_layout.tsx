@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 import React from "react";
-import { ButtonBackComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
 
 const BookingLayout = () => {
@@ -21,7 +20,12 @@ const BookingLayout = () => {
         name="checkout"
         options={{
           title: "Thanh toán",
-          headerLeft: () => <ButtonBackComponent text="Hủy" />,
+        }}
+      />
+      <Stack.Screen
+        name="history-transactions"
+        options={{
+          title: "Lịch sử giao dịch",
         }}
       />
     </Stack>

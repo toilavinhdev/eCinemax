@@ -87,6 +87,7 @@ const OtherScreen = () => {
           {
             title: "Lịch sử giao dịch",
             icon: <MaterialIcons name="history" size={28} color="white" />,
+            onPress: () => router.push("/booking/history-transactions"),
           },
           {
             title: "Đăng xuất",

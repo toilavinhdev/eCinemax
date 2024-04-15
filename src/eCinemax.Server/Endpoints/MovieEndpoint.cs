@@ -12,10 +12,7 @@ public class MovieEndpoint : IEndpoint
     {
         var group = app.MapGroup("/api/movie").WithTags(nameof(Movie));
 
-        group.MapPost("/list", (
-                    ListMovieQuery query,
-                    IMediator mediator) 
-            => mediator.Send(query))
+        group.MapPost("/list", (ListMovieQuery query, IMediator mediator) => mediator.Send(query))
             .RequireAuthorization();
 
         group.MapPost("/get", (GetMovieQuery query, IMediator mediator) => mediator.Send(query))
@@ -25,6 +22,12 @@ public class MovieEndpoint : IEndpoint
             .RequireAuthorization();
         
         group.MapPost("/mark", (MarkMovieCommand command, IMediator mediator) => mediator.Send(command))
+            .RequireAuthorization();
+        
+        group.MapPost("/list-rate", (ListMovieRateQuery query, IMediator mediator) => mediator.Send(query))
+            .RequireAuthorization();
+        
+        group.MapPost("/rating", (CreateMovieRateCommand query, IMediator mediator) => mediator.Send(query))
             .RequireAuthorization();
     }
 }

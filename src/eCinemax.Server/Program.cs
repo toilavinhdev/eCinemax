@@ -14,16 +14,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.SetupEnvironment<AppSettings>("AppSettings", out var appSettings);
 builder.SetupSerilog();
 
+var urls = new List<string>();
+if (builder.Environment.IsDevelopment())
+{
+    var localIpAddress = IPExtensions.GetLocalIPAddress();
+    urls.Add("http://localhost:5005");
+    urls.Add($"http://{localIpAddress}:5015");
+}
+
 var services = builder.Services;
 services.AddPolicyCors("eCinemax");
 services.AddSwaggerDocument("eCinemax.Server", "v1");
 services.AddHttpContextAccessor();
 services.AddEndpointDefinitions(Metadata.Assembly);
-services.AddJwtBearerAuth(appSettings.JwtConfig.TokenSingingKey);
-services.AddAuthorization();
-// services.AddHangfireMongo("Hangfire",
-//     appSettings.MongoConfig.ConnectionString, 
-//     appSettings.MongoConfig.DatabaseName);
+services.AddJwtBearerAuth(appSettings.JwtConfig.TokenSingingKey).AddAuthorization();
+services.AddHangfireMongo(o =>
+{
+    o.Prefix = "Hangfire";
+    o.ConnectionString = appSettings.MongoConfig.ConnectionString;
+    o.DatabaseName = appSettings.MongoConfig.DatabaseName;
+});
 services.AddValidatorsFromAssembly(Metadata.Assembly);
 services.AddMediatR(
     config =>
@@ -38,25 +48,30 @@ services.AddScoped<IMongoService, MongoService>();
 services.AddScoped<IHangfireCronJob, ShowTimeStatusTrackingService>();
 services.AddScoped<IHangfireCronJob, BookingStatusTrackingService>();
 
+
 var app = builder.Build();
 app.UseDefaultExceptionHandler();
 app.UsePolicyCors("eCinemax");
 app.UseSwaggerDocument("eCinemax API");
-app.UseAuthentication();
-app.UseAuthorization();
 app.UsePhysicalStaticFiles(appSettings.StaticFileConfig.Location, appSettings.StaticFileConfig.External);
+app.UseAuthentication().UseAuthorization();
 app.UseHttpsRedirection();
-app.MapEndpointDefinitions();
-// app.UseHangfireManagement(
-//     appSettings.HangfireConfig.Title,
-//     appSettings.HangfireConfig.UserName,
-//     appSettings.HangfireConfig.Password);
-// app.UseHangfireRecurringJobs();
+app.UseHangfireManagement(c =>
+{
+    c.Title = appSettings.HangfireConfig.Title;
+    c.Path = appSettings.HangfireConfig.Path;
+    c.UserName = appSettings.HangfireConfig.UserName;
+    c.Password = appSettings.HangfireConfig.Password;
+});
+app.UseHangfireRecurringJobs();
 
 app.Map("/", () => "eCinemax.Server");
 app.MapGet("/ping", () => "Pong");
 app.MapGet("/check-auth", () => "OK").RequireAuthorization();
+app.MapEndpointDefinitions();
 
 await MongoInitialization.SeedAsync(app.Services);
+
+urls.ForEach(url => app.Urls.Add(url));
 
 app.Run();

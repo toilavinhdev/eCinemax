@@ -1,4 +1,13 @@
 ﻿services:
+  app-mongo:
+    image: mongo
+    container_name: app-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+  
   ecinemax.server:
     image: ecinemax.server
     build:
@@ -6,5 +15,8 @@
       dockerfile: src/eCinemax.Server/Dockerfile
     container_name: ecinemax.server
     ports:
-      - "9010:5005"
+      - "9005:5005"
     restart: always
+
+volumes:
+  mongo-data:

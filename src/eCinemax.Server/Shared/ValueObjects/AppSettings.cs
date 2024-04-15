@@ -5,7 +5,7 @@ namespace eCinemax.Server.Shared.ValueObjects;
 public class AppSettings
 {
     public string Host { get; set; } = default!;
-
+    
     public StaticFileConfig StaticFileConfig { get; set; } = default!;
 
     public MongoConfig MongoConfig { get; set; } = default!;
@@ -65,6 +65,8 @@ public class GmailConfig
 public class HangfireConfig
 {
     public string Title { get; set; } = default!;
+    
+    public string Path { get; set; } = default!;
 
     public string UserName { get; set; } = default!;
 
