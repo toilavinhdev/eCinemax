@@ -81,8 +81,8 @@ const ListShowTimeComponent = (props: { onLoadData: () => void }) => {
     <FlatList
       data={listOfShowtime}
       keyExtractor={(item) => item.cinemaId}
-      renderItem={({ item }) => (
-        <CollapseComponent title={item.cinemaName}>
+      renderItem={({ item, index }) => (
+        <CollapseComponent title={item.cinemaName} opend={index === 0}>
           <View className="flex-row flex-wrap gap-x-3 gap-y-3 px-5 pb-5">
             {item.showTimes.map((showtime) => (
               <View
@@ -99,8 +99,11 @@ const ListShowTimeComponent = (props: { onLoadData: () => void }) => {
                   }}
                 >
                   <View className="w-[86px] py-2 ">
-                    <Text className="text-black text-center">
+                    <Text className="text-black text-center font-semibold">
                       {moment(showtime.startAt).format("HH:mm")}
+                    </Text>
+                    <Text className="text-black text-center text-[12px]">
+                      ({showtime.available} vé)
                     </Text>
                   </View>
                 </TouchableOpacity>

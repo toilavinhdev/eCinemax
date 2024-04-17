@@ -9,11 +9,14 @@ namespace eCinemax.Server.Infrastructure.Persistence;
 public interface IMongoService : IBaseService
 {
     IMongoCollection<T> Collection<T>() where T : Document;
+
+    Task<IClientSessionHandle> StartSessionAsync(ClientSessionOptions? options = null);
 }
 
 public class MongoService : BaseService, IMongoService
 {
     private readonly IMongoDatabase _database;
+    private readonly MongoClient _client;
     
     public MongoService(AppSettings appSettings, ILogger<MongoService> logger, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
     {
@@ -25,9 +28,12 @@ public class MongoService : BaseService, IMongoService
                 logger.LogInformation($"Mongo driver execute command {e.CommandName}: {e.Command.ToJson()}");
             });
         };
-        var client = new MongoClient(settings);
-        _database = client.GetDatabase(appSettings.MongoConfig.DatabaseName);
+        _client = new MongoClient(settings);
+        _database = _client.GetDatabase(appSettings.MongoConfig.DatabaseName);
     }
 
     public IMongoCollection<T> Collection<T>() where T : Document => _database.GetCollection<T>(typeof(T).Name);
+
+    public async Task<IClientSessionHandle> StartSessionAsync(ClientSessionOptions? options = null) 
+        => await _client.StartSessionAsync(options);
 }

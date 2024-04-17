@@ -1,6 +1,7 @@
 ﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.CinemaAggregate;
 using eCinemax.Server.Aggregates.MovieAggregate;
+using eCinemax.Server.Aggregates.RoomAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
 using eCinemax.Server.Application.Responses;
 using eCinemax.Server.Infrastructure.Persistence;
@@ -31,6 +32,7 @@ public class GetBookingQueryHandler(IMongoService mongoService) : IAPIRequestHan
     private readonly IMongoCollection<ShowTime> _showTimeCollection = mongoService.Collection<ShowTime>();
     private readonly IMongoCollection<Cinema> _cinemaCollection = mongoService.Collection<Cinema>();
     private readonly IMongoCollection<Movie> _movieCollection = mongoService.Collection<Movie>();
+    private readonly IMongoCollection<Room> _roomCollection = mongoService.Collection<Room>();
     
     public async Task<APIResponse<GetBookingResponse>> Handle(GetBookingQuery request, CancellationToken cancellationToken)
     {
@@ -53,6 +55,11 @@ public class GetBookingQueryHandler(IMongoService mongoService) : IAPIRequestHan
             .Find(x => x.Id == showTime.MovieId)
             .FirstOrDefaultAsync(cancellationToken);
         DocumentNotFoundException<Cinema>.ThrowIfNotFound(movie, "Không tìm thấy phim");
+        
+        var room = await _roomCollection
+            .Find(x => x.Id == showTime.RoomId)
+            .FirstOrDefaultAsync(cancellationToken);
+        DocumentNotFoundException<Cinema>.ThrowIfNotFound(movie, "Không tìm thấy phòng chiếu");
 
 
         return APIResponse<GetBookingResponse>.IsSuccess(
@@ -60,13 +67,17 @@ public class GetBookingQueryHandler(IMongoService mongoService) : IAPIRequestHan
             {
                 Id = document.Id,
                 MovieTitle = movie.Title,
+                MoviePosterUrl = movie.PosterUrl,
                 Total = document.Total,
                 Seats = document.Seats,
                 CinemaAddress = cinema.Address,
                 CinemaName = cinema.Name,
+                RoomName = room.Name,
                 PaymentExpiredAt = document.PaymentExpiredAt,
                 ShowTimeStartAt = showTime.StartAt,
+                ShowTimeFinishAt = showTime.FinishAt,
                 CreatedAt = document.CreatedAt,
+                Status = document.Status
             });
     }
 }

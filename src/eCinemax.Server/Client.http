@@ -1,0 +1,105 @@
+﻿@ENVIRONMENT = Development
+@HOST_ADDRESS = http://localhost:5005
+@HOST_ADDRESS_2 = http://192.168.160.103:5015
+@ACCESS_TOKEN = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MWU5MTY0ODQ3YzE2ZGM4MjQ0MWM4ZiIsImZ1bGxOYW1lIjoiSG9hbmcgRGluaCBWaW5oIiwiZW1haWwiOiJ0b2lsYXZpbmhAZ21haWwuY29tIiwibmJmIjoxNzEzMjc5Mzc2LCJleHAiOjYxNzEzMjc5MzE2LCJpYXQiOjE3MTMyNzkzNzZ9.HgzdqvR-x6Mgln7JXfI26vRSGMb_ibKYl-UqTJPyeW4
+
+###
+GET {{HOST_ADDRESS}}/ping
+
+###
+GET {{HOST_ADDRESS}}/check-auth
+
+###
+WEBSOCKET ws://{{HOST_ADDRESS}}/notification
+Sec-WebSocket-Key: {{ACCESS_TOKEN}}
+
+### 
+POST {{HOST_ADDRESS}}/api/user/sign-in
+Content-Type: application/json
+
+{
+  "email": "toilavinh@gmail.com",
+  "password": "Password@123"
+}
+
+###
+POST {{HOST_ADDRESS}}/api/user/sign-up
+Content-Type: application/json
+
+{
+  "fullName": "Hoang Dinh Vinh",
+  "email": "toilavinh@gmail.com",
+  "password": "Password@123"
+}
+
+###
+POST {{HOST_ADDRESS}}/api/user/me
+Content-Type: application/json
+Authorization: {{ACCESS_TOKEN}}
+
+###
+POST {{HOST_ADDRESS}}/api/movie/list
+Content-Type: application/json
+Authorization: {{ACCESS_TOKEN}}
+
+{
+  "pageIndex": 1,
+  "pageSize": 12,
+  "status": 1
+}
+
+###
+POST {{HOST_ADDRESS}}/api/movie/get
+Content-Type: application/json
+Authorization: {{ACCESS_TOKEN}}
+
+{
+  "id": "6615e19bed3121c65342e894"
+}
+
+###
+POST {{HOST_ADDRESS}}/api/room/create
+Content-Type: application/json
+Authorization: {{ACCESS_TOKEN}}
+
+{
+  "cinemaId": "6614bb50cf10ca64aa93b26d",
+  "name": "HH-H1",
+  "seatsTypes": [
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,2,2,2,2,2,2,2]
+  ]
+}
+
+###
+POST {{HOST_ADDRESS}}/api/showtime/list
+Content-Type: application/json
+Authorization: {{ACCESS_TOKEN}}
+
+{
+  "movieId": "66088f6c2d7262951592977f",
+  "showDate": "2024-04-03"
+}
+
+###
+POST {{HOST_ADDRESS}}/api/showtime/create
+Content-Type: application/json
+Authorization: {{ACCESS_TOKEN}}
+
+{
+  "movie": "6615e19bed3121c65342e894",
+  "room": "6614bb88cf10ca64aa93b26e",
+  "startAt": "2024-04-15T18:30:00+07:00",
+  "ticket": [
+    {
+      "type": 1,
+      "price": 45000
+    },
+    {
+      "type": 2,
+      "price": 65000
+    }
+  ]
+}

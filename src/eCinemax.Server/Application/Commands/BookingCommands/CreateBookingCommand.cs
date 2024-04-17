@@ -80,6 +80,7 @@ public class CreateBookingCommandHandler(IMongoService mongoService) : IRequestH
          {
              Id = ObjectId.GenerateNewId().ToString(),
              ShowTimeId = showTime.Id,
+             MovieId = showTime.MovieId,
              Total = total,
              Seats = bookingSeats,
              Status = BookingStatus.WaitForPay,

@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using eCinemax.Server.Aggregates.RoomAggregate;
+﻿using eCinemax.Server.Aggregates.RoomAggregate;
 using eCinemax.Server.Shared.ValueObjects;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace eCinemax.Server.Aggregates.BookingAggregate;
 
 public class Booking : ModifierTrackingDocument
 {
+    [BsonRepresentation(BsonType.ObjectId)]
     public string ShowTimeId { get; set; } = default!;
+    
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string MovieId { get; set; } = default!;
 
     public List<BookingSeat> Seats { get; set; } = default!;
     

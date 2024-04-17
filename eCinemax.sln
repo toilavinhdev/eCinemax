@@ -6,7 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eCinemax.Server", "src\eCin
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A2B0E253-A9AF-4C30-98A5-F79C9706DA6A}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.dev.yml = docker-compose.dev.yml
 		docker-compose.env.yml = docker-compose.env.yml
 	EndProjectSection
 EndProject

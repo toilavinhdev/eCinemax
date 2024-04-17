@@ -13,6 +13,9 @@ public class BookingEndpoint : IEndpoint
     {
         var group = app.MapGroup("/api/booking").WithTags(nameof(Booking));
         
+        group.MapPost("/list", (ListBookingQuery query, IMediator mediator) => mediator.Send(query))
+            .RequireAuthorization();
+        
         group.MapPost("/get", (GetBookingQuery query, IMediator mediator) => mediator.Send(query))
             .RequireAuthorization();
 

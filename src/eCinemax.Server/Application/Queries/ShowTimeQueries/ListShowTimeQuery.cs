@@ -66,6 +66,7 @@ public class ListShowTimeQueryHandler(IMongoService mongoService) : IAPIRequestH
                         {
                             ShowTimeId = x.Id, 
                             StartAt = x.StartAt, 
+                            Available = x.Available
                         })
                     .OrderBy(x => x.StartAt)
                     .ToList()

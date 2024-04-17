@@ -1,16 +1,15 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using eCinemax.Server.Aggregates.BookingAggregate;
+﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
 using eCinemax.Server.Application.Responses;
 using eCinemax.Server.Infrastructure.Persistence;
 using eCinemax.Server.Shared.Exceptions;
+using eCinemax.Server.Shared.Extensions;
 using eCinemax.Server.Shared.Library.VnPay;
 using eCinemax.Server.Shared.Mediator;
 using eCinemax.Server.Shared.ValueObjects;
 using FluentValidation;
 using MongoDB.Driver;
+using static System.String;
 
 namespace eCinemax.Server.Application.Commands.BookingCommands;
 
@@ -32,7 +31,9 @@ public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentComm
     }
 }
 
-public class CreatePaymentCommandHandler(IMongoService mongoService, 
+public class CreatePaymentCommandHandler(
+    IMongoService mongoService,
+    ILogger<CreatePaymentCommandHandler> logger,
     AppSettings appSettings) : IAPIRequestHandler<CreatePaymentCommand, CreatePaymentResponse>
 {
     private readonly IMongoCollection<Booking> _bookingCollection = mongoService.Collection<Booking>();
@@ -40,6 +41,8 @@ public class CreatePaymentCommandHandler(IMongoService mongoService,
     
     public async Task<APIResponse<CreatePaymentResponse>> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
     {
+        var currentUserId = mongoService.UserClaims().Id;
+        
         var bookingFilter = Builders<Booking>.Filter.Eq(x => x.Id, request.BookingId);
         var booking = await _bookingCollection
             .Find(bookingFilter)
@@ -55,12 +58,47 @@ public class CreatePaymentCommandHandler(IMongoService mongoService,
             Destination = request.Destination,
             Content = $"Thanh toán đơn hàng {booking.Id}",
             Amount = booking.Total,
-            PaidAt = null,
-            Status = PaymentStatus.Processing // để tạm success test trước, sau rồi triển khai VNPay(PaymentStatus.Processing)
+            PaidAt = DateTime.Now,
+            Status = PaymentStatus.Success // để tạm success test trước, sau rồi triển khai VNPay(PaymentStatus.Processing)
         };
+        booking.Status = BookingStatus.Success;
+        
+        // TODO: Update reservation showtime
+        var showTimeFilter = Builders<ShowTime>.Filter.Eq(x => x.Id, booking.ShowTimeId);
+        var showTime = await _showTimeCollection
+            .Find(showTimeFilter)
+            .FirstOrDefaultAsync(cancellationToken);
+        if (showTime is null) throw new BadRequestException("Lịch chiếu không tồn tại. Vui lòng thử lại");
+        
+        var reservations = showTime.Reservations
+            .SelectMany(x => x)
+            .Where(x => 
+                x.ReservationBy == currentUserId && 
+                booking.Seats.SelectMany(seat => seat.SeatNames).Contains(x.Name))
+            .ToList();
+        if (reservations is null || reservations.Count == 0) throw new BadRequestException("Có lỗi xảy ra");
 
-        var bookingUpdate = Builders<Booking>.Update.Set(x => x.Payment, booking.Payment);
-        await _bookingCollection.UpdateOneAsync(bookingFilter, bookingUpdate, cancellationToken: cancellationToken);
+        foreach (var reservation in reservations)
+        {
+            reservation.Status = ReservationStatus.SoldOut;
+        }
+
+        try
+        {
+            var bookingUpdate = Builders<Booking>.Update
+                .Set(x => x.Status, booking.Status)
+                .Set(x => x.Payment, booking.Payment);
+            await _bookingCollection.UpdateOneAsync(bookingFilter, bookingUpdate, cancellationToken: cancellationToken);
+
+            var showTimeUpdate = Builders<ShowTime>.Update.Set(x => x.Reservations, showTime.Reservations);
+            await _showTimeCollection.UpdateOneAsync(showTimeFilter,showTimeUpdate , cancellationToken:cancellationToken);
+        }
+        catch (Exception _)
+        {
+            var message = $"Giao dịch thất bại. Mã hóa đơn giao dịch {booking.Id}";
+            logger.LogError($"{message}: {_}");
+            throw new BadRequestException(message);
+        }
         
         return APIResponse<CreatePaymentResponse>.IsSuccess(
             new CreatePaymentResponse
@@ -71,7 +109,7 @@ public class CreatePaymentCommandHandler(IMongoService mongoService,
 
     private string BuildPaymentUrl(CreatePaymentCommand request, string bookingId, int amount)
     {
-        var paymentUrl = string.Empty;
+        var paymentUrl = Empty;
         
         switch (request.Destination)
         {
@@ -86,7 +124,7 @@ public class CreatePaymentCommandHandler(IMongoService mongoService,
                     vnp_BankCode = null,
                     vnp_CreateDate = DateTime.Now.ToString("yyyyMMddHHmmss"),
                     vnp_CurrCode = "VND",
-                    vnp_IpAddr = mongoService.IpAddress() ?? string.Empty,
+                    vnp_IpAddr = IPExtensions.GetLocalIPAddress(),
                     vnp_Locale = "vn",
                     vnp_OrderInfo = $"Thanh toán đơn hàng {bookingId}",
                     vnp_OrderType = "other",

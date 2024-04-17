@@ -7,11 +7,12 @@ import { IfComponent } from "~/core/components";
 interface Props {
   title: string;
   children: ReactNode;
+  opend?: boolean;
 }
 
 const CollapseComponent = (props: Props) => {
-  const { title, children } = props;
-  const [opened, setOpened] = useState(false);
+  const { title, children, opend } = props;
+  const [opened, setOpened] = useState(opend ?? false);
 
   const toggle = () => {
     setOpened(!opened);

@@ -8,10 +8,14 @@ public class GetBookingResponse
     public string Id { get; set; } = default!;
 
     public string MovieTitle { get; set; } = default!;
+    
+    public string MoviePosterUrl { get; set; } = default!;
 
     public string CinemaName { get; set; } = default!;
 
     public string CinemaAddress { get; set; } = default!;
+
+    public string RoomName { get; set; } = default!;
 
     public List<BookingSeat> Seats { get; set; } = default!;
     
@@ -21,9 +25,14 @@ public class GetBookingResponse
     public DateTime ShowTimeStartAt { get; set; }
     
     [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+    public DateTime ShowTimeFinishAt { get; set; }
+    
+    [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
     public DateTime PaymentExpiredAt { get; set; }
     
     [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
     public DateTime CreatedAt { get; set; }
+    
+    public BookingStatus Status { get; set; }
 }
 
