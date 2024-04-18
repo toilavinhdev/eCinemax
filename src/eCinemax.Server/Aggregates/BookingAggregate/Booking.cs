@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace eCinemax.Server.Aggregates.BookingAggregate;
 
-public class Booking : ModifierTrackingDocument
+public class Booking : ModifierTrackingDocument, IAggregateRoot
 {
     [BsonRepresentation(BsonType.ObjectId)]
     public string ShowTimeId { get; set; } = default!;

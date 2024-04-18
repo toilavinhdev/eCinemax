@@ -1,4 +1,18 @@
 import { EBookingStatus } from "~/features/booking";
+import { EMovieStatus } from "~/features/movie";
+
+export const GetMovieStatusString = (status: EMovieStatus) => {
+  switch (status) {
+    case EMovieStatus.NowShowing:
+      return "Đang chiếu";
+    case EMovieStatus.ComingSoon:
+      return "Sắp ra rạp";
+    case EMovieStatus.StopShowing:
+      return "Không có lịch chiếu";
+    default:
+      throw new Error("Out of range seat type value");
+  }
+};
 
 export const GetBookingStatusString = (status: EBookingStatus) => {
   switch (status) {

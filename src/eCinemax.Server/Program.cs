@@ -14,14 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.SetupEnvironment<AppSettings>("AppSettings", out var appSettings);
 builder.SetupSerilog();
 
-var urls = new List<string>();
-if (builder.Environment.IsDevelopment())
-{
-    var localIpAddress = IPExtensions.GetLocalIPAddress();
-    urls.Add("http://localhost:5005");
-    urls.Add($"http://{localIpAddress}:5015");
-}
-
 var services = builder.Services;
 services.AddPolicyCors("eCinemax");
 services.AddSwaggerDocument("eCinemax.Server", "v1");
@@ -35,19 +27,17 @@ services.AddHangfireMongo(o =>
     o.DatabaseName = appSettings.MongoConfig.DatabaseName;
 });
 services.AddValidatorsFromAssembly(Metadata.Assembly);
-services.AddMediatR(
-    config =>
-    {
-        config.RegisterServicesFromAssembly(Metadata.Assembly);
-        config.AddOpenBehavior(typeof(ValidationBehavior<,>));
-    });
+services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(Metadata.Assembly);
+    config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
 services.AddAutoMapper(Metadata.Assembly);
 services.AddTransient<IBaseService, BaseService>();
 services.AddTransient<IStorageService, StorageService>();
 services.AddScoped<IMongoService, MongoService>();
 services.AddScoped<IHangfireCronJob, ShowTimeStatusTrackingService>();
 services.AddScoped<IHangfireCronJob, BookingStatusTrackingService>();
-
 
 var app = builder.Build();
 app.UseDefaultExceptionHandler();
@@ -72,6 +62,11 @@ app.MapEndpointDefinitions();
 
 await MongoInitialization.SeedAsync(app.Services);
 
-urls.ForEach(url => app.Urls.Add(url));
+if (builder.Environment.IsDevelopment())
+{
+    var localIpAddress = IPExtensions.GetLocalIPAddress();
+    app.Urls.Add("http://localhost:5005");
+    app.Urls.Add($"http://{localIpAddress}:5015");
+}
 
 app.Run();

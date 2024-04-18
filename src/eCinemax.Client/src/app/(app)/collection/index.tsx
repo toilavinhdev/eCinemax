@@ -1,24 +1,18 @@
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  Image,
-  Text,
-  Touchable,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { IfComponent } from "~/core/components";
 import {
   EMovieStatus,
   IMovieViewModel,
   getCollectionMovie,
-  listMovie,
 } from "~/features/movie";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { NoDataComponent, SpinnerFooterComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
+import { Fontisto } from "@expo/vector-icons";
+import { GetMovieStatusString } from "~/shared/utils/booking.util";
 
 const BookMarkScreen = () => {
   const insets = useSafeAreaInsets();
@@ -28,6 +22,7 @@ const BookMarkScreen = () => {
   );
   const [pageIndex, setPageIndex] = useState<number>(1);
   const PAGE_SIZE = 12;
+  const [selectedList, setSelectedList] = useState<string[]>([]);
 
   const loadData = (idx: number) => {
     dispatch(
@@ -51,6 +46,16 @@ const BookMarkScreen = () => {
     setPageIndex(pageIndex + 1);
   };
 
+  const isMovieSelected = (id: string) => selectedList.some((x) => x == id);
+
+  const selectMovie = (id: string) => {
+    if (isMovieSelected(id)) {
+      setSelectedList([...selectedList.filter((x) => x !== id)]);
+      return;
+    }
+    setSelectedList([...selectedList, id]);
+  };
+
   useEffect(() => {
     refresh();
 
@@ -59,13 +64,30 @@ const BookMarkScreen = () => {
 
   return (
     <View
-      className="flex-1 p-1"
+      className="flex-1 p-1 pt-2"
       style={{ backgroundColor: colors.dark, paddingBottom: insets.bottom }}
     >
       <FlatList
         data={collection}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <MovieComponent movie={item} />}
+        renderItem={({ item }) => (
+          <View className="flex-row items-center gap-x-3 px-2">
+            {/* <TouchableOpacity onPress={() => selectMovie(item.id)}>
+              <Fontisto
+                name={
+                  isMovieSelected(item.id)
+                    ? "radio-btn-active"
+                    : "radio-btn-passive"
+                }
+                size={20}
+                color={colors.red}
+              />
+            </TouchableOpacity> */}
+            <View className="flex-1">
+              <MovieComponent movie={item} />
+            </View>
+          </View>
+        )}
         numColumns={1}
         onRefresh={refresh}
         refreshing={false}
@@ -94,6 +116,7 @@ const MovieComponent = (props: { movie: IMovieViewModel }) => {
   const { movie } = props;
   return (
     <TouchableOpacity
+      className="flex-1"
       onPress={() =>
         router.push({
           pathname: "/booking/movie-detail",
@@ -101,13 +124,21 @@ const MovieComponent = (props: { movie: IMovieViewModel }) => {
         })
       }
     >
-      <View className="flex-row gap-x-4">
+      <View className="flex-row gap-x-2">
         <Image
           source={{ uri: movie.posterUrl }}
-          className="h-[80px] w-[60px] rounded-lg"
+          className="h-[50px] w-[45px] rounded-lg"
         />
         <View className="flex-1">
-          <Text className="flex-1 flex-wrap text-white">{movie.title}</Text>
+          <Text
+            className="flex-1 flex-wrap text-white text-[15px] font-semibold"
+            style={{ color: colors.primary }}
+          >
+            {movie.title}
+          </Text>
+          <Text className="flex-1 flex-wrap text-gray-200 text-[14px]">
+            {GetMovieStatusString(movie.status)}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

@@ -2,7 +2,7 @@
 
 namespace eCinemax.Server.Aggregates.FileAggregate;
 
-public class File : ModifierTrackingDocument
+public class File : ModifierTrackingDocument, IAggregateRoot
 {
     public string SourceName { get; set; } = default!;
 

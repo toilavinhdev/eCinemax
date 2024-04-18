@@ -1,3 +1,4 @@
+import { FontAwesome } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import moment from "moment";
 import React, { useEffect } from "react";
@@ -11,8 +12,8 @@ import {
 } from "react-native";
 import { IfComponent } from "~/core/components";
 import {
-  clearMovie,
   EMovieStatus,
+  clearMovie,
   getMovie,
   markMovie,
   refreshStatus,
@@ -20,7 +21,6 @@ import {
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { ButtonComponent, NoDataComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
-import { FontAwesome } from "@expo/vector-icons";
 
 const MovieDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -77,28 +77,60 @@ const MovieDetailScreen = () => {
         }
         showsVerticalScrollIndicator={false}
       >
-        <View className="flex-row items-center justify-between gap-x-3">
-          <Text
-            className="flex-1 font-semibold text-[16px]"
-            style={{ color: colors.primary }}
-          >
-            {movie?.title}
-          </Text>
-          <TouchableOpacity className="p-2" onPress={onMarkMovie}>
-            <FontAwesome
-              name={movie?.marked ? "bookmark" : "bookmark-o"}
-              size={21}
-              color={colors.primary}
-            />
-          </TouchableOpacity>
+        <View className="flex-row gap-x-4">
+          <Image
+            source={{ uri: movie?.posterUrl }}
+            className="w-[110px] h-[140px] rounded-lg"
+          />
+
+          <View className="flex-1 space-y-2">
+            <Text
+              className="font-bold text-[16px]"
+              style={{ color: colors.primary }}
+            >
+              {movie?.title}
+            </Text>
+            <View className="flex-row gap-x-1">
+              {movie?.genres.map((g, idx) => (
+                <View key={idx} className="bg-gray-700 px-1 py-[1px] rounded">
+                  <Text className="text-white text-[13px]">{g}</Text>
+                </View>
+              ))}
+            </View>
+            <View className="flex-row gap-x-1">
+              <View className="bg-green-800  px-1 py-[1px] rounded">
+                <Text className="text-white text-[13px]">{movie?.age}+</Text>
+              </View>
+              <View className="bg-green-800  px-1 py-[1px] rounded">
+                <Text className="text-white text-[13px">
+                  {movie?.durationMinutes} phút
+                </Text>
+              </View>
+
+              <View className="bg-green-800  px-1 py-[1px] rounded">
+                <Text className="text-white text-[13px]">
+                  {movie?.languages}
+                </Text>
+              </View>
+            </View>
+            <View className="flex-row gap-x-1">
+              <View className=" bg-green-800 px-1 py-[1px] rounded">
+                <Text className="text-white text-[13px]">
+                  {moment(movie?.releasedAt).format("DD/MM/yyyy")}
+                </Text>
+              </View>
+            </View>
+            <View className="flex-row gap-x-1">
+              <View className="flex-row items-center bg-green-800 gap-x-1 px-1 py-[1px] rounded">
+                <StarComponent rate={movie?.averageRate ?? 0} />
+                <Text className="text-white text-[13px]">
+                  {movie?.averageRate} (
+                  {movie?.totalReview.toLocaleString("vi-VN")} reviews)
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
-
-        <Image
-          source={{ uri: movie?.posterUrl }}
-          className="w-[110px] h-[140px] rounded-lg mt-4"
-        />
-
-        <Text className="text-white mt-4">"{movie?.plot}"</Text>
 
         <View className="mt-5 space-y-3">
           <View className="flex-row">
@@ -109,56 +141,120 @@ const MovieDetailScreen = () => {
           </View>
           <View className="flex-row">
             <Text className=" text-white w-[150px]">Diễn viên</Text>
-            <Text className="text-white flex-1" numberOfLines={1}>
+            <Text className="text-white flex-1">
               {movie?.casts.reduce((acc, cur) => acc + ", " + cur)}
             </Text>
           </View>
-          <View className="flex-row">
-            <Text className=" text-white w-[150px]">Thể loại</Text>
-            <Text className="text-white flex-1">
-              {movie?.genres.reduce((acc, cur) => acc + ", " + cur)}
+        </View>
+
+        <View>
+          <Text className="text-white mt-4">"{movie?.plot}"</Text>
+        </View>
+
+        <View className="bg-gray-700 h-px my-6"></View>
+
+        <View>
+          <View className="flex-row justify-between items-center">
+            <Text className="text-white text-[14px] font-semibold">
+              Reviews
             </Text>
+            <TouchableOpacity
+              onPress={() =>
+                router.navigate({
+                  pathname: "/booking/movie-reviews/",
+                  params: { movieId: movie?.id },
+                })
+              }
+            >
+              <Text className="text-white font-semibold text-[14px]">
+                Xem tất cả
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View className="flex-row">
-            <Text className=" text-white w-[150px]">Độ tuổi</Text>
-            <Text className="text-white flex-1">{movie?.age}+</Text>
-          </View>
-          <View className="flex-row">
-            <Text className=" text-white w-[150px]">Thời lượng</Text>
-            <Text className="text-white flex-1">
-              {movie?.durationMinutes} Phút
-            </Text>
-          </View>
-          <View className="flex-row">
-            <Text className=" text-white w-[150px]">Ngôn ngữ</Text>
-            <Text className="text-white flex-1">
-              {movie?.languages.reduce((acc, cur) => acc + ", " + cur)}
-            </Text>
-          </View>
-          <View className="flex-row">
-            <Text className="text-white w-[150px]">Ngày khởi chiếu</Text>
-            <Text className="text-white">
-              {moment(movie?.releasedAt).format("DD/MM/yyyy")}
-            </Text>
-          </View>
+          <IfComponent
+            condition={movie!.reviews.length > 0}
+            elseTemplate={
+              <View>
+                <Text className="text-white mt-2">Phim chưa có đánh giá</Text>
+              </View>
+            }
+          >
+            <ScrollView horizontal className="flex-row gap-x-3 pb-1 mt-2">
+              {movie?.reviews.map((review) => (
+                <View
+                  key={review.id}
+                  style={{ backgroundColor: colors.secondary }}
+                  className="h-[100px] w-[190px] px-3 py-2 rounded-lg"
+                >
+                  <View className="flex-row justify-between items-center">
+                    <Text
+                      className="text-white text-[13px] font-semibold flex-1"
+                      numberOfLines={1}
+                    >
+                      {review.user}
+                    </Text>
+                    <View className="flex-row items-center gap-x-1">
+                      <StarComponent rate={review.rate} />
+                      <Text className="text-white text-[13px]">
+                        {review.rate}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <Text
+                    className="text-white leading-[21px] mt-1 text-[13px]"
+                    numberOfLines={3}
+                  >
+                    {review.review}
+                  </Text>
+                </View>
+              ))}
+            </ScrollView>
+          </IfComponent>
         </View>
       </ScrollView>
 
       <IfComponent condition={movie?.status === EMovieStatus.NowShowing}>
-        <ButtonComponent
-          text="Đặt vé"
-          buttonClassName="w-full mt-auto h-[60px] mb-3"
-          textClassName="font-semibold text-[18px]"
-          onPress={() =>
-            router.push({
-              pathname: "/booking/choose-cinema",
-              params: { movieId: id },
-            })
-          }
-        />
+        <View className="flex-row mb-6">
+          <TouchableOpacity
+            className="p-2 w-[60px] h-[60px] flex items-center justify-center rounded-lg"
+            style={{ backgroundColor: colors.primary }}
+            onPress={onMarkMovie}
+          >
+            <FontAwesome
+              name={movie?.marked ? "bookmark" : "bookmark-o"}
+              size={21}
+              color="black"
+            />
+          </TouchableOpacity>
+          <ButtonComponent
+            text="Đặt vé"
+            buttonClassName="flex-1 h-[60px] ml-2"
+            textClassName="font-semibold text-[18px]"
+            onPress={() =>
+              router.push({
+                pathname: "/booking/choose-cinema",
+                params: { movieId: id },
+              })
+            }
+          />
+        </View>
       </IfComponent>
     </View>
   );
+};
+
+const StarComponent = (props: { rate: number }) => {
+  const { rate } = props;
+
+  if (rate >= 0 && rate <= 3)
+    return <FontAwesome name="star-o" size={14} color={colors.primary} />;
+  if (rate > 3 && rate <= 9.5)
+    return (
+      <FontAwesome name="star-half-empty" size={14} color={colors.primary} />
+    );
+  if (rate > 9.5 && rate <= 10)
+    return <FontAwesome name="star" size={14} color={colors.primary} />;
 };
 
 export default MovieDetailScreen;

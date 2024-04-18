@@ -17,8 +17,10 @@ interface Props {
   placeholder?: string;
   label?: string;
   password?: boolean;
+  maxLength?: number;
   containerClassName?: string;
   inputClassName?: string;
+  labelClassName?: string;
 }
 
 const InputComponent = (props: Props) => {
@@ -28,8 +30,10 @@ const InputComponent = (props: Props) => {
     placeholder,
     label,
     password,
+    maxLength,
     containerClassName,
     inputClassName,
+    labelClassName,
   } = props;
 
   const inputRef = useRef<TextInput>(null);
@@ -52,7 +56,9 @@ const InputComponent = (props: Props) => {
       >
         <View className="flex-1">
           <IfComponent condition={!!label}>
-            <Text className="pt-2 text-[12px]">{label}</Text>
+            <Text className={`pt-2 text-[12px] ${labelClassName}`}>
+              {label}
+            </Text>
           </IfComponent>
           <TextInput
             ref={inputRef}
@@ -62,9 +68,11 @@ const InputComponent = (props: Props) => {
             onChangeText={(value) => onChangeText(value)}
             placeholder={placeholder}
             secureTextEntry={password && !showPassword}
+            maxLength={maxLength}
             className={`text-[16px] pt-2 pb-3 ${inputClassName}`}
           />
         </View>
+
         {password && (
           <TouchableOpacity
             className="ml-3"
@@ -76,6 +84,14 @@ const InputComponent = (props: Props) => {
               color={focus ? "#4b5563" : "#d1d5db"}
             />
           </TouchableOpacity>
+        )}
+
+        {maxLength && (
+          <View>
+            <Text className="text-white">
+              {value.length}/{maxLength}
+            </Text>
+          </View>
         )}
       </View>
     </TouchableWithoutFeedback>

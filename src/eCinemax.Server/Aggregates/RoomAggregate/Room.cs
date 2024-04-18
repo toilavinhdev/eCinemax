@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace eCinemax.Server.Aggregates.RoomAggregate;
 
-public class Room : TimeTrackingDocument
+public class Room : TimeTrackingDocument, IAggregateRoot
 {
     [BsonRepresentation(BsonType.ObjectId)]
     public string CinemaId { get; set; } = default!;

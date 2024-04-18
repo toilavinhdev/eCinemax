@@ -24,10 +24,10 @@ public class MovieEndpoint : IEndpoint
         group.MapPost("/mark", (MarkMovieCommand command, IMediator mediator) => mediator.Send(command))
             .RequireAuthorization();
         
-        group.MapPost("/list-rate", (ListMovieRateQuery query, IMediator mediator) => mediator.Send(query))
+        group.MapPost("/rating", (CreateReviewCommand command, IMediator mediator) => mediator.Send(command))
             .RequireAuthorization();
         
-        group.MapPost("/rating", (CreateMovieRateCommand query, IMediator mediator) => mediator.Send(query))
+        group.MapPost("/reviews", (ListReviewQuery query, IMediator mediator) => mediator.Send(query))
             .RequireAuthorization();
     }
 }

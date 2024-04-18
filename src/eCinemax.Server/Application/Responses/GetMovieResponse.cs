@@ -29,4 +29,10 @@ public class GetMovieResponse
     public long DurationMinutes { get; set; }
     
     public bool Marked { get; set; }
+    
+    public double AverageRate { get; set; }
+    
+    public int TotalReview { get; set; }
+    
+    public List<ReviewViewModel>? Reviews { get; set; }
 }

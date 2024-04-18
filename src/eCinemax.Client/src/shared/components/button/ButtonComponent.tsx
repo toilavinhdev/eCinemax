@@ -1,9 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import { IfComponent } from "~/core/components";
 import { colors } from "~/shared/constants";
 
 interface Props {
-  text: string;
+  text?: string;
+  content?: ReactNode;
   disabled?: boolean;
   loading?: boolean;
   onPress?: () => void;
@@ -15,6 +17,7 @@ interface Props {
 const ButtonComponent = (props: Props) => {
   const {
     text,
+    content,
     disabled,
     loading,
     onPress,
@@ -46,11 +49,14 @@ const ButtonComponent = (props: Props) => {
           disabled={disabled}
           className={`flex justify-center items-center w-[150] h-[48] rounded-lg ${buttonClassName}`}
         >
-          {!loading ? (
-            <Text className={`text-center ${textClassName}`}>{text}</Text>
-          ) : (
-            <ActivityIndicator />
-          )}
+          <IfComponent
+            condition={!loading}
+            elseTemplate={<ActivityIndicator />}
+          >
+            <IfComponent condition={!content} elseTemplate={content}>
+              <Text className={`text-center ${textClassName}`}>{text}</Text>
+            </IfComponent>
+          </IfComponent>
         </TouchableOpacity>
       );
   }

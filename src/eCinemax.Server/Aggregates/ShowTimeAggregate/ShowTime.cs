@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace eCinemax.Server.Aggregates.ShowtimeAggregate;
 
-public class ShowTime : TimeTrackingDocument
+public class ShowTime : TimeTrackingDocument, IAggregateRoot
 {
     [BsonRepresentation(BsonType.ObjectId)]
     public string MovieId { get; set; } = default!;

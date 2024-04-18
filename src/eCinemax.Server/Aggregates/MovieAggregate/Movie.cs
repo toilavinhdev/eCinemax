@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace eCinemax.Server.Aggregates.MovieAggregate;
 
-public class Movie : TimeTrackingDocument 
+public class Movie : TimeTrackingDocument, IAggregateRoot
 {
     public string Title { get; set; } = default!;
 
@@ -28,9 +28,9 @@ public class Movie : TimeTrackingDocument
     public DateTime? ReleasedAt { get; set; }
     
     public long DurationMinutes { get; set; }
-    
+
     [BsonRepresentation(BsonType.ObjectId)]
-    public List<string>? UserMarks { get; set; }
+    public List<string> UserMarks { get; set; } = [];
 }
 
 public enum MovieStatus

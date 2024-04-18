@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace eCinemax.Server.Aggregates.CinemaAggregate;
 
-public class Cinema : Document
+public class Cinema : Document, IAggregateRoot
 {
     public string Name { get; set; } = default!;
 

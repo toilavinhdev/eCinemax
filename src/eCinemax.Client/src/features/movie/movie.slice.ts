@@ -4,7 +4,9 @@ import {
   getCollectionMovie,
   getMovie,
   listMovie,
+  listReview,
   markMovie,
+  ratingMovie,
 } from "~/features/movie/movie.thunk";
 
 const initialState: IMovieState = {
@@ -14,6 +16,8 @@ const initialState: IMovieState = {
   collection: [],
   movie: undefined,
   pagination: undefined,
+  reviews: [],
+  reviewPagination: undefined,
 };
 
 const movieSlice = createSlice({
@@ -92,6 +96,34 @@ const movieSlice = createSlice({
     });
     builder.addCase(getCollectionMovie.rejected, (state) => {
       state.status = "failed";
+    });
+    builder.addCase(listReview.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    });
+    builder.addCase(listReview.fulfilled, (state, action) => {
+      state.status = "success";
+      const { records, pagination } = action.payload;
+      state.reviews =
+        pagination.pageIndex === 1 ? records : [...state.reviews, ...records];
+      state.reviewPagination = pagination;
+    });
+    builder.addCase(listReview.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload as string;
+    });
+    builder.addCase(ratingMovie.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    });
+    builder.addCase(ratingMovie.fulfilled, (state, action) => {
+      state.status = "success";
+      const {} = action.payload;
+      state.reviews = [action.payload, ...state.reviews];
+    });
+    builder.addCase(ratingMovie.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload as string;
     });
   },
 });

@@ -2,7 +2,7 @@
 
 namespace eCinemax.Server.Aggregates.NotificationAggregate;
 
-public class Notification : TimeTrackingDocument
+public class Notification : TimeTrackingDocument, IAggregateRoot
 {
     public string Title { get; set; } = default!;
     

@@ -12,6 +12,10 @@ const BookingLayout = () => {
     >
       <Stack.Screen name="movie-detail" options={{ title: "Chi tiết phim" }} />
       <Stack.Screen
+        name="movie-reviews"
+        options={{ title: "Bình luận phim", presentation: "modal" }}
+      />
+      <Stack.Screen
         name="choose-cinema"
         options={{ title: "Chọn rạp chiếu" }}
       />

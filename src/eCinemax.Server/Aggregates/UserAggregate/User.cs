@@ -2,7 +2,7 @@
 
 namespace eCinemax.Server.Aggregates.UserAggregate;
 
-public class User : TimeTrackingDocument
+public class User : TimeTrackingDocument, IAggregateRoot
 {
     public string FullName { get; set; } = default!;
 

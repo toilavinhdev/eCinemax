@@ -3,6 +3,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace eCinemax.Server.Shared.ValueObjects;
 
+public interface IAggregateRoot;
+
 public class Document
 {
     [BsonId]
@@ -32,8 +34,10 @@ public class TimeTrackingDocument : Document
 
 public class ModifierTrackingDocument : TimeTrackingDocument
 {
+    [BsonRepresentation(BsonType.ObjectId)]
     public string CreatedBy { get; set; } = default!;
 
+    [BsonRepresentation(BsonType.ObjectId)]
     public string ModifiedBy { get; set; } = default!;
 
     public virtual void MarkCreated(string createdBy)

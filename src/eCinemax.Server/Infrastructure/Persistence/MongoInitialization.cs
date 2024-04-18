@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using eCinemax.Server.Aggregates.CinemaAggregate;
-using eCinemax.Server.Aggregates.MovieAggregate;
-using eCinemax.Server.Aggregates.RoomAggregate;
-using eCinemax.Server.Aggregates.UserAggregate;
+﻿using eCinemax.Server.Aggregates.UserAggregate;
 using eCinemax.Server.Shared.ValueObjects;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Todo.NET.Extensions;
 
@@ -23,9 +14,6 @@ public static class MongoInitialization
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<IMongoService>>();
         logger.LogInformation("Start initializing mongo documents");
         await SeedAsync<User>(mongoService, "users.json");
-        await SeedAsync<Cinema>(mongoService, "cinemas.json");
-        await SeedAsync<Room>(mongoService, "rooms.json");
-        await SeedAsync<Movie>(mongoService, "movie.json");
         logger.LogInformation("Finished initializing mongo documents");
     }
     
@@ -34,7 +22,7 @@ public static class MongoInitialization
         var collection = mongoService.Collection<TDocument>();
         var any = await collection.Find(_ => true).AnyAsync();
         if (any) return;
-        var path = Path.Combine("Infrastructure", "DocumentData", fileName);
+        var path = Path.Combine("Infrastructure", "Data", fileName);
         var json = await File.ReadAllTextAsync(path);
         if(string.IsNullOrEmpty(json)) return;
         var data = json.ToObject<List<TDocument>>();

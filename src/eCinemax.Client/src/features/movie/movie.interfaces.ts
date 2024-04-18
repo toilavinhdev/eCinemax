@@ -8,6 +8,8 @@ export interface IMovieState {
   collection: IMovieViewModel[];
   collectionPagination?: IPagination;
   movie?: IGetMovieResponse;
+  reviews: IReviewViewModel[];
+  reviewPagination?: IPagination;
 }
 
 export interface IListMovieRequest {
@@ -34,6 +36,9 @@ export interface IGetMovieResponse {
   releasedAt?: Date;
   durationMinutes: number;
   marked: boolean;
+  averageRate: number;
+  totalReview: number;
+  reviews: IReviewViewModel[];
 }
 
 export interface IMovieViewModel {
@@ -52,4 +57,27 @@ export enum EMovieStatus {
 export interface IMarkMovieRequest {
   ids: string[];
   isMark: boolean;
+}
+
+export interface IListReviewRequest {
+  movieId: string;
+  pageIndex: number;
+  pageSize: number;
+}
+
+export interface IListReviewResponse
+  extends IPaginationResponse<IReviewViewModel> {}
+
+export interface IReviewViewModel {
+  id: string;
+  rate: number;
+  user: string;
+  review?: string;
+  createdAt: Date;
+}
+
+export interface ICreateReviewRequest {
+  movieId: string;
+  rate: number;
+  review?: string | null;
 }
