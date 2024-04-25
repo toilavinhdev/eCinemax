@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { hideGlobalLoading, showGlobalLoading } from "~/features/common";
 import { EMovieStatus, IMovieViewModel, listMovie } from "~/features/movie";
@@ -15,6 +15,7 @@ const HomeScreen = () => {
   const PAGE_SIZE = 12;
   const dispatch = useAppDispatch();
   const { list, pagination, status } = useAppSelector((state) => state.movie);
+  const flatListRef = useRef(null);
 
   const loadData = (idx: number) => {
     dispatch(
@@ -61,6 +62,7 @@ const HomeScreen = () => {
         setStatus={setMovieStatusFilter}
       />
       <FlatList
+        ref={flatListRef}
         data={list}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <MovieComponent item={item} />}

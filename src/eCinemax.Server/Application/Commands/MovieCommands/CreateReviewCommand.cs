@@ -31,7 +31,7 @@ public class CreateReviewCommand : IAPIRequest<ReviewViewModel>
             DocumentNotFoundException<Movie>.ThrowIfNotFound(movie, "Không tìm thấy phim");
 
             var review = await _reviewCollection
-                .Find(x => x.CreatedBy == mongoService.UserClaims().Id)
+                .Find(x => x.CreatedBy == mongoService.UserClaims().Id && x.MovieId == request.MovieId)
                 .FirstOrDefaultAsync(cancellationToken);
             if (review is not null) throw new BadRequestException("Phim này đã được đánh giá");
             
