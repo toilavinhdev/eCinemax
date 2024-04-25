@@ -1,7 +1,4 @@
 ﻿using System.Net;
-using eCinemax.Server.Shared.Exceptions;
-using eCinemax.Server.Shared.ValueObjects;
-using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace eCinemax.Server.Shared.Extensions;

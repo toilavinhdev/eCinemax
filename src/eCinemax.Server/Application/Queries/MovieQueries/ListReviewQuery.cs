@@ -1,10 +1,6 @@
 ﻿using eCinemax.Server.Aggregates.MovieAggregate;
 using eCinemax.Server.Aggregates.UserAggregate;
 using eCinemax.Server.Application.Responses;
-using eCinemax.Server.Infrastructure.Persistence;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
-using FluentValidation;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Queries.MovieQueries;

@@ -1,12 +1,6 @@
-﻿using AutoMapper;
-using eCinemax.Server.Aggregates.CinemaAggregate;
+﻿using eCinemax.Server.Aggregates.CinemaAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
 using eCinemax.Server.Application.Responses;
-using eCinemax.Server.Infrastructure.Persistence;
-using eCinemax.Server.Shared.Exceptions;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
-using FluentValidation;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Queries.ShowTimeQueries;

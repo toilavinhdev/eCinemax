@@ -1,5 +1,4 @@
 ﻿using eCinemax.Server.Application.Commands.ShowTimeCommands;
-using MediatR;
 using Todo.NET.Hangfire;
 
 namespace eCinemax.Server.Infrastructure.Schedule;

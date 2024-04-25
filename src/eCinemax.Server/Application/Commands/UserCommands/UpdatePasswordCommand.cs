@@ -1,10 +1,5 @@
 ﻿using eCinemax.Server.Aggregates.UserAggregate;
-using eCinemax.Server.Infrastructure.Persistence;
 using eCinemax.Server.Shared.Constants;
-using eCinemax.Server.Shared.Exceptions;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
-using FluentValidation;
 using MongoDB.Driver;
 using Todo.NET.Extensions;
 

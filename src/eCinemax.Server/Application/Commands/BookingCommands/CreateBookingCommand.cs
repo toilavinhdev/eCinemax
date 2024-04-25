@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
-using eCinemax.Server.Aggregates.BookingAggregate;
+﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
-using eCinemax.Server.Infrastructure.Persistence;
-using eCinemax.Server.Shared.Exceptions;
-using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 

@@ -1,0 +1,5 @@
+﻿{
+    "arguments": ["toilavinh", "Tin nhan hello world"],
+    "target": "SendMessageBroadcast",
+    "type": 1
+}

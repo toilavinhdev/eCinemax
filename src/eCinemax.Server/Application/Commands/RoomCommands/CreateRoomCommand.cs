@@ -1,11 +1,5 @@
 ﻿using eCinemax.Server.Aggregates.CinemaAggregate;
 using eCinemax.Server.Aggregates.RoomAggregate;
-using eCinemax.Server.Infrastructure.Persistence;
-using eCinemax.Server.Shared.Exceptions;
-using eCinemax.Server.Shared.Extensions;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
-using FluentValidation;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Commands.RoomCommands;

@@ -1,12 +1,6 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using eCinemax.Server.Aggregates.BookingAggregate;
+﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
-using eCinemax.Server.Infrastructure.Persistence;
-using eCinemax.Server.Shared.Exceptions;
 using eCinemax.Server.Shared.Library.VnPay;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Commands.BookingCommands;

@@ -1,5 +1,4 @@
 ﻿using eCinemax.Server.Aggregates.UserAggregate;
-using eCinemax.Server.Shared.ValueObjects;
 using MongoDB.Driver;
 using Todo.NET.Extensions;
 

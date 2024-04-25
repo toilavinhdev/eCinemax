@@ -1,5 +1,4 @@
 ﻿using eCinemax.Server.Application.Commands.FileCommands;
-using MediatR;
 using Todo.NET.Extensions;
 
 namespace eCinemax.Server.Endpoints;

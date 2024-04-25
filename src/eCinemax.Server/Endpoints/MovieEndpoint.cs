@@ -1,7 +1,6 @@
 ﻿using eCinemax.Server.Aggregates.MovieAggregate;
 using eCinemax.Server.Application.Commands.MovieCommands;
 using eCinemax.Server.Application.Queries.MovieQueries;
-using MediatR;
 using Todo.NET.Extensions;
 
 namespace eCinemax.Server.Endpoints;

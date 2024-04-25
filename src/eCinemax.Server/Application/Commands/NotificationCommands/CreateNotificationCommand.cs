@@ -1,8 +1,4 @@
 ﻿using eCinemax.Server.Aggregates.NotificationAggregate;
-using eCinemax.Server.Infrastructure.Persistence;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
-using FluentValidation;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Commands.NotificationCommands;

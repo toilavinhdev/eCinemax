@@ -1,6 +1,4 @@
-﻿using eCinemax.Server.Shared.ValueObjects;
-
-namespace eCinemax.Server.Application.Responses;
+﻿namespace eCinemax.Server.Application.Responses;
 
 public class ListReviewResponse(
     List<ReviewViewModel>

@@ -1,7 +1,4 @@
 ﻿using eCinemax.Server.Aggregates.RoomAggregate;
-using eCinemax.Server.Infrastructure.Persistence;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Queries.RoomQueries;

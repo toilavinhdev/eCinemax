@@ -1,6 +1,4 @@
-﻿using eCinemax.Server.Shared.ValueObjects;
-
-namespace eCinemax.Server.Application.Responses;
+﻿namespace eCinemax.Server.Application.Responses;
 
 public class ListNotificationResponse(List<NotificationViewModel> records, 
     int pageIndex, int pageSize, int totalRecord) : PaginationResponse<NotificationViewModel>(records, pageIndex, pageSize, totalRecord);

@@ -1,5 +1,4 @@
 ﻿using eCinemax.Server.Application.Commands.BookingCommands;
-using MediatR;
 using Todo.NET.Hangfire;
 
 namespace eCinemax.Server.Infrastructure.Schedule;

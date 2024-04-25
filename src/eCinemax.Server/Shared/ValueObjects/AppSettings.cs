@@ -33,6 +33,8 @@ public class MongoConfig
     public string ConnectionString { get; set; } = default!;
 
     public string DatabaseName { get; set; } = default!;
+    
+    public bool UseLogging { get; set; }
 }
 
 public class JwtConfig
