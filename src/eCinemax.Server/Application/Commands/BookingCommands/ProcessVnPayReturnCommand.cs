@@ -1,5 +1,6 @@
 ﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
+using eCinemax.Server.Persistence;
 using eCinemax.Server.Shared.Library.VnPay;
 using MongoDB.Driver;
 

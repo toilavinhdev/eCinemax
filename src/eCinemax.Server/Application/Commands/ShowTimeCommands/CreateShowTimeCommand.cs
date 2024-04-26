@@ -1,6 +1,7 @@
 ﻿using eCinemax.Server.Aggregates.MovieAggregate;
 using eCinemax.Server.Aggregates.RoomAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
+using eCinemax.Server.Persistence;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Commands.ShowTimeCommands;

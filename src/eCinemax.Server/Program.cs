@@ -1,3 +1,6 @@
+using eCinemax.Server.Persistence;
+using eCinemax.Server.Schedule;
+using eCinemax.Server.Services;
 using Todo.NET.Extensions;
 using Todo.NET.Hangfire;
 using Todo.NET.Security;
@@ -31,6 +34,7 @@ services.AddTransient<IStorageService, StorageService>();
 services.AddScoped<IMongoService, MongoService>();
 services.AddScoped<IHangfireCronJob, ShowTimeStatusTrackingService>();
 services.AddScoped<IHangfireCronJob, BookingStatusTrackingService>();
+services.AddSingleton<ReservationGroupService>();
 
 var app = builder.Build();
 app.UseDefaultExceptionHandler();
@@ -50,25 +54,28 @@ app.UseHangfireManagement(c =>
 });
 app.UseHangfireRecurringJobs();
 app.MapEndpointDefinitions();
-app.MapHub<NotificationSignalRHub>("/hub/notification").RequireAuthorization();
+app.MapHub<NotificationHub>("/hub/notification").RequireAuthorization();
 app.MapHub<ReservationHub>("/hub/reservation").RequireAuthorization();
 
 await MongoInitialization.SeedAsync(app.Services);
 
 if (builder.Environment.IsDevelopment())
 {
-    var localIpAddress = IPExtensions.GetLocalIPAddress();
     app.Urls.Add("http://localhost:5005");
-    app.Urls.Add($"http://{localIpAddress}:5015");
+    app.Urls.Add($"http://{IPExtensions.GetLocalIPAddress()}:5015");
 }
 
-app.MapGet("/", () => Metadata.Name);
-app.MapGet("/health", () => "OK");
-app.MapGet("/auth-check", () => "DONE").RequireAuthorization();
-app.MapGet("/hub-connections", (ConnectionManager connectionManager) => new
+app.Map("/", () => Metadata.Name);
+app.Map("/health", () => "OK");
+app.MapGet("/hub/connections", (ConnectionManager connectionManager) => new
 {
     TotalUser = connectionManager.Connections.Keys.Count,
     TotalConnection = connectionManager.Connections.Values.SelectMany(x => x).ToList().Count,
-    Data = connectionManager.Connections
+    Data = connectionManager.Connections.Select( x => new
+    {
+        UserId = x.Key,
+        Connections = x.Value
+    })
 });
+app.MapGet("/hub/reservation", (ReservationGroupService reservationGroupService) => reservationGroupService.Groups);
 app.Run();

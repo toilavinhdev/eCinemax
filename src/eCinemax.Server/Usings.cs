@@ -1,7 +1,4 @@
 ﻿global using eCinemax.Server;
-global using eCinemax.Server.Infrastructure.Persistence;
-global using eCinemax.Server.Infrastructure.Schedule;
-global using eCinemax.Server.Infrastructure.Services;
 global using eCinemax.Server.Shared.Extensions;
 global using eCinemax.Server.Shared.Mediator;
 global using eCinemax.Server.Shared.SignalR;

@@ -1,4 +1,5 @@
 ﻿using eCinemax.Server.Aggregates.CinemaAggregate;
+using eCinemax.Server.Persistence;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Queries.CinemaQueries;

@@ -1,8 +1,9 @@
-﻿using MongoDB.Bson;
+﻿using eCinemax.Server.Services;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Events;
 
-namespace eCinemax.Server.Infrastructure.Persistence;
+namespace eCinemax.Server.Persistence;
 
 public interface IMongoService : IBaseService
 {

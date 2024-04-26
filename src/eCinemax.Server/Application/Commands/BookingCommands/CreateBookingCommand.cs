@@ -1,5 +1,6 @@
 ﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
+using eCinemax.Server.Persistence;
 using MongoDB.Bson;
 using MongoDB.Driver;
 

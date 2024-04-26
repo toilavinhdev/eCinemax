@@ -13,15 +13,18 @@ public class ConnectionManager
 
     public void AddConnection(string userId, string connectionId)
     {
-        Connections.TryGetValue(userId, out var existed);
-        existed ??= [];
+        var existed = Connections.GetValueOrDefault(userId);
+        if (existed is null)
+        {
+            existed = [];
+            Connections.TryAdd(userId, existed);
+        }
         existed.Add(connectionId);
-        Connections.TryAdd(userId, existed);
     }
 
     public void RemoveConnection(string userId, string connectionId)
     {
-        Connections.TryGetValue(userId, out var existed);
+        var existed = Connections.GetValueOrDefault(userId);
         if (existed is null) return;
         existed.Remove(connectionId);
         if (existed.Count == 0) Connections.TryRemove(userId, out _);

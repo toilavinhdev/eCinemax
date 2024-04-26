@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using Todo.NET.Extensions;
 
-namespace eCinemax.Server.Infrastructure.Persistence;
+namespace eCinemax.Server.Persistence;
 
 public static class MongoInitialization
 {
@@ -21,7 +21,7 @@ public static class MongoInitialization
         var collection = mongoService.Collection<TDocument>();
         var any = await collection.Find(_ => true).AnyAsync();
         if (any) return;
-        var path = Path.Combine("Infrastructure", "Data", fileName);
+        var path = Path.Combine("Infrastructure", "MigrateData", fileName);
         var json = await File.ReadAllTextAsync(path);
         if(string.IsNullOrEmpty(json)) return;
         var data = json.ToObject<List<TDocument>>();

@@ -1,5 +1,6 @@
 ﻿using eCinemax.Server.Aggregates.CinemaAggregate;
 using eCinemax.Server.Aggregates.RoomAggregate;
+using eCinemax.Server.Persistence;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Commands.RoomCommands;

@@ -1,5 +1,6 @@
 ﻿using eCinemax.Server.Aggregates.MovieAggregate;
 using eCinemax.Server.Application.Responses;
+using eCinemax.Server.Persistence;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Queries.MovieQueries;

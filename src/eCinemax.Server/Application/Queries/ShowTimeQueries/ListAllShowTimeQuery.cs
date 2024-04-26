@@ -1,4 +1,5 @@
 ﻿using eCinemax.Server.Aggregates.ShowtimeAggregate;
+using eCinemax.Server.Persistence;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Queries.ShowTimeQueries;
