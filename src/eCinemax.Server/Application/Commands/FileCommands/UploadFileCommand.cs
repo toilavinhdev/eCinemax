@@ -1,10 +1,6 @@
-﻿using eCinemax.Server.Infrastructure.Persistence;
-using eCinemax.Server.Infrastructure.Services;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
-using FluentValidation;
+﻿using eCinemax.Server.Persistence;
+using eCinemax.Server.Services;
 using MongoDB.Driver;
-using File = eCinemax.Server.Aggregates.FileAggregate.File;
 using FileAggregate_File = eCinemax.Server.Aggregates.FileAggregate.File;
 
 namespace eCinemax.Server.Application.Commands.FileCommands;

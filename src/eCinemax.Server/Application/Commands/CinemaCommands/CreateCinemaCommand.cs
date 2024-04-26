@@ -1,9 +1,5 @@
-﻿using AutoMapper;
-using eCinemax.Server.Aggregates.CinemaAggregate;
-using eCinemax.Server.Infrastructure.Persistence;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
-using FluentValidation;
+﻿using eCinemax.Server.Aggregates.CinemaAggregate;
+using eCinemax.Server.Persistence;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Commands.CinemaCommands;

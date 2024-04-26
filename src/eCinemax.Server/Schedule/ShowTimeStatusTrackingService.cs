@@ -1,8 +1,7 @@
 ﻿using eCinemax.Server.Application.Commands.ShowTimeCommands;
-using MediatR;
 using Todo.NET.Hangfire;
 
-namespace eCinemax.Server.Infrastructure.Schedule;
+namespace eCinemax.Server.Schedule;
 
 [Hangfire("*/1 * * * *", "Execute at every 1 minutes")]
 public class ShowTimeStatusTrackingService(ILogger<ShowTimeStatusTrackingService> logger, ISender sender) : IHangfireCronJob

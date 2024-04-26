@@ -1,5 +1,4 @@
-﻿using eCinemax.Server.Shared.ValueObjects;
-using MimeKit;
+﻿using MimeKit;
 
 namespace eCinemax.Server.Helpers;
 

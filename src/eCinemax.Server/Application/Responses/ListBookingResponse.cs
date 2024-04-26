@@ -1,5 +1,4 @@
 ﻿using eCinemax.Server.Aggregates.BookingAggregate;
-using eCinemax.Server.Shared.ValueObjects;
 
 namespace eCinemax.Server.Application.Responses;
 

@@ -54,19 +54,6 @@ const MainLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="voucher"
-        options={{
-          title: "Khuyến mại",
-          tabBarIcon: ({ focused }) => (
-            <MaterialIcons
-              name="discount"
-              size={19}
-              color={focused ? colors.primary : colors.gray}
-            />
-          ),
-        }}
-      ></Tabs.Screen>
-      <Tabs.Screen
         name="other"
         options={{
           title: "Khác",

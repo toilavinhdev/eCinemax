@@ -1,12 +1,8 @@
 ﻿using System.Security.Claims;
 using eCinemax.Server.Aggregates.UserAggregate;
 using eCinemax.Server.Application.Responses;
-using eCinemax.Server.Infrastructure.Persistence;
+using eCinemax.Server.Persistence;
 using eCinemax.Server.Shared.Constants;
-using eCinemax.Server.Shared.Exceptions;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
-using FluentValidation;
 using MongoDB.Driver;
 using Todo.NET.Extensions;
 using Todo.NET.Security;
@@ -60,7 +56,11 @@ public class SignInCommandHandler(IMongoService mongoService, AppSettings appSet
             DateTime.Now.AddMinutes(appSettings.JwtConfig.AccessTokenDurationInMinutes));
 
         return APIResponse<SignInResponse>.IsSuccess(
-            new SignInResponse { AccessToken = accessToken },
+            new SignInResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = "refresh_token"
+            },
             "Đăng nhập thành công");
     }
 }

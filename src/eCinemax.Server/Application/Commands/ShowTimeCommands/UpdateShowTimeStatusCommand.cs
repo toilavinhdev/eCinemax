@@ -1,6 +1,5 @@
 ﻿using eCinemax.Server.Aggregates.ShowtimeAggregate;
-using eCinemax.Server.Infrastructure.Persistence;
-using MediatR;
+using eCinemax.Server.Persistence;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Commands.ShowTimeCommands;

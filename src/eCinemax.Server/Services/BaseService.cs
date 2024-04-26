@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using eCinemax.Server.Shared.ValueObjects;
 
-namespace eCinemax.Server.Infrastructure.Services;
+namespace eCinemax.Server.Services;
 
 public interface IBaseService
 {

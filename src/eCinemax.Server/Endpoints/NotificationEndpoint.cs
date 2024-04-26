@@ -1,7 +1,6 @@
 ﻿using eCinemax.Server.Aggregates.NotificationAggregate;
 using eCinemax.Server.Application.Commands.NotificationCommands;
 using eCinemax.Server.Application.Queries.NotificationQuery;
-using MediatR;
 using Todo.NET.Extensions;
 
 namespace eCinemax.Server.Endpoints;

@@ -1,23 +1,19 @@
-using eCinemax.Server;
-using eCinemax.Server.Infrastructure.Persistence;
-using eCinemax.Server.Infrastructure.Schedule;
-using eCinemax.Server.Infrastructure.Services;
-using eCinemax.Server.Shared.Extensions;
-using eCinemax.Server.Shared.Mediator;
-using eCinemax.Server.Shared.ValueObjects;
-using FluentValidation;
+using eCinemax.Server.Persistence;
+using eCinemax.Server.Schedule;
+using eCinemax.Server.Services;
 using Todo.NET.Extensions;
 using Todo.NET.Hangfire;
 using Todo.NET.Security;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.SetupEnvironment<AppSettings>("AppSettings", out var appSettings);
+builder.SetupEnvironment<AppSettings>(nameof(AppSettings), out var appSettings);
 builder.SetupSerilog();
 
 var services = builder.Services;
-services.AddPolicyCors("eCinemax");
-services.AddSwaggerDocument("eCinemax.Server", "v1");
+services.AddPolicyCors(Metadata.Name);
+services.AddSwaggerDocument(Metadata.Name, "v1");
 services.AddHttpContextAccessor();
+services.AddSignalRManager();
 services.AddEndpointDefinitions(Metadata.Assembly);
 services.AddJwtBearerAuth(appSettings.JwtConfig.TokenSingingKey).AddAuthorization();
 services.AddHangfireMongo(o =>
@@ -38,12 +34,15 @@ services.AddTransient<IStorageService, StorageService>();
 services.AddScoped<IMongoService, MongoService>();
 services.AddScoped<IHangfireCronJob, ShowTimeStatusTrackingService>();
 services.AddScoped<IHangfireCronJob, BookingStatusTrackingService>();
+services.AddSingleton<ReservationGroupService>();
 
 var app = builder.Build();
 app.UseDefaultExceptionHandler();
-app.UsePolicyCors("eCinemax");
-app.UseSwaggerDocument("eCinemax API");
-app.UsePhysicalStaticFiles(appSettings.StaticFileConfig.Location, appSettings.StaticFileConfig.External);
+app.UsePolicyCors(Metadata.Name);
+app.UseSwaggerDocument(Metadata.Name);
+app.UsePhysicalStaticFiles(
+    appSettings.StaticFileConfig.Location,
+    appSettings.StaticFileConfig.External);
 app.UseAuthentication().UseAuthorization();
 app.UseHttpsRedirection();
 app.UseHangfireManagement(c =>
@@ -54,19 +53,29 @@ app.UseHangfireManagement(c =>
     c.Password = appSettings.HangfireConfig.Password;
 });
 app.UseHangfireRecurringJobs();
-
-app.Map("/", () => "eCinemax.Server");
-app.MapGet("/ping", () => "Pong");
-app.MapGet("/check-auth", () => "OK").RequireAuthorization();
 app.MapEndpointDefinitions();
+app.MapHub<NotificationHub>("/hub/notification").RequireAuthorization();
+app.MapHub<ReservationHub>("/hub/reservation").RequireAuthorization();
 
 await MongoInitialization.SeedAsync(app.Services);
 
 if (builder.Environment.IsDevelopment())
 {
-    var localIpAddress = IPExtensions.GetLocalIPAddress();
     app.Urls.Add("http://localhost:5005");
-    app.Urls.Add($"http://{localIpAddress}:5015");
+    app.Urls.Add($"http://{IPExtensions.GetLocalIPAddress()}:5015");
 }
 
+app.Map("/", () => Metadata.Name);
+app.Map("/health", () => "OK");
+app.MapGet("/hub/connections", (ConnectionManager connectionManager) => new
+{
+    TotalUser = connectionManager.Connections.Keys.Count,
+    TotalConnection = connectionManager.Connections.Values.SelectMany(x => x).ToList().Count,
+    Data = connectionManager.Connections.Select( x => new
+    {
+        UserId = x.Key,
+        Connections = x.Value
+    })
+});
+app.MapGet("/hub/reservation", (ReservationGroupService reservationGroupService) => reservationGroupService.Groups);
 app.Run();

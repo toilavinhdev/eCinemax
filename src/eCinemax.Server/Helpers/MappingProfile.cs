@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using eCinemax.Server.Aggregates.CinemaAggregate;
+﻿using eCinemax.Server.Aggregates.CinemaAggregate;
 using eCinemax.Server.Aggregates.MovieAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
 using eCinemax.Server.Aggregates.UserAggregate;

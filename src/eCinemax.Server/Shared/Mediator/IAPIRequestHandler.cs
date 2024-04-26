@@ -1,7 +1,4 @@
-﻿using eCinemax.Server.Shared.ValueObjects;
-using MediatR;
-
-namespace eCinemax.Server.Shared.Mediator;
+﻿namespace eCinemax.Server.Shared.Mediator;
 
 public interface IAPIRequestHandler<in TRequest> : IRequestHandler<TRequest, APIResponse>
     where TRequest : IRequest<APIResponse>

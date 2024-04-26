@@ -1,6 +1,4 @@
-﻿using eCinemax.Server.Shared.ValueObjects;
-
-namespace eCinemax.Server.Infrastructure.Services;
+﻿namespace eCinemax.Server.Services;
 
 public interface IStorageService : IBaseService
 {

@@ -1,7 +1,6 @@
 ﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Application.Commands.BookingCommands;
 using eCinemax.Server.Application.Queries.BookingQueries;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Todo.NET.Extensions;
 

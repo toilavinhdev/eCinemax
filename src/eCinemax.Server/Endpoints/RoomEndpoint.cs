@@ -1,7 +1,6 @@
 ﻿using eCinemax.Server.Aggregates.RoomAggregate;
 using eCinemax.Server.Application.Commands.RoomCommands;
 using eCinemax.Server.Application.Queries.RoomQueries;
-using MediatR;
 using Todo.NET.Extensions;
 
 namespace eCinemax.Server.Endpoints;
