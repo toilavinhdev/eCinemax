@@ -1,3 +1,9 @@
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel,
+} from "@microsoft/signalr";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -9,7 +15,7 @@ import {
   View,
 } from "react-native";
 import { IfComponent } from "~/core/components";
-import { createBooking } from "~/features/booking";
+import { createBooking, refreshStatus } from "~/features/booking";
 import {
   ESeatStatus,
   ESeatType,
@@ -20,20 +26,46 @@ import {
   clearShowtime,
   getShowtime,
   removeReservation,
+  setTouchedSeatsInShowtime,
   showtimeTotalTicket,
+  updateAwaitingPaymentSeats,
 } from "~/features/showtime";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { ButtonComponent } from "~/shared/components";
-import { colors } from "~/shared/constants";
+import { authConst, colors } from "~/shared/constants";
 
 const ChooseSeatsScreen = () => {
   const { showtimeId } = useLocalSearchParams<{ showtimeId: string }>();
   const dispatch = useAppDispatch();
   const showtime = useAppSelector((state) => state.showtime.showtime);
+  const [hubConnection, setHubConnection] = useState<HubConnection>();
 
   const loadShowtime = () => {
     if (showtimeId) dispatch(getShowtime(showtimeId));
   };
+
+  // const createHubConnection = async () => {
+  //   const accessToken = await AsyncStorage.getItem(authConst.ACCESS_TOKEN);
+  //   const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
+  //   const connection = new HubConnectionBuilder()
+  //     .withUrl(`${baseUrl}/reservation?${showtimeId}`, {
+  //       accessTokenFactory: () => accessToken!,
+  //       headers: {
+  //         showtimeId: showtimeId!,
+  //       },
+  //     })
+  //     .configureLogging(LogLevel.Information)
+  //     .build();
+
+  //   setHubConnection(connection);
+  // };
+
+  // const onTouchSeat = (seatName: string) => {
+  //   hubConnection
+  //     ?.invoke("OnTouchSeat", seatName)
+  //     .then(() => {})
+  //     .catch((error) => console.error(error.toString()));
+  // };
 
   useEffect(() => {
     loadShowtime();
@@ -44,6 +76,56 @@ const ChooseSeatsScreen = () => {
     };
   }, [showtimeId]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(refreshStatus());
+    };
+  }, []);
+
+  // //TODO: Init connection
+  // useEffect(() => {
+  //   createHubConnection();
+
+  //   return () => {
+  //     hubConnection?.stop();
+  //     dispatch(setTouchedSeatsInShowtime([]));
+  //   };
+  // }, []);
+
+  // //TODO: Handle signalR connecting & disconnect
+  // useEffect(() => {
+  //   if (hubConnection) {
+  //     hubConnection
+  //       .start()
+  //       .then(() => {
+  //         console.log("SignalR connected");
+  //       })
+  //       .catch((error) => console.error(error.toString()));
+  //   }
+
+  //   return () => {
+  //     if (hubConnection) {
+  //       hubConnection.stop();
+  //     }
+  //   };
+  // }, [hubConnection]);
+
+  // //TODO: Subscribe events
+  // useEffect(() => {
+  //   if (hubConnection) {
+  //     hubConnection.on("SendSelectedSeatsOnGroup", (seatNames) => {
+  //       console.log("[SendSelectedSeatsOnGroup]", seatNames);
+  //       //TODO: set state cho các ghế đang chọn -> handle trong từng seat
+  //       dispatch(setTouchedSeatsInShowtime(seatNames));
+  //     });
+
+  //     hubConnection.on("SendSeatsAwaitingPayment", (seatNames) => {
+  //       console.log("[SendSeatsAwaitingPayment]", seatNames);
+  //       dispatch(updateAwaitingPaymentSeats(seatNames));
+  //     });
+  //   }
+  // }, [hubConnection]);
+
   return (
     <View className="flex-1 px-2" style={{ backgroundColor: colors.dark }}>
       <ScreenComponent />
@@ -52,7 +134,10 @@ const ChooseSeatsScreen = () => {
           <RefreshControl refreshing={false} onRefresh={loadShowtime} />
         }
       >
-        <RoomComponent reservations={showtime?.reservations ?? []} />
+        <RoomComponent
+          reservations={showtime?.reservations ?? []}
+          // touchSeatHandler={onTouchSeat}
+        />
         <SeatInfoComponent tickets={showtime?.ticket} />
       </ScrollView>
       <TotalComponent />
@@ -72,14 +157,21 @@ const ScreenComponent = () => {
   );
 };
 
-const RoomComponent = (props: { reservations: IReservation[][] }) => {
-  const { reservations } = props;
+const RoomComponent = (props: {
+  reservations: IReservation[][];
+  // touchSeatHandler: (seatName: string) => void;
+}) => {
+  const { reservations /*touchSeatHandler*/ } = props;
   return (
     <View className="mt-10">
       {reservations.map((row, idx) => (
         <View key={idx} className="flex-row">
           {row.map((seat) => (
-            <SeatComponent key={seat.name} reservation={seat} />
+            <SeatComponent
+              key={seat.name}
+              reservation={seat}
+              // touchSeatHandler={touchSeatHandler}
+            />
           ))}
         </View>
       ))}
@@ -87,10 +179,18 @@ const RoomComponent = (props: { reservations: IReservation[][] }) => {
   );
 };
 
-const SeatComponent = (props: { reservation: IReservation }) => {
+const SeatComponent = (props: {
+  reservation: IReservation;
+  // touchSeatHandler: (seatName: string) => void;
+}) => {
   const { name, status, type } = props.reservation;
+  // const { touchSeatHandler } = props;
   const [selected, setSelected] = useState<boolean>(false);
+  const [isSeletedByOther, setIsSelectedByOther] = useState<boolean>(false); //TODO: check other
   const dispatch = useAppDispatch();
+  const { touchedSeatsInShowtime, reservations } = useAppSelector(
+    (state) => state.showtime
+  );
   const styles = StyleSheet.create({
     baseContainer: {
       flex: 1,
@@ -103,9 +203,11 @@ const SeatComponent = (props: { reservation: IReservation }) => {
             ? colors.success
             : status === ESeatStatus.AwaitingPayment
               ? colors.blue
-              : selected
-                ? colors.primary
-                : colors.gray,
+              : isSeletedByOther
+                ? colors.red
+                : selected
+                  ? colors.primary
+                  : colors.gray,
     },
     baseText: {
       color: status === ESeatStatus.SoldOut ? "white" : "black",
@@ -126,7 +228,8 @@ const SeatComponent = (props: { reservation: IReservation }) => {
     if (
       type === ESeatType.Empty ||
       status === ESeatStatus.AwaitingPayment ||
-      status === ESeatStatus.SoldOut
+      status === ESeatStatus.SoldOut ||
+      isSeletedByOther
     )
       return;
     if (!selected) {
@@ -135,7 +238,16 @@ const SeatComponent = (props: { reservation: IReservation }) => {
       dispatch(removeReservation(props.reservation));
     }
     setSelected(!selected);
+    // touchSeatHandler(name); //TODO: OnTouchSeat
   };
+
+  useEffect(() => {
+    if (reservations.some((r) => r.name === name)) return;
+    const isSeatTouchedByOther = touchedSeatsInShowtime.some(
+      (seatName) => seatName === name
+    );
+    setIsSelectedByOther(isSeatTouchedByOther);
+  }, [touchedSeatsInShowtime]);
 
   return (
     <TouchableOpacity
@@ -153,9 +265,8 @@ const SeatComponent = (props: { reservation: IReservation }) => {
 const TotalComponent = () => {
   const dispatch = useAppDispatch();
   const total = useAppSelector(showtimeTotalTicket);
-  const status = useAppSelector((state) => state.booking.status);
-  const showtime = useAppSelector((state) => state.showtime.showtime);
-  const reservatons = useAppSelector((state) => state.showtime.reservations);
+  const { status, error, booking } = useAppSelector((state) => state.booking);
+  const { showtime, reservations } = useAppSelector((state) => state.showtime);
 
   const onSubmit = () => {
     if (!showtime) return;
@@ -163,7 +274,7 @@ const TotalComponent = () => {
     dispatch(
       createBooking({
         showTimeId: showtime.id,
-        seatNames: reservatons.map((x) => x.name),
+        seatNames: reservations.map((x) => x.name),
       })
     );
   };
@@ -203,14 +314,25 @@ const SeatInfoComponent = (props: { tickets?: ISeatPrice[] }) => {
               className="h-[14px] w-[14px] rounded"
               style={{ backgroundColor: colors.blue }}
             ></View>
-            <Text className="text-white text-[10px]">Đang chờ thanh toán</Text>
+            <Text className="text-white text-[10px]">Chờ thanh toán</Text>
           </View>
+        </View>
+        <View className="flex-row gap-2 mt-1">
           <View className="flex-row gap-1 items-center">
             <View
               className="h-[14px] w-[14px] rounded"
               style={{ backgroundColor: colors.primary }}
             ></View>
             <Text className="text-white text-[10px]">Đang chọn</Text>
+          </View>
+          <View className="flex-row gap-1 items-center">
+            <View
+              className="h-[14px] w-[14px] rounded"
+              style={{ backgroundColor: colors.red }}
+            ></View>
+            <Text className="text-white text-[10px]">
+              Đang chọn bởi người khác
+            </Text>
           </View>
         </View>
         <View className="flex-row gap-2 mt-1">

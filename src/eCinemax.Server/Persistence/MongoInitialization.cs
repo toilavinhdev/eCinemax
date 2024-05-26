@@ -12,7 +12,6 @@ public static class MongoInitialization
         var mongoService = scope.ServiceProvider.GetRequiredService<IMongoService>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<IMongoService>>();
         logger.LogInformation("Start initializing mongo documents");
-        await SeedAsync<User>(mongoService, "users.json");
         logger.LogInformation("Finished initializing mongo documents");
     }
     
@@ -21,7 +20,7 @@ public static class MongoInitialization
         var collection = mongoService.Collection<TDocument>();
         var any = await collection.Find(_ => true).AnyAsync();
         if (any) return;
-        var path = Path.Combine("Infrastructure", "MigrateData", fileName);
+        var path = Path.Combine("Persistence", "MigrateData", fileName);
         var json = await File.ReadAllTextAsync(path);
         if(string.IsNullOrEmpty(json)) return;
         var data = json.ToObject<List<TDocument>>();

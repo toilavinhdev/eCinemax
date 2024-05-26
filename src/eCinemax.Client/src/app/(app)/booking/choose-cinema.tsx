@@ -15,6 +15,7 @@ import {
   listShowtime,
   refreshStatus,
 } from "~/features/showtime";
+import { refreshStatus as bookingRefresh } from "~/features/booking";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { CollapseComponent, NoDataComponent } from "~/shared/components";
 import { DateOfWeekPickerComponent } from "~/shared/components/datetimepicker";
@@ -47,6 +48,10 @@ const ChooseCinemaScreen = () => {
       dispatch(hideGlobalLoading());
     }
   }, [status]);
+
+  useEffect(() => {
+    dispatch(bookingRefresh());
+  }, []);
 
   return (
     <View className="flex-1 p-2" style={{ backgroundColor: colors.dark }}>

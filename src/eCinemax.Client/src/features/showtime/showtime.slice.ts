@@ -1,5 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IReservation, IShowTimeState } from "./showtime.interfaces";
+import {
+  ESeatStatus,
+  IReservation,
+  IShowTimeState,
+} from "./showtime.interfaces";
 import { getShowtime, listShowtime } from "./showtime.thunk";
 import { RootState } from "../store";
 
@@ -9,6 +13,7 @@ const initialState: IShowTimeState = {
   list: [],
   showtime: undefined,
   reservations: [],
+  touchedSeatsInShowtime: [],
 };
 
 const showTimeSlice = createSlice({
@@ -34,6 +39,37 @@ const showTimeSlice = createSlice({
     },
     clearShowtime: (state) => {
       state.showtime = undefined;
+    },
+    setTouchedSeatsInShowtime: (state, action: PayloadAction<string[]>) => {
+      state.touchedSeatsInShowtime = action.payload;
+    },
+    updateAwaitingPaymentSeats: (state, action: PayloadAction<string[]>) => {
+      if (state.showtime) {
+        state.showtime = {
+          ...state.showtime,
+          reservations: state.showtime.reservations.map((row) =>
+            row.map((seat) => {
+              return action.payload.includes(seat.name)
+                ? { ...seat, status: ESeatStatus.AwaitingPayment }
+                : seat;
+            })
+          ),
+        };
+      }
+    },
+    updateSoldOutSeats: (state, action: PayloadAction<string[]>) => {
+      if (state.showtime) {
+        state.showtime = {
+          ...state.showtime,
+          reservations: state.showtime.reservations.map((row) =>
+            row.map((seat) => {
+              return action.payload.includes(seat.name)
+                ? { ...seat, status: ESeatStatus.SoldOut }
+                : seat;
+            })
+          ),
+        };
+      }
     },
   },
   extraReducers: (builder) => {
@@ -78,5 +114,8 @@ export const {
   clearReservations,
   clearListShowtime,
   clearShowtime,
+  setTouchedSeatsInShowtime,
+  updateAwaitingPaymentSeats,
+  updateSoldOutSeats,
 } = showTimeSlice.actions;
 export default showTimeSlice.reducer;

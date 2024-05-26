@@ -10,11 +10,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { IfComponent } from "~/core/components";
 import {
   EMovieStatus,
   clearMovie,
+  clearReviews,
   getMovie,
+  listReview,
   markMovie,
   refreshStatus,
 } from "~/features/movie";
@@ -153,93 +154,118 @@ const MovieDetailScreen = () => {
 
         <View className="bg-gray-700 h-px my-6"></View>
 
-        <View>
-          <View className="flex-row justify-between items-center">
-            <Text className="text-white text-[14px] font-semibold">
-              Reviews
-            </Text>
-            <TouchableOpacity
-              onPress={() =>
-                router.navigate({
-                  pathname: "/booking/movie-reviews/",
-                  params: { movieId: movie?.id },
-                })
-              }
-            >
-              <Text className="text-white font-semibold text-[14px]">
-                Xem tất cả
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <IfComponent
-            condition={movie!.reviews.length > 0}
-            elseTemplate={
-              <View>
-                <Text className="text-white mt-2">Phim chưa có đánh giá</Text>
-              </View>
-            }
-          >
-            <ScrollView horizontal className="flex-row gap-x-3 pb-1 mt-2">
-              {movie?.reviews.map((review) => (
-                <View
-                  key={review.id}
-                  style={{ backgroundColor: colors.secondary }}
-                  className="h-[100px] w-[190px] px-3 py-2 rounded-lg"
-                >
-                  <View className="flex-row justify-between items-center">
-                    <Text
-                      className="text-white text-[13px] font-semibold flex-1"
-                      numberOfLines={1}
-                    >
-                      {review.user}
-                    </Text>
-                    <View className="flex-row items-center gap-x-1">
-                      <StarComponent rate={review.rate} />
-                      <Text className="text-white text-[13px]">
-                        {review.rate}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <Text
-                    className="text-white leading-[21px] mt-1 text-[13px]"
-                    numberOfLines={3}
-                  >
-                    {review.review}
-                  </Text>
-                </View>
-              ))}
-            </ScrollView>
-          </IfComponent>
-        </View>
+        {movie?.status === EMovieStatus.NowShowing && <ReviewComponent />}
       </ScrollView>
 
-      <IfComponent condition={movie?.status === EMovieStatus.NowShowing}>
-        <View className="flex-row mb-6">
-          <TouchableOpacity
-            className="p-2 w-[60px] h-[60px] flex items-center justify-center rounded-lg"
-            style={{ backgroundColor: colors.primary }}
-            onPress={onMarkMovie}
-          >
-            <FontAwesome
-              name={movie?.marked ? "bookmark" : "bookmark-o"}
-              size={21}
-              color="black"
-            />
-          </TouchableOpacity>
-          <ButtonComponent
-            text="Đặt vé"
-            buttonClassName="flex-1 h-[60px] ml-2"
-            textClassName="font-semibold text-[18px]"
-            onPress={() =>
-              router.push({
-                pathname: "/booking/choose-cinema",
-                params: { movieId: id },
-              })
-            }
+      <View className="flex-row mb-6">
+        <TouchableOpacity
+          className="p-2 w-[60px] h-[60px] flex items-center justify-center rounded-lg"
+          style={{ backgroundColor: colors.primary }}
+          onPress={onMarkMovie}
+        >
+          <FontAwesome
+            name={movie?.marked ? "bookmark" : "bookmark-o"}
+            size={21}
+            color="black"
           />
+        </TouchableOpacity>
+        <ButtonComponent
+          disabled={movie?.status !== EMovieStatus.NowShowing}
+          text={
+            movie?.status === EMovieStatus.NowShowing ? "Đặt vé" : "Sắp chiếu"
+          }
+          buttonClassName="flex-1 h-[60px] ml-2"
+          textClassName="font-semibold text-[18px]"
+          onPress={() =>
+            router.push({
+              pathname: "/booking/choose-cinema",
+              params: { movieId: id },
+            })
+          }
+        />
+      </View>
+    </View>
+  );
+};
+
+const ReviewComponent = () => {
+  const dispatch = useAppDispatch();
+  const { movie, reviews } = useAppSelector((state) => state.movie);
+  const { currentUser } = useAppSelector((state) => state.user);
+
+  const loadReviews = () => {
+    if (!movie) return;
+
+    dispatch(
+      listReview({
+        movieId: movie.id,
+        pageIndex: 1,
+        pageSize: 5,
+      })
+    );
+  };
+
+  useEffect(() => {
+    loadReviews();
+
+    return () => {
+      dispatch(clearReviews());
+    };
+  }, []);
+
+  return (
+    <View>
+      <View className="flex-row justify-between items-center">
+        <Text className="text-white text-[14px] font-semibold">Reviews</Text>
+        <TouchableOpacity
+          onPress={() =>
+            router.navigate({
+              pathname: "/booking/movie-reviews/",
+              params: { movieId: movie?.id },
+            })
+          }
+        >
+          <Text className="text-white font-semibold text-[14px]">
+            Xem tất cả
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {reviews.length === 0 ? (
+        <View>
+          <Text className="text-white mt-2">Phim chưa có đánh giá</Text>
         </View>
-      </IfComponent>
+      ) : (
+        <ScrollView horizontal className="flex-row gap-x-3 pb-1 mt-2">
+          {reviews.map((review) => (
+            <View
+              key={review.id}
+              style={{ backgroundColor: colors.secondary }}
+              className="h-[100px] w-[190px] px-3 py-2 rounded-lg"
+            >
+              <View className="flex-row justify-between items-center">
+                <Text
+                  className={`text-white text-[13px] font-semibold flex-1 ${currentUser?.id === review.userId ? "text-yellow-500" : ""}`}
+                  numberOfLines={1}
+                >
+                  {review.user}
+                </Text>
+                <View className="flex-row items-center gap-x-1">
+                  <StarComponent rate={review.rate} />
+                  <Text className="text-white text-[13px]">{review.rate}</Text>
+                </View>
+              </View>
+
+              <Text
+                className="text-white leading-[21px] mt-1 text-[13px]"
+                numberOfLines={3}
+              >
+                {review.review}
+              </Text>
+            </View>
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 };

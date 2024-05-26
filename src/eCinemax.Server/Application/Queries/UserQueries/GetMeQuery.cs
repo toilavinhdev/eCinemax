@@ -5,10 +5,7 @@ using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Queries.UserQueries;
 
-public class GetMeQuery : IAPIRequest<GetMeResponse>
-{
-    
-}
+public class GetMeQuery : IAPIRequest<GetMeResponse>;
 
 public class GetMeQueryHandler(IMongoService mongoService, IMapper mapper) : IAPIRequestHandler<GetMeQuery, GetMeResponse>
 {

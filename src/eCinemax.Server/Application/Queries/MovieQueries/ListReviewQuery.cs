@@ -17,18 +17,32 @@ public class ListReviewQuery : IAPIRequest<ListReviewResponse>
     internal class ListReviewQueryHandler(IMongoService mongoService) : IAPIRequestHandler<ListReviewQuery, ListReviewResponse>
     {
         private readonly IMongoCollection<MovieReview> _reviewCollection = mongoService.Collection<MovieReview>();
-        private readonly IMongoCollection<Movie> _movieCollection = mongoService.Collection<Movie>();
         private readonly IMongoCollection<User> _userCollection = mongoService.Collection<User>();
         
         public async Task<APIResponse<ListReviewResponse>> Handle(ListReviewQuery request, CancellationToken cancellationToken)
         {
+            var currentUserId = mongoService.UserClaims().Id;
+            
             var totalRecord = await _reviewCollection
                 .Find(Builders<MovieReview>.Filter.Empty)
                 .CountDocumentsAsync(cancellationToken);
 
+            var currentUserReview = await _reviewCollection
+                .Find(x => x.MovieId == request.MovieId && x.CreatedBy == currentUserId)
+                .Project(x => new ReviewViewModel
+                {
+                    Id = x.Id,
+                    User = "Bình luận của bạn",
+                    UserId = currentUserId,
+                    Rate = x.Rate,
+                    Review = x.Review,
+                    CreatedAt = x.CreatedAt
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+
             var documents = await _reviewCollection
                 .Aggregate()
-                .Match(x => x.MovieId == request.MovieId)
+                .Match(x => x.MovieId == request.MovieId && x.CreatedBy != currentUserId)
                 .SortBy(x => x.CreatedAt)
                 .Skip(request.PageSize * (request.PageIndex - 1))
                 .Limit(request.PageSize)
@@ -41,11 +55,14 @@ public class ListReviewQuery : IAPIRequest<ListReviewResponse>
                 {
                     Id = x.Id,
                     User = x.Users.FirstOrDefault()!.FullName,
+                    UserId = x.Users.FirstOrDefault()!.Id,
                     Rate = x.Rate,
                     Review = x.Review,
                     CreatedAt = x.CreatedAt
                 })
                 .ToListAsync(cancellationToken);
+            
+            if (currentUserReview is not null) documents.Insert(0, currentUserReview);
 
             return APIResponse<ListReviewResponse>.IsSuccess(new ListReviewResponse(
                 documents,

@@ -38,7 +38,6 @@ export interface IGetMovieResponse {
   marked: boolean;
   averageRate: number;
   totalReview: number;
-  reviews: IReviewViewModel[];
 }
 
 export interface IMovieViewModel {
@@ -72,6 +71,7 @@ export interface IReviewViewModel {
   id: string;
   rate: number;
   user: string;
+  userId: string;
   review?: string;
   createdAt: Date;
 }

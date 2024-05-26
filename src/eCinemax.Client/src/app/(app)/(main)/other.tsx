@@ -73,7 +73,7 @@ const OtherScreen = () => {
       <FlatList
         data={[
           {
-            title: "Bộ sưu tập",
+            title: "Phim đã lưu",
             icon: <FontAwesome name="bookmark" size={22} color="white" />,
             onPress: () => {
               router.push("/collection");

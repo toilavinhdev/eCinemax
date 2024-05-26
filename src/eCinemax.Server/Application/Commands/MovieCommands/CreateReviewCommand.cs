@@ -49,7 +49,8 @@ public class CreateReviewCommand : IAPIRequest<ReviewViewModel>
                     CreatedAt = document.CreatedAt,
                     Rate = document.Rate,
                     Review = document.Review,
-                    User = mongoService.UserClaims().FullName
+                    User = "Bình luận của bạn",
+                    UserId = mongoService.UserClaims().Id
                 });
         }
     }
