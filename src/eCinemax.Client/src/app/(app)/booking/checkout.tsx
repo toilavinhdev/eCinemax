@@ -9,6 +9,7 @@ import {
   checkoutAPI,
   clearBooking,
   getBooking,
+  refreshStatus,
 } from "~/features/booking";
 import { hideGlobalLoading, showGlobalLoading } from "~/features/common";
 import { clearReservations } from "~/features/showtime";
@@ -38,6 +39,10 @@ const CheckoutScreen = () => {
       dispatch(clearBooking());
     };
   }, [bookingId]);
+
+  useEffect(() => {
+    dispatch(refreshStatus());
+  }, []);
 
   const buildQrCodeValue = () => {
     return `eCinemax.${currentUser?.email}.${booking?.id}.secret-key`;
@@ -92,7 +97,9 @@ const BillComponent = () => {
         <View className="space-y-4 mt-6">
           <View className="flex-row gap-x-4 items-center">
             <MaterialIcons name="movie" size={22} color="white" />
-            <Text className="text-white">{booking?.movieTitle}</Text>
+            <Text className="text-white flex-wrap flex-1">
+              {booking?.movieTitle}
+            </Text>
           </View>
           <View className="flex-row gap-x-4 items-center">
             <Entypo name="calendar" size={21} color="white" />

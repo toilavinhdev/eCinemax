@@ -44,6 +44,7 @@ public class ListMovieQueryHandler(IMongoService mongoService) : IAPIRequestHand
         var fluent = _movieCollection.Find(filter);
         var totalRecord = await fluent.CountDocumentsAsync(cancellationToken);
         var documents = await fluent
+            .SortByDescending(x => x.ReleasedAt)
             .Skip((request.PageIndex - 1) * request.PageSize)
             .Limit(request.PageSize)
             .Project(x => new MovieViewModel

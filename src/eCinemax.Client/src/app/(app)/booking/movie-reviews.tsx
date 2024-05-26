@@ -16,6 +16,7 @@ const MovieReviewScreen = () => {
   const { reviews, reviewPagination, status, error } = useAppSelector(
     (state) => state.movie
   );
+  const { currentUser } = useAppSelector((state) => state.user);
   const { movieId } = useLocalSearchParams<{ movieId: string }>();
   const [pageIndex, setPageIndex] = useState<number>(1);
   const PAGE_SIZE = 12;
@@ -55,7 +56,7 @@ const MovieReviewScreen = () => {
 
   return (
     <View className="flex-1 p-2" style={{ backgroundColor: colors.dark }}>
-      <RatingComponent />
+      {reviews[0]?.userId !== currentUser?.id && <RatingComponent />}
 
       <FlatList
         data={reviews}
@@ -81,6 +82,7 @@ const MovieReviewScreen = () => {
 
 const ReviewComponent = (props: { review: IReviewViewModel }) => {
   const { review } = props;
+  const { currentUser } = useAppSelector((state) => state.user);
 
   return (
     <View
@@ -89,7 +91,7 @@ const ReviewComponent = (props: { review: IReviewViewModel }) => {
     >
       <View className="flex-row justify-between items-center">
         <Text
-          className="text-white text-[13px] font-semibold flex-1"
+          className={`text-white text-[13px] font-semibold flex-1 ${currentUser?.id === review.userId ? "text-yellow-500" : ""}`}
           numberOfLines={1}
         >
           {review.user}
@@ -160,7 +162,7 @@ const RatingComponent = () => {
         />
         <TouchableOpacity
           style={{ backgroundColor: colors.primary }}
-          className="p-2 w-[64px] h-[64px] flex items-center justify-center rounded-lg  ml-3"
+          className="p-2 w-[74px] h-[74px] flex items-center justify-center rounded-lg  ml-3"
           disabled={status === "loading"}
           onPress={onRating}
         >

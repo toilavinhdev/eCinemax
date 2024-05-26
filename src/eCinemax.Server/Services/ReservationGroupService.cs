@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace eCinemax.Server.Hubs;
+namespace eCinemax.Server.Services;
 
 public class ReservationGroupService
 {

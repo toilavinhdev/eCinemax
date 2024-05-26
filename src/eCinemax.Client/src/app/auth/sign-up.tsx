@@ -60,7 +60,7 @@ const SignUpScreen = () => {
 
   return (
     <ScrollView className="flex-1 bg-white px-8">
-      <Text className="font-medium text-[36px] mt-20">Sign Up {status}</Text>
+      <Text className="font-medium text-[36px] mt-20">Sign Up</Text>
       <Text className="font-light text-[12px] mt-2">
         Sign up with on of following options
       </Text>

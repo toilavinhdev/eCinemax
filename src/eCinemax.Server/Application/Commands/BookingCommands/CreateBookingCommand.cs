@@ -1,6 +1,7 @@
 ﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
 using eCinemax.Server.Persistence;
+using Microsoft.AspNetCore.SignalR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -13,11 +14,13 @@ public class CreateBookingCommand : IRequest<string>
     public List<string> SeatNames { get; set; } = default!;
 }
 
-public class CreateBookingCommandHandler(IMongoService mongoService) : IRequestHandler<CreateBookingCommand, string>
+public class CreateBookingCommandHandler(
+    IMongoService mongoService, 
+    ReservationHub reservationHub) : IRequestHandler<CreateBookingCommand, string>
 {
     private readonly IMongoCollection<Booking> _bookingCollection = mongoService.Collection<Booking>();
     private readonly IMongoCollection<ShowTime> _showTimeCollection = mongoService.Collection<ShowTime>();
-    private const int BookingDurationInMinutes = 10; // Hết hạn thanh toán sau 10 phút, sử dụng job để track
+    private const int BookingDurationInMinutes = 5; // Hết hạn thanh toán sau 10 phút, sử dụng job để track
     
     public async Task<string> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
     {
@@ -87,6 +90,8 @@ public class CreateBookingCommandHandler(IMongoService mongoService) : IRequestH
              showTimeFilter, 
              showTimeUpdate, 
              cancellationToken: cancellationToken);
+
+         // await reservationHub.SendSeatsAwaitingPayment(request.SeatNames.ToArray());
          
          return booking.Id;
     }

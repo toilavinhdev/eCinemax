@@ -35,6 +35,7 @@ services.AddScoped<IMongoService, MongoService>();
 services.AddScoped<IHangfireCronJob, ShowTimeStatusTrackingService>();
 services.AddScoped<IHangfireCronJob, BookingStatusTrackingService>();
 services.AddSingleton<ReservationGroupService>();
+services.AddSingleton<ReservationHub>();
 
 var app = builder.Build();
 app.UseDefaultExceptionHandler();
@@ -54,8 +55,8 @@ app.UseHangfireManagement(c =>
 });
 app.UseHangfireRecurringJobs();
 app.MapEndpointDefinitions();
-app.MapHub<NotificationHub>("/hub/notification").RequireAuthorization();
-app.MapHub<ReservationHub>("/hub/reservation").RequireAuthorization();
+app.MapHub<NotificationHub>("/notification").RequireAuthorization();
+app.MapHub<ReservationHub>("/reservation").RequireAuthorization();
 
 await MongoInitialization.SeedAsync(app.Services);
 
@@ -66,16 +67,4 @@ if (builder.Environment.IsDevelopment())
 }
 
 app.Map("/", () => Metadata.Name);
-app.Map("/health", () => "OK");
-app.MapGet("/hub/connections", (ConnectionManager connectionManager) => new
-{
-    TotalUser = connectionManager.Connections.Keys.Count,
-    TotalConnection = connectionManager.Connections.Values.SelectMany(x => x).ToList().Count,
-    Data = connectionManager.Connections.Select( x => new
-    {
-        UserId = x.Key,
-        Connections = x.Value
-    })
-});
-app.MapGet("/hub/reservation", (ReservationGroupService reservationGroupService) => reservationGroupService.Groups);
 app.Run();

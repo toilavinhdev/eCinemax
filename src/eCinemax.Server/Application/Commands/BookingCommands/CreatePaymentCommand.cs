@@ -1,6 +1,8 @@
 ﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
+using eCinemax.Server.Aggregates.UserAggregate;
 using eCinemax.Server.Application.Responses;
+using eCinemax.Server.Helpers;
 using eCinemax.Server.Persistence;
 using eCinemax.Server.Shared.Library.VnPay;
 using MongoDB.Driver;
@@ -29,14 +31,19 @@ public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentComm
 public class CreatePaymentCommandHandler(
     IMongoService mongoService,
     ILogger<CreatePaymentCommandHandler> logger,
+    ReservationHub reservationHub,
     AppSettings appSettings) : IAPIRequestHandler<CreatePaymentCommand, CreatePaymentResponse>
 {
     private readonly IMongoCollection<Booking> _bookingCollection = mongoService.Collection<Booking>();
     private readonly IMongoCollection<ShowTime> _showTimeCollection = mongoService.Collection<ShowTime>();
+    private readonly IMongoCollection<User> _userCollection = mongoService.Collection<User>();
     
     public async Task<APIResponse<CreatePaymentResponse>> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
     {
         var currentUserId = mongoService.UserClaims().Id;
+        var user = await _userCollection
+            .Find(x => x.Id == currentUserId)
+            .FirstOrDefaultAsync(cancellationToken);
         
         var bookingFilter = Builders<Booking>.Filter.Eq(x => x.Id, request.BookingId);
         var booking = await _bookingCollection
@@ -94,6 +101,14 @@ public class CreatePaymentCommandHandler(
             logger.LogError($"{message}: {_}");
             throw new BadRequestException(message);
         }
+
+        // await reservationHub.SendSeatsSoldOut(reservations.Select(x => x.Name).ToArray());
+
+        // await EmailHelper.SmptSendAsync(
+        //     appSettings.GmailConfig,
+        //     user.Email,
+        //     "Thanh toán thành công",
+        //     "Thanh toán thành công đơn hàng");
         
         return APIResponse<CreatePaymentResponse>.IsSuccess(
             new CreatePaymentResponse

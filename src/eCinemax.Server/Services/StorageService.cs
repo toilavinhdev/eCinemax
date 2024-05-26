@@ -30,7 +30,7 @@ public class StorageService(IHttpContextAccessor httpContextAccessor, AppSetting
         return $"{appSettings.StaticFileConfig.External}/{bucketToFile}";
     }
     
-    private string InitialBucket(string path)
+    private static string InitialBucket(string path)
     {
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
         return path;

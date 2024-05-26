@@ -5,10 +5,7 @@ public class ListReviewResponse(
         records,
     int pageIndex,
     int pageSize,
-    int totalRecord) : PaginationResponse<ReviewViewModel>(records, pageIndex, pageSize, totalRecord)
-{
-    public ReviewViewModel? UserReview { get; set; }
-}
+    int totalRecord) : PaginationResponse<ReviewViewModel>(records, pageIndex, pageSize, totalRecord);
 
 public class ReviewViewModel
 {
@@ -17,6 +14,8 @@ public class ReviewViewModel
     public int Rate { get; set; }
     
     public string User { get; set; } = default!;
+    
+    public string UserId { get; set; } = default!;
     
     public string? Review { get; set; }
     

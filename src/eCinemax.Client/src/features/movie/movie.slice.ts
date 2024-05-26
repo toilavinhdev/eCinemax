@@ -30,6 +30,9 @@ const movieSlice = createSlice({
     clearMovie: (state) => {
       state.movie = undefined;
     },
+    clearReviews: (state) => {
+      state.reviews = [];
+    },
     clearList: (state) => {
       state.list = [];
       state.pagination = undefined;
@@ -128,5 +131,6 @@ const movieSlice = createSlice({
   },
 });
 
-export const { clearList, refreshStatus, clearMovie } = movieSlice.actions;
+export const { clearList, refreshStatus, clearMovie, clearReviews } =
+  movieSlice.actions;
 export default movieSlice.reducer;
