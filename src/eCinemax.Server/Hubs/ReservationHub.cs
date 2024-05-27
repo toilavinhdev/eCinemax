@@ -39,20 +39,6 @@ public class ReservationHub(ConnectionManager connectionManager,
         reservationGroupService.SelectSeat(GetShowTimeId(), CurrentConnectionId, seatName);
         return SendSelectedSeatsOnGroup();
     }
-
-    public Task SendSeatsAwaitingPayment(string[] seatNames)
-    {
-        return Clients
-            .Groups(GetShowTimeId())
-            .SendAsync(nameof(SendSeatsAwaitingPayment), seatNames);
-    }
-    
-    public Task SendSeatsSoldOut(string[] seatNames)
-    {
-        return Clients
-            .Groups(GetShowTimeId())
-            .SendAsync(nameof(SendSeatsSoldOut), seatNames);
-    }
     
     private Task SendSelectedSeatsOnGroup()
     {
@@ -60,7 +46,7 @@ public class ReservationHub(ConnectionManager connectionManager,
         var selectedSeats = reservationGroupService.GetSelectedSeats(GetShowTimeId());
         return Clients
             .Groups(GetShowTimeId())
-            .SendAsync(nameof(SendSelectedSeatsOnGroup), selectedSeats);
+            .SendAsync("ReceivedSelectedSeatsGroup", selectedSeats);
     }
 
     private string GetShowTimeId()

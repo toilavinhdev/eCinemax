@@ -68,3 +68,15 @@ export const checkout = createAsyncThunk(
     }
   }
 );
+
+export const cancelBooking = createAsyncThunk(
+  "@booking/cancel",
+  async (bookingId: string, { rejectWithValue }) => {
+    try {
+      await cancelBooking(bookingId);
+      return true;
+    } catch (error: any) {
+      return rejectWithValue(error.message as string);
+    }
+  }
+);

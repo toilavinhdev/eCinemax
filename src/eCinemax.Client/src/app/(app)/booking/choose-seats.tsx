@@ -21,51 +21,50 @@ import {
   ESeatType,
   IReservation,
   ISeatPrice,
-  addReservation,
   clearReservations,
   clearShowtime,
   getShowtime,
-  removeReservation,
-  setTouchedSeatsInShowtime,
   showtimeTotalTicket,
-  updateAwaitingPaymentSeats,
+  updateSeatsStatus,
+  addReservation,
+  removeReservation,
+  setSelectedSeatBySomeone,
 } from "~/features/showtime";
 import { useAppDispatch, useAppSelector } from "~/features/store";
 import { ButtonComponent } from "~/shared/components";
 import { authConst, colors } from "~/shared/constants";
 
 const ChooseSeatsScreen = () => {
-  const { showtimeId } = useLocalSearchParams<{ showtimeId: string }>();
   const dispatch = useAppDispatch();
-  const showtime = useAppSelector((state) => state.showtime.showtime);
+  const { showtimeId } = useLocalSearchParams<{ showtimeId: string }>();
+  const { showtime, reservations } = useAppSelector((state) => state.showtime);
   const [hubConnection, setHubConnection] = useState<HubConnection>();
 
   const loadShowtime = () => {
     if (showtimeId) dispatch(getShowtime(showtimeId));
   };
 
-  // const createHubConnection = async () => {
-  //   const accessToken = await AsyncStorage.getItem(authConst.ACCESS_TOKEN);
-  //   const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
-  //   const connection = new HubConnectionBuilder()
-  //     .withUrl(`${baseUrl}/reservation?${showtimeId}`, {
-  //       accessTokenFactory: () => accessToken!,
-  //       headers: {
-  //         showtimeId: showtimeId!,
-  //       },
-  //     })
-  //     .configureLogging(LogLevel.Information)
-  //     .build();
+  const createHubConnection = async () => {
+    const accessToken = await AsyncStorage.getItem(authConst.ACCESS_TOKEN);
+    const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
+    const connection = new HubConnectionBuilder()
+      .withUrl(`${baseUrl}/reservation?${showtimeId}`, {
+        accessTokenFactory: () => accessToken!,
+        headers: {
+          showtimeId: showtimeId!,
+        },
+      })
+      .configureLogging(LogLevel.Information)
+      .build();
+    setHubConnection(connection);
+  };
 
-  //   setHubConnection(connection);
-  // };
-
-  // const onTouchSeat = (seatName: string) => {
-  //   hubConnection
-  //     ?.invoke("OnTouchSeat", seatName)
-  //     .then(() => {})
-  //     .catch((error) => console.error(error.toString()));
-  // };
+  const onTouchSeat = (seatName: string) => {
+    hubConnection
+      ?.invoke("OnTouchSeat", seatName)
+      .then(() => {})
+      .catch((error) => console.error(error.toString()));
+  };
 
   useEffect(() => {
     loadShowtime();
@@ -82,49 +81,69 @@ const ChooseSeatsScreen = () => {
     };
   }, []);
 
-  // //TODO: Init connection
-  // useEffect(() => {
-  //   createHubConnection();
+  //TODO: Init connection
+  useEffect(() => {
+    createHubConnection();
 
-  //   return () => {
-  //     hubConnection?.stop();
-  //     dispatch(setTouchedSeatsInShowtime([]));
-  //   };
-  // }, []);
+    return () => {
+      hubConnection?.stop();
+    };
+  }, []);
 
-  // //TODO: Handle signalR connecting & disconnect
-  // useEffect(() => {
-  //   if (hubConnection) {
-  //     hubConnection
-  //       .start()
-  //       .then(() => {
-  //         console.log("SignalR connected");
-  //       })
-  //       .catch((error) => console.error(error.toString()));
-  //   }
+  //TODO: Handle signalR connect & disconnect
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .start()
+        .then(() => {
+          console.log("SignalR connected");
+        })
+        .catch((error) => console.error(error.toString()));
+    }
 
-  //   return () => {
-  //     if (hubConnection) {
-  //       hubConnection.stop();
-  //     }
-  //   };
-  // }, [hubConnection]);
+    return () => {
+      if (hubConnection) {
+        hubConnection.stop();
+      }
+    };
+  }, [hubConnection]);
 
-  // //TODO: Subscribe events
-  // useEffect(() => {
-  //   if (hubConnection) {
-  //     hubConnection.on("SendSelectedSeatsOnGroup", (seatNames) => {
-  //       console.log("[SendSelectedSeatsOnGroup]", seatNames);
-  //       //TODO: set state cho các ghế đang chọn -> handle trong từng seat
-  //       dispatch(setTouchedSeatsInShowtime(seatNames));
-  //     });
-
-  //     hubConnection.on("SendSeatsAwaitingPayment", (seatNames) => {
-  //       console.log("[SendSeatsAwaitingPayment]", seatNames);
-  //       dispatch(updateAwaitingPaymentSeats(seatNames));
-  //     });
-  //   }
-  // }, [hubConnection]);
+  //TODO: Subscribe events
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ReceivedSelectedSeatsGroup", (seatNames: string[]) => {
+        console.log("[ReceivedSelectedSeatsGroup]", seatNames);
+        dispatch(setSelectedSeatBySomeone(seatNames));
+      });
+      hubConnection.on("ReceivedSeatsAwaitingPayment", (seatNames) => {
+        console.log("[ReceivedSeatsAwaitingPayment]", seatNames);
+        dispatch(
+          updateSeatsStatus({
+            seatNames: seatNames,
+            newStatus: ESeatStatus.AwaitingPayment,
+          })
+        );
+      });
+      hubConnection.on("ReceivedSeatsSoldOut", (seatNames) => {
+        console.log("[ReceivedSeatsSoldOut]", seatNames);
+        dispatch(
+          updateSeatsStatus({
+            seatNames: seatNames,
+            newStatus: ESeatStatus.SoldOut,
+          })
+        );
+      });
+      hubConnection.on("ReceivedSeatsBookingCanceled", (seatNames) => {
+        console.log("[ReceivedSeatsBookingCanceled]", seatNames);
+        dispatch(
+          updateSeatsStatus({
+            seatNames: seatNames,
+            newStatus: ESeatStatus.Empty,
+          })
+        );
+      });
+    }
+  }, [hubConnection]);
 
   return (
     <View className="flex-1 px-2" style={{ backgroundColor: colors.dark }}>
@@ -136,7 +155,7 @@ const ChooseSeatsScreen = () => {
       >
         <RoomComponent
           reservations={showtime?.reservations ?? []}
-          // touchSeatHandler={onTouchSeat}
+          touchSeatHandler={onTouchSeat}
         />
         <SeatInfoComponent tickets={showtime?.ticket} />
       </ScrollView>
@@ -145,23 +164,11 @@ const ChooseSeatsScreen = () => {
   );
 };
 
-const ScreenComponent = () => {
-  return (
-    <View className="mt-3">
-      <Text className="text-white text-center text-[12px]">Screen</Text>
-      <View
-        className="w-full h-[12px] rounded-b-lg"
-        style={{ backgroundColor: colors.secondary }}
-      ></View>
-    </View>
-  );
-};
-
 const RoomComponent = (props: {
   reservations: IReservation[][];
-  // touchSeatHandler: (seatName: string) => void;
+  touchSeatHandler: (seatName: string) => void;
 }) => {
-  const { reservations /*touchSeatHandler*/ } = props;
+  const { reservations, touchSeatHandler } = props;
   return (
     <View className="mt-10">
       {reservations.map((row, idx) => (
@@ -170,7 +177,7 @@ const RoomComponent = (props: {
             <SeatComponent
               key={seat.name}
               reservation={seat}
-              // touchSeatHandler={touchSeatHandler}
+              touchSeatHandler={touchSeatHandler}
             />
           ))}
         </View>
@@ -181,14 +188,13 @@ const RoomComponent = (props: {
 
 const SeatComponent = (props: {
   reservation: IReservation;
-  // touchSeatHandler: (seatName: string) => void;
+  touchSeatHandler: (seatName: string) => void;
 }) => {
   const { name, status, type } = props.reservation;
-  // const { touchSeatHandler } = props;
+  const { touchSeatHandler } = props;
   const [selected, setSelected] = useState<boolean>(false);
-  const [isSeletedByOther, setIsSelectedByOther] = useState<boolean>(false); //TODO: check other
   const dispatch = useAppDispatch();
-  const { touchedSeatsInShowtime, reservations } = useAppSelector(
+  const { selectedSeatNamesBySomeone } = useAppSelector(
     (state) => state.showtime
   );
   const styles = StyleSheet.create({
@@ -203,7 +209,7 @@ const SeatComponent = (props: {
             ? colors.success
             : status === ESeatStatus.AwaitingPayment
               ? colors.blue
-              : isSeletedByOther
+              : selectedSeatNamesBySomeone.includes(name)
                 ? colors.red
                 : selected
                   ? colors.primary
@@ -229,7 +235,7 @@ const SeatComponent = (props: {
       type === ESeatType.Empty ||
       status === ESeatStatus.AwaitingPayment ||
       status === ESeatStatus.SoldOut ||
-      isSeletedByOther
+      selectedSeatNamesBySomeone.includes(name)
     )
       return;
     if (!selected) {
@@ -238,16 +244,8 @@ const SeatComponent = (props: {
       dispatch(removeReservation(props.reservation));
     }
     setSelected(!selected);
-    // touchSeatHandler(name); //TODO: OnTouchSeat
+    touchSeatHandler(name); //TODO: OnTouchSeat
   };
-
-  useEffect(() => {
-    if (reservations.some((r) => r.name === name)) return;
-    const isSeatTouchedByOther = touchedSeatsInShowtime.some(
-      (seatName) => seatName === name
-    );
-    setIsSelectedByOther(isSeatTouchedByOther);
-  }, [touchedSeatsInShowtime]);
 
   return (
     <TouchableOpacity
@@ -289,6 +287,18 @@ const TotalComponent = () => {
         textClassName="text-[18px]"
         onPress={onSubmit}
       />
+    </View>
+  );
+};
+
+const ScreenComponent = () => {
+  return (
+    <View className="mt-3">
+      <Text className="text-white text-center text-[12px]">Screen</Text>
+      <View
+        className="w-full h-[12px] rounded-b-lg"
+        style={{ backgroundColor: colors.secondary }}
+      ></View>
     </View>
   );
 };

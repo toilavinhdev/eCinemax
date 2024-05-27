@@ -6,6 +6,7 @@ import { Alert, RefreshControl, ScrollView, Text, View } from "react-native";
 import {
   EBookingStatus,
   EPaymentDestination,
+  cancelBookingAPI,
   checkoutAPI,
   clearBooking,
   getBooking,
@@ -199,15 +200,54 @@ const PaymentDestinationComponent = () => {
     }
   };
 
+  const confirmCancel = () => {
+    Alert.alert("Bạn có muốn vé đang đặt?", undefined, [
+      {
+        text: "Hoàn tác",
+      },
+      {
+        text: "Đồng ý",
+        onPress: () => onCancel(),
+      },
+    ]);
+  };
+
+  const onCancel = async () => {
+    if (!booking) return;
+
+    try {
+      await cancelBookingAPI(booking.id);
+      setLoading(false);
+      dispatch(hideGlobalLoading());
+      router.replace({
+        pathname: "/",
+        params: { bookingId: booking.id },
+      });
+    } catch (error: any) {
+      setLoading(false);
+      dispatch(hideGlobalLoading());
+      Alert.alert(error.message);
+    }
+  };
+
   useEffect(() => {}, []);
 
   if (booking?.status !== EBookingStatus.WaitForPay) return;
 
   return (
-    <View className="mt-auto mb-[70px]">
+    <View className="mt-auto mb-[30px] flex-row">
+      <ButtonComponent
+        text="Hủy"
+        buttonClassName="w-full mt-4 h-[60px] flex-[0.3] mr-1"
+        textClassName="text-[18px] font-semibold"
+        disabled={loading}
+        loading={loading}
+        bgColor={colors.gray}
+        onPress={confirmCancel}
+      />
       <ButtonComponent
         text="Thanh toán"
-        buttonClassName="w-full mt-4 h-[60px]"
+        buttonClassName="w-full mt-4 h-[60px] flex-[0.7] ml-1"
         textClassName="text-[18px] font-semibold"
         disabled={loading}
         loading={loading}

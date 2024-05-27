@@ -15,8 +15,8 @@ public class CreateBookingCommand : IRequest<string>
 }
 
 public class CreateBookingCommandHandler(
-    IMongoService mongoService, 
-    ReservationHub reservationHub) : IRequestHandler<CreateBookingCommand, string>
+    IMongoService mongoService,
+    IHubContext<ReservationHub> reservationHubContext) : IRequestHandler<CreateBookingCommand, string>
 {
     private readonly IMongoCollection<Booking> _bookingCollection = mongoService.Collection<Booking>();
     private readonly IMongoCollection<ShowTime> _showTimeCollection = mongoService.Collection<ShowTime>();
@@ -91,7 +91,10 @@ public class CreateBookingCommandHandler(
              showTimeUpdate, 
              cancellationToken: cancellationToken);
 
-         // await reservationHub.SendSeatsAwaitingPayment(request.SeatNames.ToArray());
+         await reservationHubContext.Clients.Group(showTime.Id).SendAsync(
+             "ReceivedSeatsAwaitingPayment",
+             request.SeatNames.ToArray(),
+             cancellationToken);
          
          return booking.Id;
     }

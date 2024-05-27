@@ -125,7 +125,7 @@ const MovieDetailScreen = () => {
               <View className="flex-row items-center bg-green-800 gap-x-1 px-1 py-[1px] rounded">
                 <StarComponent rate={movie?.averageRate ?? 0} />
                 <Text className="text-white text-[13px]">
-                  {movie?.averageRate} (
+                  {movie?.averageRate}/10 (
                   {movie?.totalReview.toLocaleString("vi-VN")} reviews)
                 </Text>
               </View>

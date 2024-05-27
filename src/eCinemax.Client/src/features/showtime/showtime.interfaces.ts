@@ -4,7 +4,7 @@ export interface IShowTimeState {
   error: string | null;
   showtime?: IGetShowTimeResponse;
   reservations: IReservation[];
-  touchedSeatsInShowtime: string[];
+  selectedSeatNamesBySomeone: string[];
 }
 
 export interface IListShowTimeRequest {

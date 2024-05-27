@@ -1,6 +1,7 @@
 ﻿using eCinemax.Server.Aggregates.BookingAggregate;
 using eCinemax.Server.Aggregates.ShowtimeAggregate;
 using eCinemax.Server.Persistence;
+using Microsoft.AspNetCore.SignalR;
 using MongoDB.Driver;
 
 namespace eCinemax.Server.Application.Commands.BookingCommands;
@@ -18,7 +19,8 @@ public class CancelBookingCommandValidator : AbstractValidator<CancelBookingComm
     }
 }
 
-public class CancelBookingCommandHandler(IMongoService mongoService) : IAPIRequestHandler<CancelBookingCommand>
+public class CancelBookingCommandHandler(IMongoService mongoService,
+    IHubContext<ReservationHub> reservationHubContext) : IAPIRequestHandler<CancelBookingCommand>
 {
     private readonly IMongoCollection<Booking> _bookingCollection = mongoService.Collection<Booking>();
     private readonly IMongoCollection<ShowTime> _showTimeCollection = mongoService.Collection<ShowTime>();
@@ -59,6 +61,11 @@ public class CancelBookingCommandHandler(IMongoService mongoService) : IAPIReque
             showTimeFilter, 
             showTimeUpdate,
             cancellationToken: cancellationToken);
+
+        await reservationHubContext.Clients.Group(showTime.Id).SendAsync(
+            "ReceivedSeatsBookingCanceled",
+            booking.Seats.SelectMany(s => s.SeatNames),
+            cancellationToken);
         
         return APIResponse.IsSuccess("Hoàn tác thành công");
     }

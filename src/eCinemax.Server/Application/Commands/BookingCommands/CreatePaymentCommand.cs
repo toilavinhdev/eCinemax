@@ -5,6 +5,7 @@ using eCinemax.Server.Application.Responses;
 using eCinemax.Server.Helpers;
 using eCinemax.Server.Persistence;
 using eCinemax.Server.Shared.Library.VnPay;
+using Microsoft.AspNetCore.SignalR;
 using MongoDB.Driver;
 using static System.String;
 
@@ -31,7 +32,7 @@ public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentComm
 public class CreatePaymentCommandHandler(
     IMongoService mongoService,
     ILogger<CreatePaymentCommandHandler> logger,
-    ReservationHub reservationHub,
+    IHubContext<ReservationHub> reservationHubContext,
     AppSettings appSettings) : IAPIRequestHandler<CreatePaymentCommand, CreatePaymentResponse>
 {
     private readonly IMongoCollection<Booking> _bookingCollection = mongoService.Collection<Booking>();
@@ -102,7 +103,10 @@ public class CreatePaymentCommandHandler(
             throw new BadRequestException(message);
         }
 
-        // await reservationHub.SendSeatsSoldOut(reservations.Select(x => x.Name).ToArray());
+        await reservationHubContext.Clients.Group(showTime.Id).SendAsync(
+             "ReceivedSeatsSoldOut",
+             reservations.Select(x => x.Name).ToArray(),
+             cancellationToken);
 
         // await EmailHelper.SmptSendAsync(
         //     appSettings.GmailConfig,

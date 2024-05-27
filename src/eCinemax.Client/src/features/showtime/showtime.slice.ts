@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   ESeatStatus,
   IReservation,
@@ -13,7 +13,7 @@ const initialState: IShowTimeState = {
   list: [],
   showtime: undefined,
   reservations: [],
-  touchedSeatsInShowtime: [],
+  selectedSeatNamesBySomeone: [],
 };
 
 const showTimeSlice = createSlice({
@@ -31,6 +31,11 @@ const showTimeSlice = createSlice({
         (x) => x.name !== action.payload.name
       );
     },
+    setSelectedSeatBySomeone: (state, action: PayloadAction<string[]>) => {
+      state.selectedSeatNamesBySomeone = action.payload.filter(
+        (seatName) => !state.reservations.some((r) => r.name === seatName)
+      );
+    },
     clearReservations: (state) => {
       state.reservations = [];
     },
@@ -40,31 +45,17 @@ const showTimeSlice = createSlice({
     clearShowtime: (state) => {
       state.showtime = undefined;
     },
-    setTouchedSeatsInShowtime: (state, action: PayloadAction<string[]>) => {
-      state.touchedSeatsInShowtime = action.payload;
-    },
-    updateAwaitingPaymentSeats: (state, action: PayloadAction<string[]>) => {
+    updateSeatsStatus: (
+      state,
+      action: PayloadAction<{ seatNames: string[]; newStatus: ESeatStatus }>
+    ) => {
       if (state.showtime) {
         state.showtime = {
           ...state.showtime,
           reservations: state.showtime.reservations.map((row) =>
             row.map((seat) => {
-              return action.payload.includes(seat.name)
-                ? { ...seat, status: ESeatStatus.AwaitingPayment }
-                : seat;
-            })
-          ),
-        };
-      }
-    },
-    updateSoldOutSeats: (state, action: PayloadAction<string[]>) => {
-      if (state.showtime) {
-        state.showtime = {
-          ...state.showtime,
-          reservations: state.showtime.reservations.map((row) =>
-            row.map((seat) => {
-              return action.payload.includes(seat.name)
-                ? { ...seat, status: ESeatStatus.SoldOut }
+              return action.payload.seatNames.includes(seat.name)
+                ? { ...seat, status: action.payload.newStatus }
                 : seat;
             })
           ),
@@ -111,11 +102,10 @@ export const {
   refreshStatus,
   addReservation,
   removeReservation,
+  setSelectedSeatBySomeone,
   clearReservations,
   clearListShowtime,
   clearShowtime,
-  setTouchedSeatsInShowtime,
-  updateAwaitingPaymentSeats,
-  updateSoldOutSeats,
+  updateSeatsStatus,
 } = showTimeSlice.actions;
 export default showTimeSlice.reducer;

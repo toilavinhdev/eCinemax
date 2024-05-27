@@ -13,6 +13,7 @@ const endpoints = {
   get: "/api/booking/get",
   create: "/api/booking/create",
   checkout: "/api/booking/checkout",
+  cancel: "/api/booking/cancel",
 };
 
 export const listBookingAPI = (payload: IListBookingRequest) =>
@@ -41,4 +42,13 @@ export const checkoutAPI = (payload: ICreatePaymentRequest) =>
     method: "POST",
     url: endpoints.checkout,
     data: payload,
+  });
+
+export const cancelBookingAPI = (bookingId: string) =>
+  client.request({
+    method: "POST",
+    url: endpoints.cancel,
+    data: {
+      id: bookingId,
+    },
   });

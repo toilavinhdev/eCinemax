@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IBookingState } from "./booking.interfaces";
 import {
+  cancelBooking,
   checkout,
   createBooking,
   getBooking,
@@ -78,6 +79,17 @@ const bookingSlice = createSlice({
       state.status = "success";
     });
     builder.addCase(checkout.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.payload as string;
+    });
+    builder.addCase(cancelBooking.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    });
+    builder.addCase(cancelBooking.fulfilled, (state, action) => {
+      state.status = "success";
+    });
+    builder.addCase(cancelBooking.rejected, (state, action) => {
       state.status = "error";
       state.error = action.payload as string;
     });

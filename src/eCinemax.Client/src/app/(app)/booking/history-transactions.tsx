@@ -165,7 +165,7 @@ const BookingStatusComponent = (props: {
   return (
     <View className="flex-row items-center">
       <Component status={EBookingStatus.WaitForPay} text="Chờ thanh toán" />
-      <Component status={EBookingStatus.Success} text="Lịch sử" />
+      <Component status={EBookingStatus.Success} text="Vé đã mua" />
     </View>
   );
 };

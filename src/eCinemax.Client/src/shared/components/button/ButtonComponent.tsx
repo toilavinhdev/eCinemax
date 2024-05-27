@@ -12,6 +12,7 @@ interface Props {
   buttonClassName?: string;
   textClassName?: string;
   appearance?: "default" | "text";
+  bgColor?: string;
 }
 
 const ButtonComponent = (props: Props) => {
@@ -24,6 +25,7 @@ const ButtonComponent = (props: Props) => {
     buttonClassName,
     textClassName,
     appearance = "default",
+    bgColor,
   } = props;
 
   switch (appearance) {
@@ -32,7 +34,11 @@ const ButtonComponent = (props: Props) => {
         <TouchableOpacity
           onPress={onPress}
           disabled={disabled}
-          style={{ backgroundColor: !disabled ? colors.primary : colors.gray }}
+          style={{
+            backgroundColor: !disabled
+              ? bgColor ?? colors.primary
+              : colors.gray,
+          }}
           className={`flex justify-center items-center w-[150] h-[48] rounded-lg ${buttonClassName}`}
         >
           {!loading ? (

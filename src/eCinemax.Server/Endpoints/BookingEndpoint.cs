@@ -30,6 +30,9 @@ public class BookingEndpoint : IEndpoint
         group.MapPost("/checkout", (CreatePaymentCommand command, IMediator mediator) => mediator.Send(command))
             .RequireAuthorization();
 
+        group.MapPost("/cancel", (CancelBookingCommand command, ISender sender) => sender.Send(command))
+            .RequireAuthorization();
+
         group.MapGet("/vnpay-return",
             ([AsParameters] ProcessVnPayReturnCommand command, 
                 [FromServices] IMediator mediator) => mediator.Send(command));

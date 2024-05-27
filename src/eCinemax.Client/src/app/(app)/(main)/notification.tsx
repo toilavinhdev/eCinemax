@@ -66,7 +66,7 @@ const NotificationScreen = () => {
         renderItem={({ item }) => <NotificationComponent data={item} />}
         numColumns={1}
         onRefresh={refresh}
-        refreshing={false}
+        refreshing={loading}
         onEndReachedThreshold={0}
         onEndReached={getNextBatch}
         showsVerticalScrollIndicator={false}
