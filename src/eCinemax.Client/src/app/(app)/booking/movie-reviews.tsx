@@ -4,11 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
 import { IReviewViewModel, listReview, ratingMovie } from "~/features/movie";
 import { useAppDispatch, useAppSelector } from "~/features/store";
-import {
-  InputComponent,
-  NoDataComponent,
-  SpinnerFooterComponent,
-} from "~/shared/components";
+import { InputComponent, NoDataComponent } from "~/shared/components";
 import { colors } from "~/shared/constants";
 
 const MovieReviewScreen = () => {
@@ -67,11 +63,8 @@ const MovieReviewScreen = () => {
         onEndReachedThreshold={0}
         onEndReached={nextBatch}
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={() => <NoDataComponent />}
-        ListFooterComponent={() => (
-          <SpinnerFooterComponent
-            show={reviewPagination?.hasNextPage ?? false}
-          />
+        ListEmptyComponent={() => (
+          <NoDataComponent text="Chưa có bình luận nào" />
         )}
         ItemSeparatorComponent={() => <View className="h-[12px]" />}
         className="mt-4"
