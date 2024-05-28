@@ -100,7 +100,7 @@ const HomeHeaderComponent = () => {
           className="font-[900] text-[24px]"
           style={{ color: colors.primary }}
         >
-          ECINEMAX
+          CINEMAX
         </Text>
       </View>
     </View>

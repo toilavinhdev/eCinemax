@@ -1,6 +1,7 @@
 export interface IUserState {
   status: "idle" | "loading" | "success" | "failed";
   error: string | null;
+  signedIn: boolean;
   currentUser: IGetMeResponse | null;
 }
 

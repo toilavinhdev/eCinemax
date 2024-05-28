@@ -69,7 +69,7 @@ const HistoryTransactionsScreen = () => {
   }, [status]);
 
   return (
-    <View className="flex-1 px-2" style={{ backgroundColor: colors.dark }}>
+    <View className="flex-1" style={{ backgroundColor: colors.dark }}>
       <BookingStatusComponent
         currentStatus={bookingStatusFilter}
         setStatus={setBookingStatusFilter}
@@ -85,6 +85,7 @@ const HistoryTransactionsScreen = () => {
                 params: { bookingId: item.id },
               })
             }
+            className="mx-2"
           >
             <BookingComponent booking={item} />
           </TouchableOpacity>
@@ -111,9 +112,9 @@ const BookingComponent = (props: { booking: IBookingViewModel }) => {
         source={{ uri: booking.moviePosterUrl }}
         className="w-[80px] h-[105px]"
       />
-      <View>
+      <View className="flex-1">
         <Text
-          className="text-white font-semibold text-[15px]"
+          className="text-white font-semibold text-[15px] flex-1 flex-wrap"
           numberOfLines={2}
         >
           {booking.movieName}

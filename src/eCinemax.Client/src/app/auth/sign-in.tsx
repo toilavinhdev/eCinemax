@@ -45,6 +45,12 @@ const SignInScreen = () => {
     }
   }, [status]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(refreshStatus());
+    };
+  }, []);
+
   return (
     <ScrollView className="flex-1 bg-white px-8">
       <Text className="font-medium text-[36px] mt-20">Login</Text>

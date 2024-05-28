@@ -58,6 +58,12 @@ const SignUpScreen = () => {
     }
   }, [status]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(refreshStatus());
+    };
+  }, []);
+
   return (
     <ScrollView className="flex-1 bg-white px-8">
       <Text className="font-medium text-[36px] mt-20">Sign Up</Text>
@@ -105,7 +111,7 @@ const SignUpScreen = () => {
       <ButtonComponent
         text="Đã có tài khoản? Đăng nhập ngay"
         disabled={status === "loading"}
-        onPress={() => router.push("/auth/sign-in")}
+        onPress={() => router.replace("/auth/sign-in")}
         textClassName="font-semibold text-[14px]"
         buttonClassName="w-full mt-3 mb-10"
         appearance="text"

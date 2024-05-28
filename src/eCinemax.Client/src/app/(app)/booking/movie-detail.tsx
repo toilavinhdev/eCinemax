@@ -152,9 +152,12 @@ const MovieDetailScreen = () => {
           <Text className="text-white mt-4">"{movie?.plot}"</Text>
         </View>
 
-        <View className="bg-gray-700 h-px my-6"></View>
-
-        {movie?.status === EMovieStatus.NowShowing && <ReviewComponent />}
+        {movie?.status === EMovieStatus.NowShowing && (
+          <View>
+            <View className="bg-gray-700 h-px my-6"></View>
+            <ReviewComponent />
+          </View>
+        )}
       </ScrollView>
 
       <View className="flex-row mb-6">
@@ -172,7 +175,9 @@ const MovieDetailScreen = () => {
         <ButtonComponent
           disabled={movie?.status !== EMovieStatus.NowShowing}
           text={
-            movie?.status === EMovieStatus.NowShowing ? "Đặt vé" : "Sắp chiếu"
+            movie?.status === EMovieStatus.NowShowing
+              ? "Đặt vé"
+              : "Comming soon"
           }
           buttonClassName="flex-1 h-[60px] ml-2"
           textClassName="font-semibold text-[18px]"

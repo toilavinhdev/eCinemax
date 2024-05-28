@@ -11,10 +11,12 @@ import {
   View,
 } from "react-native";
 import { IfComponent } from "~/core/components";
-import { useAppSelector } from "~/features/store";
+import { useAppDispatch, useAppSelector } from "~/features/store";
+import { refreshStatus, signOut } from "~/features/user";
 import { authConst, colors } from "~/shared/constants";
 
 const OtherScreen = () => {
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.currentUser);
 
   const onLogout = async () => {
@@ -23,6 +25,7 @@ const OtherScreen = () => {
         text: "Đồng ý",
         onPress: async () => {
           await AsyncStorage.removeItem(authConst.ACCESS_TOKEN);
+          dispatch(signOut());
           router.replace("/auth/sign-in");
         },
         style: "destructive",
@@ -62,7 +65,12 @@ const OtherScreen = () => {
               <Text className="text-[12px] text-gray-300">{user?.email}</Text>
             </View>
           </View>
-          <TouchableOpacity onPress={() => router.push("/user/update-profile")}>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(refreshStatus());
+              router.push("/user/update-profile");
+            }}
+          >
             <Text>
               <FontAwesome5 name="user-edit" size={24} color="white" />,
             </Text>
