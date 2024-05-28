@@ -9,6 +9,8 @@ public class CreateCinemaCommand : IAPIRequest<Cinema>
     public string Name { get; set; } = default!;
 
     public string Address { get; set; } = default!;
+    
+    public CinemaLocation? Location { get; set; } 
 }
 
 public class CreateCinemaCommandValidator : AbstractValidator<CreateCinemaCommand>

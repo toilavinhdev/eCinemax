@@ -2,7 +2,6 @@ import {
   Entypo,
   FontAwesome,
   MaterialCommunityIcons,
-  MaterialIcons,
 } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
@@ -38,6 +37,20 @@ const MainLayout = () => {
             />
           ),
           header: () => <HomeHeaderComponent />,
+        }}
+      />
+      <Tabs.Screen
+        name="cinema"
+        options={{
+          title: "Rạp chiếu",
+          headerTitle: "Rạp chiếu gần bạn",
+          tabBarIcon: ({ focused }) => (
+            <Entypo
+              name="location-pin"
+              size={24}
+              color={focused ? colors.primary : colors.gray}
+            />
+          ),
         }}
       />
       <Tabs.Screen
